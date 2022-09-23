@@ -1,33 +1,20 @@
 package org.compiler_design;
-import org.antlr_out.HelloLexer;
-import org.antlr_out.HelloParser;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
+import org.Expr.EvalVisitor;
+import org.compiler_design.antlr_out.*;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
 public class test {
-    public static void run(String expr) throws Exception{
-        // 对每一个输入的字符串，构造一个 ANTLRStringStream 流 in
-        ANTLRInputStream input = new ANTLRInputStream(expr);
-        // 用 in 构造词法分析器 lexer，词法分析的作用是将字符聚集成单词或者符号
-        HelloLexer lexer = new HelloLexer(input);
-        // 用词法分析器 lexer 构造一个记号流 tokens
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        // 再使用 tokens 构造语法分析器 parser,至此已经完成词法分析和语法分析的准备工作
-        HelloParser parser = new HelloParser(tokens);
-        // 最终调用语法分析器的规则 r（这个是我们在Hello.g4里面定义的那个规则），完成对表达式的验证
-        parser.rr();
-    }
-
-    public static void main(String[] args) throws Exception{
-        String[] testStr={
-                "Hello world",
-                "hello world",
-                "hi world"
-        };
-        for(String s : testStr){
-            System.out.println("Input: " + s);
-            run(s);
-        }
+    public static void main(String[] args) throws Exception {
+        CharStream input = CharStreams.fromFileName("./src/main/java/org/compiler_design/source_code.in");//新建一个CharStream读取数据
+        System.out.println(input);
+        System.out.println("-----------");
+        HelloLexer lexer=new HelloLexer(input);//创建一个lexer 处理输入数据
+        CommonTokenStream tokens=new CommonTokenStream(lexer);//创建一个token缓冲区 储存lexer生成的词法符号
+        HelloParser parser=new HelloParser(tokens);//创建一个parser 处理token缓冲区中的内容为解析做准备工作
+        ParseTree tree=parser.prog();//用Hello.g4中的prog规则对得到的token流进行语法分析
+//        System.out.println(tree.toStringTree(parser));//用Lisp风格打印生成的树
+        EvalVisitor visitor=new EvalVisitor();//新建一个自定义的EvalVisitor类
+        visitor.visit(tree);//开始用自定义的方法visit该语法分析树
     }
 }

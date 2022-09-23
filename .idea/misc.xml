@@ -13,6 +13,66 @@
           <option name="language" value="" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/java/org/antlr_out/Hello.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="E:\Compiler-Design\src\main\java" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="org.antlr_out" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/java/org/anltr_learning/Expr/Expr.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="E:\Compiler-Design\src\main\java" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="org.antlr_learning.Expr" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/java/org/antlr_learning/Expr/Expr.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="E:\Compiler-Design\src\main\java" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="org.antlr_learning.Expr" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/java/org/antlr_learning/Expr/antlr_out/Expr.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="E:\Compiler-Design\src\main\java" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="org.antlr_learning.Expr.antlr_out" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/main/java/org/compiler_design/antlr_out/Hello.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="E:\Compiler-Design\src\main\java" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="org.compiler_design.antlr_out" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/antlr_learning/Expr/antlr_out/Expr.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="E:\Compiler-Design\src\antlr_learning" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="Expr.antlr_out" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
       </list>
     </option>
   </component>
