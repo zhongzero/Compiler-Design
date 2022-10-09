@@ -1,10 +1,7 @@
 package org.compiler_design;
-import org.compiler_design.antlr_out.*;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.*;
+import org.compiler_design.parser.*;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class EvalVisitor extends HelloBaseVisitor<Integer> {
 	HashMap<String,Integer> memory=new HashMap<String,Integer>();

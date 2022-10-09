@@ -100,6 +100,19 @@ WS: [ \t\r\n]+ -> skip;
 **一些基本语法 ** 
 
 ```
+/*词法*/
+ID1:[a-z]+;//重复至少一次,（方括号表示匹配其中一个字符）
+ID2:[a-z]*;//重复任意多次（可以为0次） 
+ID3:~[a-z];//除了a-z都匹配，取反符号后面必须是单个字符或[]组成的单个字符的集合 (\n取反要加[]，即~[\n]) （若后接()，且()内都为单个字符也合法 ）
+	即可以的形式有 ~a,~'a',~[ab],~('a'|'b'),~'\n'
+ID4:('a'|'bb')*;//匹配'a'或'bb'，重复任意多次
+ID5 'ab'? 'cd';// 'ab'?表示匹配'ab'或者忽略它
+STRING:'"' .*? '"';//'.'可以匹配任意字符,若是不加问号默认为贪婪匹配，加了问号表示改为非贪婪匹配(懒惰匹配)
+	即 若是使用贪婪匹配，则 "sss" "sss" 会被匹配成一个STRING
+	而若是使用懒惰匹配，"sss" "sss"会被匹配成两个STRING
+WS: ->skip; //->skip表示在lexer解析完成后，把该类型的token全部删去
+	
+/*句法*/
 expr: expr op=('*'|'/') expr		#MulDiv
 	| expr op=('+'|'-') expr		#AddSub
 	| INT						#int
@@ -108,17 +121,44 @@ expr: expr op=('*'|'/') expr		#MulDiv
 	;
 //多个备选分支
 //#后面表示某一分支的标签(请让标签和规则名都独一无二)
-//expr op=('*'|'/') expr 中的op=('*'|'/') 是简易写法，直接在句内确定规则op
-//WS: ->skip 定义了空白符(需要跳过的字符)
+//expr op=('*'|'/') expr 表示在这个语句里，把('*'|'/')命名为op
+ttt	:INT_CONSTANT
+	|<assoc=right>ttt '+' ttt//右结合(antlr4默认为左结合)
+	;
 ```
+
+
 
 **一些注意点** 
 
-- 大写字母开头为语法，小写字母开头为词法
-- WS的作用是分割token词素(每一块中仍可能有多个词素拼接)，token通过lexer中的词法确定自己是什么词类型，parser再对lexer给出的一串词法记号流(解析过的token流)进行分析
+- 大写字母开头为句法，小写字母开头为词法
+
+- lexer在词法规则下确定token流，parser再对lexer给出的一串词法记号流(解析过的token流)进行分析
+
+- antlr4的parser可以处理直接左递归，但仍不能处理间接左递归
+
+  备选方案被antlr4分成以下几种
+
+  1.expr:expr op expr;//二元(其中op是单词法符号或多词法符号构成的运算符)
+
+  2.expr:expr op1 expr op2 expr;//三元(其中op必须是单词法符号)
+
+  3.expr:elements expr;//一元前缀
+
+  4.expr:expr elements;//一元后缀
+
+  5.除此之外的其他备选分支//主表达式(例如标识符和整数，也包括 '(' expr ')' )  (注：主表达式没有优先级，即放在任何位置都一样)
+
+  其中直接左递归包含1，2，4三类，注：不在1,2中的直接左递归全部归为第4类(elements中可以再直接或间接调用expr)
 
 
-- 语法/词法不能有歧义，但歧义可通过优先级解决并利用(如，1.词法分析器的歧义，antlr会选择最靠前的词法规则；2.语法分析器的歧义，antlr会选择最靠前的备选分支)
+- 句法/词法不能有歧义，歧义可以通过优先级解决并利用
+
+  1.词法歧义，首先lexer会选择匹配可能的最长字符串（贪婪匹配），在长度相同的基础上，antlr会选择最靠前的备选分支
+
+  2.句法歧义，其中关于 "二元"形式的直接左递归，antlr会选择最靠前的句法规则。但除了这样的一部分句法歧义可通过优先级消除，一般是不行的
+
+     尽管antlr4可以处理一部分句法歧义，但尽量还是不要出现不确定antlr4是否能解决的句法歧义，即不要故意刁难antlr4
 
   ```
   Begin:'begin';
@@ -127,18 +167,11 @@ expr: expr op=('*'|'/') expr		#MulDiv
 
   若匹配begin，会匹配Begin
 
-- lexer会选择匹配可能的最长字符串(字符串指被WS分割的某一部分)
-
-  ```
-  Begin:'begin';
-  ID:[a-z]+;
-  ```
-
   若匹配beginner，会匹配ID,而不是拆成begin+ner去匹配Begin+ID
 
   但若是匹配begin ner，会匹配Begin+ID
 
-- 当文件过长时，可以考虑将.g4文件分为多份文件，用import合并(一种选择是将语法和词法分成两个.g4文件)
+- 当文件过长时，可以考虑将.g4文件分为多份文件，用import合并(一种选择是将句法和词法分成两个.g4文件)
 
 
 
@@ -146,7 +179,7 @@ expr: expr op=('*'|'/') expr		#MulDiv
 
 ## 生成的.java文件
 
-XXXLexer.java和XXXparser.java为根据XXX.g4文件中的词法/语法生成的lexer/parser
+XXXLexer.java和XXXparser.java为根据XXX.g4文件中的词法/句法生成的lexer/parser
 
 XXXListener.java提供了listener监听器的基类(虚类)，XXXBaseListener.java提供了listener监听器的默认实现类(从XXXListener.java中派生而来)
 
@@ -222,7 +255,7 @@ public static void main(String[] args) throws Exception {
         HelloLexer lexer=new HelloLexer(input);//创建一个lexer 处理输入数据
         CommonTokenStream tokens=new CommonTokenStream(lexer);//创建一个token缓冲区 储存lexer生成的词法符号
         HelloParser parser=new HelloParser(tokens);//创建一个parser 处理token缓冲区中的内容为解析做准备工作
-        ParseTree tree=parser.rr();//用Hello.g4中的rr规则对得到的token流进行语法分析
+        ParseTree tree=parser.rr();//用Hello.g4中的rr规则对得到的token流进行句法分析
         System.out.println(tree.toStringTree(parser));//用Lisp风格打印生成的树
     }
 ```
@@ -339,7 +372,7 @@ public class test {
         ExprLexer lexer=new ExprLexer(input);//创建一个lexer 处理输入数据
         CommonTokenStream tokens=new CommonTokenStream(lexer);//创建一个token缓冲区 储存lexer生成的词法符号
         ExprParser parser=new ExprParser(tokens);//创建一个parser 处理token缓冲区中的内容为解析做准备工作
-        ParseTree tree=parser.prog();//用Expr.g4中的prog规则对得到的token流进行语法分析
+        ParseTree tree=parser.prog();//用Expr.g4中的prog规则对得到的token流进行句法分析
 //        System.out.println(tree.toStringTree(parser));//用Lisp风格打印生成的树
         EvalVisitor visitor=new EvalVisitor();//新建一个自定义的EvalVisitor类
         visitor.visit(tree);//开始用自定义的方法visit该语法分析树
@@ -347,7 +380,7 @@ public class test {
 }
 ```
 
-* 对于每一个token，包括明确写出词法定义的(如MUL: '*';) 和 在语法选择分支中出现但没有明确写出语法定义的( ID '=' expr NEWLINE 中的'=')，都对应一个整数值，且MUL和'\*'对应的值是同一个(即确定字符为map对应)
+* 对于每一个token，包括明确写出词法定义的(如MUL: '*';) 和 在句法选择分支中出现但没有明确写出句法定义的( ID '=' expr NEWLINE 中的'=')，都对应一个整数值，且MUL和'\*'对应的值是同一个(即确定字符为map对应)
 * **Expr.g4** 中通过单独定义MUL:'*'，可实现 **EvalVisitor.java** 中对MUL和DIV的分类，即可通过if(ctx.op.getType()==ExprParser.ADD) 判断op对应的token类型(if中左右皆为Integer)
 * 对于通过antlr4生成的ExprBaseVIsitor
   * 1.若选择分支只有一个，如prog，ExprBaseVisitor中会生成一个visitProg方法
