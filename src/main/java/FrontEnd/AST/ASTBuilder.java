@@ -9,7 +9,7 @@ import FrontEnd.AST.ExprNodeSet.ConstExprNode.ConstBoolExprNode;
 import FrontEnd.AST.ExprNodeSet.ConstExprNode.ConstIntExprNode;
 import FrontEnd.AST.ExprNodeSet.ConstExprNode.ConstStringExprNode;
 import FrontEnd.AST.ExprNodeSet.ConstExprNode.NullExprNode;
-import FrontEnd.AST.OtherNodeSet.BlockNode;
+import FrontEnd.AST.StatNodeSet.BlockStatNode;
 import FrontEnd.AST.OtherNodeSet.ClassConstructorNode;
 import FrontEnd.AST.OtherNodeSet.ParaDataListNode;
 import FrontEnd.AST.OtherNodeSet.ParaListNode;
@@ -26,7 +26,10 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 	@Override public ASTBaseNode visitProgram(MxParser.ProgramContext ctx) {
 		ArrayList<BaseDefNode> deflist=new ArrayList<>();
 		for(int i=0;i<ctx.defAllType().size();i++){
-			deflist.add((BaseDefNode) visit(ctx.defAllType().get(i)));
+			MxParser.DefAllTypeContext tmp=ctx.defAllType().get(i);
+			if(tmp.variableDefinitionStatement()!=null)deflist.add((BaseDefNode) visit(tmp.variableDefinitionStatement()));
+			if(tmp.functionDefinitionStatement()!=null)deflist.add((BaseDefNode) visit(tmp.functionDefinitionStatement()));
+			if(tmp.classDefinitionStatement()!=null)deflist.add((BaseDefNode) visit(tmp.classDefinitionStatement()));
 		}
 		return new RootNode(deflist,new Position(ctx));
 	}
@@ -34,8 +37,9 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		return null;
 	}
 	@Override public ASTBaseNode visitFunctionDefinitionStatement(MxParser.FunctionDefinitionStatementContext ctx) {
-		return new FuncDefNode(ctx.VOID()==null?null:new VoidTypeNode(new Position(ctx)), ctx.IDENTIFIER().getText(),
-				(ParaListNode) visit(ctx.parameterList()), (BlockNode) visit(ctx.block()), new Position(ctx));
+		return new FuncDefNode(ctx.VOID()!=null?new VoidTypeNode(new Position(ctx)):(BaseTypeNode) visit(ctx.type()),
+				ctx.IDENTIFIER().getText(), ctx.parameterList()==null?null:(ParaListNode) visit(ctx.parameterList()),
+				(BlockStatNode) visit(ctx.block()), new Position(ctx));
 	}
 	@Override public ASTBaseNode visitClassDefinitionStatement(MxParser.ClassDefinitionStatementContext ctx) {
 		ArrayList<VarDefNode> varlist=new ArrayList<>();
@@ -53,8 +57,9 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		return new ClassDefNode(ctx.IDENTIFIER().getText(),varlist,funclist,classconstructorlist,new Position(ctx));
 	}
 	@Override public ASTBaseNode visitClassConstructorStatement(MxParser.ClassConstructorStatementContext ctx) {
-		return new ClassConstructorNode(ctx.IDENTIFIER().getText(),(ParaListNode) visit(ctx.parameterList()),
-				(BlockNode) visit(ctx.block()),new Position(ctx));
+		return new ClassConstructorNode(ctx.IDENTIFIER().getText(),
+				ctx.parameterList()==null?null:(ParaListNode) visit(ctx.parameterList()),
+				(BlockStatNode) visit(ctx.block()),new Position(ctx));
 	}
 	@Override public ASTBaseNode visitVariableDefinitionStatement(MxParser.VariableDefinitionStatementContext ctx) {
 		return null;
@@ -66,10 +71,12 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		return new VarDefNode(null,ctx.IDENTIFIER().getText(),
 				ctx.expression()==null?null: (BaseExprNode) visit(ctx.expression()),new Position(ctx));
 	}
+	@Override public ASTBaseNode visitStat_block(MxParser.Stat_blockContext ctx) {
+		return visit(ctx.block());
+	}
 	@Override public ASTBaseNode visitStat_for(MxParser.Stat_forContext ctx) {
 		ArrayList<VarDefNode> initdeflist;
 		ArrayList<BaseExprNode> initexprlist;
-		BlockNode forblock;
 
 		if(ctx.init1==null)initdeflist=null;
 		else {
@@ -90,27 +97,16 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 			}
 		}
 
-		if(ctx.for1!=null)forblock=(BlockNode) visit(ctx.for1);
-		else forblock=(BlockNode) visit(ctx.for2);
-
 		return new ForStatNode(initdeflist,initexprlist, (BaseExprNode) visit(ctx.condition),
 				ctx.update==null?null:(BaseExprNode) visit(ctx.update),
-				forblock,new Position(ctx));
+				(BaseStatNode) visit(ctx.forstat),new Position(ctx));
 	}
 	@Override public ASTBaseNode visitStat_while(MxParser.Stat_whileContext ctx) {
-		BlockNode whileblock;
-		if(ctx.while1!=null)whileblock=(BlockNode) visit(ctx.while1);
-		else whileblock=(BlockNode) visit(ctx.while2);
-		return new WhileStatNode((BaseExprNode) visit(ctx.condition), whileblock, new Position(ctx));
+		return new WhileStatNode((BaseExprNode) visit(ctx.condition), (BaseStatNode) visit(ctx.whilestat), new Position(ctx));
 	}
 	@Override public ASTBaseNode visitStat_if(MxParser.Stat_ifContext ctx) {
-		BlockNode ifblock,elseblock;
-		if(ctx.if1!=null)ifblock=(BlockNode) visit(ctx.if1);
-		else ifblock=(BlockNode) visit(ctx.if2);
-		if(ctx.else1!=null)elseblock=(BlockNode) visit(ctx.else1);
-		else if(ctx.else2!=null)elseblock=(BlockNode) visit(ctx.else2);
-		else elseblock=null;
-		return new IfStatNode((BaseExprNode) visit(ctx.condition), ifblock, elseblock, new Position(ctx));
+		return new IfStatNode((BaseExprNode) visit(ctx.condition), (BaseStatNode) visit(ctx.ifstat),
+				ctx.elsestat==null?null:(BaseStatNode) visit(ctx.elsestat), new Position(ctx));
 	}
 	@Override public ASTBaseNode visitStat_return(MxParser.Stat_returnContext ctx) {
 		return new ReturnStatNode(ctx.expression()==null?null:(BaseExprNode) visit(ctx.expression()), new Position(ctx));
@@ -140,11 +136,11 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		for(int i=0;i<ctx.statement().size();i++){
 			statlist.add((BaseStatNode) visit(ctx.statement().get(i)));
 		}
-		return new BlockNode(statlist,new Position(ctx));
+		return new BlockStatNode(statlist,new Position(ctx));
 	}
 	@Override public ASTBaseNode visitExpr_lambda(MxParser.Expr_lambdaContext ctx) {
 		return new LambdaExprNode(ctx.children.get(2).getText().equals("&"), (ParaListNode) visit(ctx.parameterList()),
-				(BlockNode) visit(ctx.block()), (ParaDataListNode) visit(ctx.parameterdataList()), new Position(ctx));
+				(BlockStatNode) visit(ctx.block()), (ParaDataListNode) visit(ctx.parameterdataList()), new Position(ctx));
 	}
 	@Override public ASTBaseNode visitExpr_assign(MxParser.Expr_assignContext ctx) {
 		return new AssignExprNode((BaseExprNode) visit(ctx.operand1),(BaseExprNode) visit(ctx.operand2),new Position(ctx));
@@ -188,7 +184,9 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		return new SingleExprNode((BaseExprNode) visit(ctx.expression()), op,new Position(ctx));
 	}
 	@Override public ASTBaseNode visitExpr_function(MxParser.Expr_functionContext ctx) {
-		return new FuncExprNode((BaseExprNode) visit(ctx.expression()),(ParaDataListNode) visit(ctx.parameterdataList()),new Position(ctx));
+		return new FuncExprNode((BaseExprNode) visit(ctx.expression()),
+				ctx.parameterdataList()==null?null:(ParaDataListNode) visit(ctx.parameterdataList()),
+				new Position(ctx));
 	}
 	@Override public ASTBaseNode visitExpr_member(MxParser.Expr_memberContext ctx) {
 		return new MemberExprNode((BaseExprNode) visit(ctx.expression()),ctx.IDENTIFIER().getText(),new Position(ctx));
@@ -244,7 +242,6 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		for(int i=0;i<ctx.expression().size();i++){
 			BaseExprNode tmp= (BaseExprNode) visit(ctx.expression().get(i));
 			if((tmp instanceof ThisExprNode)||(tmp instanceof NewformatExprNode))throw new SemanticError("Error in new an array",new Position(ctx));
-			if(!(tmp.returntype instanceof IntTypeNode))throw new SemanticError("Error in new an array",new Position(ctx));
 			sizelist.add(tmp);
 		}
 		int dim=(ctx.getChildCount()-ctx.expression().size()-1)/2;

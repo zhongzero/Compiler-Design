@@ -7,7 +7,7 @@ import FrontEnd.AST.*;
 
 public class Compiler {
 	public static void main(String[] args) throws Exception {
-//		try {
+		try {
 			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\Compiler-2021-testcases\\sema\\array-package\\array-1.mx");//新建一个CharStream读取数据
 			System.out.println(input);
 			System.out.println("-----------");
@@ -19,9 +19,9 @@ public class Compiler {
 			System.out.println(cstroot.toStringTree(parser));//用Lisp风格打印生成的语法分析树
 			ASTBuilder astbuilder = new ASTBuilder();//新建一个ASTBuilder类(CST的Visitor，从MxBaseVisitor派生)
 			RootNode astroot = (RootNode) astbuilder.visit(cstroot);//从根结点开始visit该cst的语法分析树，生成AST的语法分析树
-//		}
-//		catch (SemanticError error){
-//			error.Output();
-//		}
+		}
+		catch (SemanticError error){
+			error.Output();
+		}
 	}
 }

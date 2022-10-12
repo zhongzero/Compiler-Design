@@ -1,16 +1,14 @@
-package FrontEnd.AST.OtherNodeSet;
+package FrontEnd.AST.StatNodeSet;
 
 import FrontEnd.AST.ASTBaseNode;
-import FrontEnd.AST.ExprNodeSet.BaseExprNode;
-import FrontEnd.AST.StatNodeSet.BaseStatNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
 
 import java.util.ArrayList;
 
-public class BlockNode extends ASTBaseNode {
+public class BlockStatNode extends BaseStatNode {
 	ArrayList<BaseStatNode> statlist;
-	public BlockNode(ArrayList<BaseStatNode> _statlist,Position _pos){
+	public BlockStatNode(ArrayList<BaseStatNode> _statlist, Position _pos){
 		super(_pos);
 		statlist=_statlist;
 	}

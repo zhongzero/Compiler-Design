@@ -9,164 +9,164 @@ import FrontEnd.AST.TypeNodeSet.*;
 
 
 public abstract class ASTVisitor {
-	abstract void visitIntType(IntTypeNode node);
-	abstract void visitBoolType(BoolTypeNode node);
-	abstract void visitStringType(StringTypeNode node);
-	abstract void visitNullType(NullTypeNode node);
-	abstract void visitClassType(ClassTypeNode node);
-	abstract void visitArrayType(ArrayTypeNode node);
-	abstract void visitVoidType(VoidTypeNode node);
+	public abstract void visitIntType(IntTypeNode node);
+	public abstract void visitBoolType(BoolTypeNode node);
+	public abstract void visitStringType(StringTypeNode node);
+	public abstract void visitNullType(NullTypeNode node);
+	public abstract void visitClassType(ClassTypeNode node);
+	public abstract void visitArrayType(ArrayTypeNode node);
+	public abstract void visitVoidType(VoidTypeNode node);
 
-	abstract void visitConstIntExpr(ConstIntExprNode node);
-	abstract void visitConstBoolExpr(ConstBoolExprNode node);
-	abstract void visitConstStringExpr(ConstStringExprNode node);
-	abstract void visitNullExpr(NullExprNode node);
-	abstract void visitIdExpr(IdExprNode node);
-	abstract void visitArrayExpr(ArrayExprNode node);
-	abstract void visitMemberExpr(MemberExprNode node);
-	abstract void visitThisExpr(ThisExprNode node);
-	abstract void visitNewformatExpr(NewformatExprNode node);
-	abstract void visitFuncExpr(FuncExprNode node);
-	abstract void visitSingleExpr(SingleExprNode node);
-	abstract void visitBinaryExpr(BinaryExprNode node);
-	abstract void visitAssignExpr(AssignExprNode node);
-	abstract void visitLambdaExpr(LambdaExprNode node);
+	public abstract void visitConstIntExpr(ConstIntExprNode node);
+	public abstract void visitConstBoolExpr(ConstBoolExprNode node);
+	public abstract void visitConstStringExpr(ConstStringExprNode node);
+	public abstract void visitNullExpr(NullExprNode node);
+	public abstract void visitIdExpr(IdExprNode node);
+	public abstract void visitArrayExpr(ArrayExprNode node);
+	public abstract void visitMemberExpr(MemberExprNode node);
+	public abstract void visitThisExpr(ThisExprNode node);
+	public abstract void visitNewformatExpr(NewformatExprNode node);
+	public abstract void visitFuncExpr(FuncExprNode node);
+	public abstract void visitSingleExpr(SingleExprNode node);
+	public abstract void visitBinaryExpr(BinaryExprNode node);
+	public abstract void visitAssignExpr(AssignExprNode node);
+	public abstract void visitLambdaExpr(LambdaExprNode node);
 
-	abstract void visitExprStat(ExprStatNode node);
-	abstract void visitVarDefStat(VarDefStatNode node);
-	abstract void visitBreakStat(BreakStatNode node);
-	abstract void visitContinueStat(ContinueStatNode node);
-	abstract void visitReturnStat(ReturnStatNode node);
-	abstract void visitIfStat(IfStatNode node);
-	abstract void visitWhileStat(WhileStatNode node);
-	abstract void visitForStat(ForStatNode node);
+	public abstract void visitExprStat(ExprStatNode node);
+	public abstract void visitVarDefStat(VarDefStatNode node);
+	public abstract void visitBreakStat(BreakStatNode node);
+	public abstract void visitContinueStat(ContinueStatNode node);
+	public abstract void visitReturnStat(ReturnStatNode node);
+	public abstract void visitIfStat(IfStatNode node);
+	public abstract void visitWhileStat(WhileStatNode node);
+	public abstract void visitForStat(ForStatNode node);
 
-	abstract void visitBlock(BlockNode node);
-	abstract void visitParaList(ParaListNode node);
-	abstract void visitParaDataList(ParaDataListNode node);
-	abstract void visitClassConstructor(ClassConstructorNode node);
+	public abstract void visitBlock(BlockStatNode node);
+	public abstract void visitParaList(ParaListNode node);
+	public abstract void visitParaDataList(ParaDataListNode node);
+	public abstract void visitClassConstructor(ClassConstructorNode node);
 
-	abstract void visitVarDef(VarDefNode node);
-	abstract void visitFuncDef(FuncDefNode node);
-	abstract void visitClassDef(ClassDefNode node);
+	public abstract void visitVarDef(VarDefNode node);
+	public abstract void visitFuncDef(FuncDefNode node);
+	public abstract void visitClassDef(ClassDefNode node);
 
-	abstract void visitRoot(RootNode node);
+	public abstract void visitRoot(RootNode node);
 
 
-	void visit(IntTypeNode node){
+	public void visit(IntTypeNode node){
 		node.accept(this);
 	}
-	void visit(BoolTypeNode node){
+	public void visit(BoolTypeNode node){
 		node.accept(this);
 	}
-	void visit(StringTypeNode node){
+	public void visit(StringTypeNode node){
 		node.accept(this);
 	}
-	void visit(NullTypeNode node){
+	public void visit(NullTypeNode node){
 		node.accept(this);
 	}
-	void visit(ClassTypeNode node){
+	public void visit(ClassTypeNode node){
 		node.accept(this);
 	}
-	void visit(ArrayTypeNode node){
+	public void visit(ArrayTypeNode node){
 		node.accept(this);
 	}
-	void visit(VoidTypeNode node){
-		node.accept(this);
-	}
-
-	void visit(ConstIntExprNode node){
-		node.accept(this);
-	}
-	void visit(ConstBoolExprNode node){
-		node.accept(this);
-	}
-	void visit(ConstStringExprNode node){
-		node.accept(this);
-	}
-	void visit(NullExprNode node){
-		node.accept(this);
-	}
-	void visit(IdExprNode node){
-		node.accept(this);
-	}
-	void visit(ArrayExprNode node){
-		node.accept(this);
-	}
-	void visit(MemberExprNode node){
-		node.accept(this);
-	}
-	void visit(ThisExprNode node){
-		node.accept(this);
-	}
-	void visit(NewformatExprNode node){
-		node.accept(this);
-	}
-	void visit(FuncExprNode node){
-		node.accept(this);
-	}
-	void visit(SingleExprNode node){
-		node.accept(this);
-	}
-	void visit(BinaryExprNode node){
-		node.accept(this);
-	}
-	void visit(AssignExprNode node){
-		node.accept(this);
-	}
-	void visit(LambdaExprNode node){
+	public void visit(VoidTypeNode node){
 		node.accept(this);
 	}
 
-	void visit(ExprStatNode node){
+	public void visit(ConstIntExprNode node){
 		node.accept(this);
 	}
-	void visit(VarDefStatNode node){
+	public void visit(ConstBoolExprNode node){
 		node.accept(this);
 	}
-	void visit(BreakStatNode node){
+	public void visit(ConstStringExprNode node){
 		node.accept(this);
 	}
-	void visit(ContinueStatNode node){
+	public void visit(NullExprNode node){
 		node.accept(this);
 	}
-	void visit(ReturnStatNode node){
+	public void visit(IdExprNode node){
 		node.accept(this);
 	}
-	void visit(IfStatNode node){
+	public void visit(ArrayExprNode node){
 		node.accept(this);
 	}
-	void visit(WhileStatNode node){
+	public void visit(MemberExprNode node){
 		node.accept(this);
 	}
-	void visit(ForStatNode node){
+	public void visit(ThisExprNode node){
 		node.accept(this);
 	}
-
-	void visit(BlockNode node){
+	public void visit(NewformatExprNode node){
 		node.accept(this);
 	}
-	void visit(ParaListNode node){
+	public void visit(FuncExprNode node){
 		node.accept(this);
 	}
-	void visit(ParaDataListNode node){
+	public void visit(SingleExprNode node){
 		node.accept(this);
 	}
-	void visit(ClassConstructorNode node){
+	public void visit(BinaryExprNode node){
 		node.accept(this);
 	}
-
-	void visit(VarDefNode node){
+	public void visit(AssignExprNode node){
 		node.accept(this);
 	}
-	void visit(FuncDefNode node){
-		node.accept(this);
-	}
-	void visit(ClassDefNode node){
+	public void visit(LambdaExprNode node){
 		node.accept(this);
 	}
 
-	void visit(RootNode node){
+	public void visit(ExprStatNode node){
+		node.accept(this);
+	}
+	public void visit(VarDefStatNode node){
+		node.accept(this);
+	}
+	public void visit(BreakStatNode node){
+		node.accept(this);
+	}
+	public void visit(ContinueStatNode node){
+		node.accept(this);
+	}
+	public void visit(ReturnStatNode node){
+		node.accept(this);
+	}
+	public void visit(IfStatNode node){
+		node.accept(this);
+	}
+	public void visit(WhileStatNode node){
+		node.accept(this);
+	}
+	public void visit(ForStatNode node){
+		node.accept(this);
+	}
+
+	public void visit(BlockStatNode node){
+		node.accept(this);
+	}
+	public void visit(ParaListNode node){
+		node.accept(this);
+	}
+	public void visit(ParaDataListNode node){
+		node.accept(this);
+	}
+	public void visit(ClassConstructorNode node){
+		node.accept(this);
+	}
+
+	public void visit(VarDefNode node){
+		node.accept(this);
+	}
+	public void visit(FuncDefNode node){
+		node.accept(this);
+	}
+	public void visit(ClassDefNode node){
+		node.accept(this);
+	}
+
+	public void visit(RootNode node){
 		node.accept(this);
 	}
 }

@@ -1,21 +1,20 @@
 package FrontEnd.AST.StatNodeSet;
 
 import FrontEnd.AST.ExprNodeSet.BaseExprNode;
-import FrontEnd.AST.OtherNodeSet.BlockNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
 
 public class IfStatNode extends BaseStatNode{
 	public BaseExprNode conditionexpr;
-	public BlockNode ifblock;
-	public BlockNode elseblock;
+	public BaseStatNode ifstat;
+	public BaseStatNode elsestat;
 	public IfStatNode(BaseExprNode _conditionexpr,
-					  BlockNode _ifblock,BlockNode _elseblock,
+					  BaseStatNode _ifstat,BaseStatNode _elsestat,
 					  Position _pos){
 		super(_pos);
 		conditionexpr=_conditionexpr;
-		ifblock=_ifblock;
-		elseblock=_elseblock;
+		ifstat=_ifstat;
+		elsestat=_elsestat;
 	}
 
 	@Override

@@ -17,7 +17,7 @@ functionDefinitionStatement	:(VOID |type) IDENTIFIER '(' parameterList? ')' bloc
 classDefinitionStatement	:CLASS IDENTIFIER '{' (functionDefinitionStatement|variableDefinitionStatement|classConstructorStatement)* '}' ';';
 
 //类构造函数
-classConstructorStatement	:IDENTIFIER '(' parameterList ')' block;
+classConstructorStatement	:IDENTIFIER '(' parameterList? ')' block;
 
 
 //变量定义语句
@@ -34,12 +34,13 @@ variableDefinitionSingle	:IDENTIFIER ('=' expression)?;
 statement	:expression ';'																															#stat_expression
 			|';'																																	#stat_empty
 			|variableDefinitionStatement																											#stat_vardef
-			|IF '(' condition=expression ')' (if1=statement|if2=block) (ELSE (else1=statement|else2=block) )?										#stat_if
-			|FOR '(' (init1=variableDefinitionList|init2=expressionList)? ';' condition=expression ';' (update=expression)? ')' (for1=statement|for2=block)	#stat_for
-			|WHILE '(' condition=expression ')' (while1=statement|while2=block)																		#stat_while
+			|IF '(' condition=expression ')' ifstat=statement (ELSE elsestat=statement )?															#stat_if
+			|FOR '(' (init1=variableDefinitionList|init2=expressionList)? ';' condition=expression ';' (update=expression)? ')' forstat=statement	#stat_for
+			|WHILE '(' condition=expression ')' whilestat=statement																					#stat_while
 			|BREAK ';'																																#stat_break
 			|CONTINUE ';'																															#stat_continue
 			|RETURN (expression)? ';'																												#stat_return
+			|block																																	#stat_block
 			;
 
 
@@ -55,7 +56,7 @@ expression	:IDENTIFIER																			#expr_ID
 			|array=expression '[' index=expression ']'											#expr_array
 			|NEW newformat																		#expr_new
 			|'(' expression ')'																	#expr_bracket
-			|expression '(' parameterdataList? ')'													#expr_function
+			|expression '(' parameterdataList? ')'												#expr_function
 			|expression op=('++'|'--')															#expr_singleafter
 			|<assoc=right> op=('!'|'~'|'++'|'--'|'+'|'-') expression							#expr_singlebefore
 			|operand1=expression op=('*'|'/'|'%') operand2=expression							#expr_binary
@@ -94,8 +95,7 @@ newformat	:nonarraytype ('[' expression ']')+ ('[' ']')+ ('[' expression ']')+	#
 
 
 //基本数据类型
-nonarraytype	:
-				|INT
+nonarraytype	:INT
 				|BOOL
 				|STRING
 				|IDENTIFIER
@@ -114,8 +114,6 @@ STRING:'string';
 NEW:'new';
 CLASS:'class';
 NULL:'null';
-TRUE:'true';
-FALSE:'false';
 THIS:'this';
 IF:'if';
 ELSE:'else';
@@ -130,12 +128,11 @@ RETURN:'return';
 INT_CONSTANT:'0'|[1-9][0-9]*;
 
 //字符串常量
-STRING_CONSTANT:'"' .*? '"';
-//STRING_CONSTANT:'"' (ESC|.)*? '"';
-//fragment ESC:'\\n'|'\\\\'|'\\"';//转义字符Escape character
+STRING_CONSTANT:'"' (ESC|.)*? '"';//ESC主要作用是优先把 \" 匹配了，不然根据非贪婪匹配会导致匹配到\"就停止
+fragment ESC:'\\n'|'\\\\'|'\\"';//转义字符Escape character
 
-BOOL_CONSTANT:TRUE|FALSE;
-
+//Bool常量
+BOOL_CONSTANT:'true'|'false';
 
 //标识符
 IDENTIFIER:[a-zA-Z][a-zA-Z0-9_]*;
