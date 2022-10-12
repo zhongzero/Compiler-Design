@@ -185,11 +185,11 @@ XXXListener.java提供了listener监听器的基类(虚类)，XXXBaseListener.ja
 
 XXXVisitor.java提供了Visitor访问器的基类(虚类)，XXXBaseVisitor.java提供了Visitor访问器的默认实现类(从XXXVisitor.java中派生而来)
 
-## 语法生成树
+## 语法分析树
 
-对于语法生成树中的每一个非叶节点(规则)，都会生成一个单独的RuleNode的子类，如规则stat会生成StatContext的类
+对于语法分析树中的每一个非叶节点(规则)，都会生成一个单独的RuleNode的子类，如规则stat会生成StatContext的类
 
-对于语法生成树中的每一个叶节点(词素)，都会生成一个TerminalNode类
+对于语法分析树中的每一个叶节点(词素)，都会生成一个TerminalNode类
 
 RuleNode和TerminalNode都是ParseTree的子类
 
@@ -381,13 +381,23 @@ public class test {
 ```
 
 * 对于每一个token，包括明确写出词法定义的(如MUL: '*';) 和 在句法选择分支中出现但没有明确写出句法定义的( ID '=' expr NEWLINE 中的'=')，都对应一个整数值，且MUL和'\*'对应的值是同一个(即确定字符为map对应)
+
 * **Expr.g4** 中通过单独定义MUL:'*'，可实现 **EvalVisitor.java** 中对MUL和DIV的分类，即可通过if(ctx.op.getType()==ExprParser.ADD) 判断op对应的token类型(if中左右皆为Integer)
+
 * 对于通过antlr4生成的ExprBaseVIsitor
   * 1.若选择分支只有一个，如prog，ExprBaseVisitor中会生成一个visitProg方法
   *  2.若选择分支有多个，如stat，可通过对每个选择分支打标签，ExprBaseVisitor中会给每个标签都生成一个visitXXX方法,如visitPrintExpr,visitAssign,visitBlank
   *  特别的，若只有一个选择分支则不能打标签
   * 通过这样我们可以做到每个选择分支对应一个visitXXX方法
+
+* 对于通过antlr4生成的ExprPaser
+
+  和Visitor相同的，每个visitXXX对应的，生成一个XXXNode(antlr4生成的叫Context)
+
 * 如**EvalVisitor.java** ，可通过对BaseVisitor类进行派生自定义Visitor类，当在main()中调用visitor.visit(tree)时，则会从根规则对应的方法进入，上例中为visitProg()
+
 * 在每个visitXXX()方法中，可进入该选择分支中出现的子规则对应的方法( 形如visit(ctx.expr())/visit(ctx.expr(0))，其中若是子规则只出现一次使用前面的形式，若是子规则出现多次则还有带一个参数表示为第几个 )
+
 * visit()函数的返回值即为进入的方法的返回值，返回值类型在派生时定义，上例中为Integer
+
 
