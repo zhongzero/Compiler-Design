@@ -9,7 +9,8 @@ import FrontEnd.AST.*;
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
-			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\main\\java\\test.mx");//新建一个CharStream读取数据
+			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
+//			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
 			System.out.println(input);
 			System.out.println("-----------");
 
