@@ -1,6 +1,17 @@
-int main(){
-	int sum = [&](int a, int b) -> { return a + b; }(1, 2); // 正确
-    int sum2 = [&]() -> { return sum; }(12); // 错误
-    int sum3 = [&]() -> { return sum; }(); // 正确
-    int foo = [&] -> {return 1;}(); // 正确
+/*
+Test Package: Sema_Local_Preview
+Test Target: Basic
+Author: 15' Siqi Liu
+Time: 2019-10-20
+Verdict: Success
+Origin Package: Semantic Extended
+*/
+void haha(){
+	int a;
+	return;
+}
+
+int main() {
+	print("hehe\n");
+	return 0;
 }
