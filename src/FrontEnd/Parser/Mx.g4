@@ -67,7 +67,7 @@ expression	:IDENTIFIER																			#expr_ID
 			|operand1=expression op=('&'|'|'|'^') operand2=expression							#expr_binary
 			|operand1=expression op=('&&'|'||') operand2=expression								#expr_binary
 			|<assoc=right> operand1=expression '=' operand2=expression									#expr_assign
-			|('[' '&' ']'|'[' ']') ( '(' parameterList ')' )? '->' block '(' parameterdataList ')'	#expr_lambda	//仅在Semantic Check阶段考察
+			|('[' '&' ']'|'[' ']') ( '(' parameterList? ')' )? '->' block '(' parameterdataList? ')'	#expr_lambda	//仅在Semantic Check阶段考察
 			;
 
 //参数List

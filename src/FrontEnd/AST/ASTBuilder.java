@@ -177,8 +177,10 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 		return new BlockStatNode(statlist,new Position(ctx));
 	}
 	@Override public ASTBaseNode visitExpr_lambda(MxParser.Expr_lambdaContext ctx) {
-		return new LambdaExprNode(ctx.children.get(2).getText().equals("&"), (ParaListNode) visit(ctx.parameterList()),
-				(BlockStatNode) visit(ctx.block()), (ParaDataListNode) visit(ctx.parameterdataList()), new Position(ctx));
+		return new LambdaExprNode(ctx.children.get(2).getText().equals("&"),
+				ctx.parameterList()==null?new ParaListNode(new ArrayList<>(),new Position(ctx)):(ParaListNode) visit(ctx.parameterList()),
+				(BlockStatNode) visit(ctx.block()),
+				ctx.parameterdataList()==null?new ParaDataListNode(new ArrayList<>(),new Position(ctx)):(ParaDataListNode) visit(ctx.parameterdataList()), new Position(ctx));
 	}
 	@Override public ASTBaseNode visitExpr_assign(MxParser.Expr_assignContext ctx) {
 		return new AssignExprNode((BaseExprNode) visit(ctx.operand1),(BaseExprNode) visit(ctx.operand2),new Position(ctx));
