@@ -5,7 +5,7 @@ import FrontEnd.AST.OtherNodeSet.ParaListNode;
 import FrontEnd.AST.TypeNodeSet.BaseTypeNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
-
+import Utils.Scope;
 
 
 public class FuncDefNode extends BaseDefNode {
@@ -14,6 +14,7 @@ public class FuncDefNode extends BaseDefNode {
 	public ParaListNode paralist;
 	public BlockStatNode block;
 	public boolean isvoid;
+
 	public FuncDefNode(BaseTypeNode _returntype, String _funcname, ParaListNode _paralist, BlockStatNode _block, Position _pos){
 		super(_pos);
 		returntype=_returntype;

@@ -6,10 +6,10 @@ import Utils.Position;
 
 public class IfStatNode extends BaseStatNode{
 	public BaseExprNode conditionexpr;
-	public BaseStatNode ifstat;
-	public BaseStatNode elsestat;
+	public BlockStatNode ifstat;
+	public BlockStatNode elsestat;
 	public IfStatNode(BaseExprNode _conditionexpr,
-					  BaseStatNode _ifstat,BaseStatNode _elsestat,
+					  BlockStatNode _ifstat,BlockStatNode _elsestat,
 					  Position _pos){
 		super(_pos);
 		conditionexpr=_conditionexpr;

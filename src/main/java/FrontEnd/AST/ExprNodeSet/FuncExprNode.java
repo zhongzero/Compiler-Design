@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import FrontEnd.AST.ASTVisitor;
 
 public class FuncExprNode extends BaseExprNode{
-	BaseExprNode funcname;
-	ParaDataListNode paradatalist;
-	public FuncExprNode(BaseExprNode _funcname,ParaDataListNode _paradatalist,Position _pos){
+	public BaseExprNode expr;
+	public ParaDataListNode paradatalist;
+	public FuncExprNode(BaseExprNode _expr,ParaDataListNode _paradatalist,Position _pos){
 		super(_pos);
-		funcname=_funcname;
+		expr=_expr;
 		paradatalist=_paradatalist;
 	}
 	@Override

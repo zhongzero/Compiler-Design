@@ -41,7 +41,7 @@ public abstract class ASTVisitor {
 	public abstract void visitWhileStat(WhileStatNode node);
 	public abstract void visitForStat(ForStatNode node);
 
-	public abstract void visitBlock(BlockStatNode node);
+	public abstract void visitBlockStat(BlockStatNode node);
 	public abstract void visitParaList(ParaListNode node);
 	public abstract void visitParaDataList(ParaDataListNode node);
 	public abstract void visitClassConstructor(ClassConstructorNode node);
@@ -53,9 +53,13 @@ public abstract class ASTVisitor {
 	public abstract void visitRoot(RootNode node);
 
 
-	public void visit(IntTypeNode node){
-		node.accept(this);
-	}
+	public void visit(ASTBaseNode node){node.accept(this);}
+	public void visit(BaseTypeNode node){node.accept(this);}
+	public void visit(BaseExprNode node){node.accept(this);}
+	public void visit(BaseStatNode node){node.accept(this);}
+	public void visit(BaseDefNode node){node.accept(this);}
+
+	public void visit(IntTypeNode node){node.accept(this);}
 	public void visit(BoolTypeNode node){
 		node.accept(this);
 	}

@@ -6,24 +6,24 @@ import Utils.Position;
 import Utils.Scope;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 public class ClassDefNode extends BaseDefNode {
 	public String classname;
-	public ArrayList<VarDefNode> varlist;
-	public ArrayList<FuncDefNode> funclist;
-	public ArrayList<ClassConstructorNode> classconstructorlist;
-	public Scope classscope;
+	public HashMap<String,VarDefNode> varHashmap;
+	public HashMap<String,FuncDefNode> funcHashmap;
+	public ArrayList<ClassConstructorNode> classconstructorList;
 	public ClassDefNode(String _classname,
-						ArrayList<VarDefNode> _varlist,
-						ArrayList<FuncDefNode> _funclist,
-						ArrayList<ClassConstructorNode> _classconstructorlist,
+						HashMap<String,VarDefNode> _varHashmap,
+						HashMap<String,FuncDefNode> _funcHashmap,
+						ArrayList<ClassConstructorNode> _classconstructorList,
 						Position _pos){
 		super(_pos);
 		classname=_classname;
-		varlist=_varlist;
-		funclist=_funclist;
-		classconstructorlist=_classconstructorlist;
-		classscope=new Scope(null);
+		varHashmap=_varHashmap;
+		funcHashmap=_funcHashmap;
+		classconstructorList=_classconstructorList;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import FrontEnd.AST.DefNodeSet.VarDefNode;
 import FrontEnd.AST.ExprNodeSet.BaseExprNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
+import Utils.Scope;
 
 import java.util.ArrayList;
 
@@ -12,10 +13,10 @@ public class ForStatNode extends BaseStatNode{
 	public ArrayList<BaseExprNode> initexprlist;
 	public BaseExprNode conditionexpr;
 	public BaseExprNode updateexpr;
-	public BaseStatNode forstat;
+	public BlockStatNode forstat;
 	public ForStatNode(ArrayList<VarDefNode> _initdeflist,ArrayList<BaseExprNode> _initexprlist,
 					   BaseExprNode _conditionexpr, BaseExprNode _updateexpr,
-					   BaseStatNode _forstat, Position _pos){
+					   BlockStatNode _forstat, Position _pos){
 		super(_pos);
 		initdeflist=_initdeflist;
 		initexprlist=_initexprlist;

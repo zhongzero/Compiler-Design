@@ -14,7 +14,7 @@ public class BaseTypeNode extends ASTBaseNode{
 		dim=_dim;
 	}
 
-	boolean IsEqual(BaseTypeNode other){
+	public boolean IsEqual(BaseTypeNode other){
 		return typename.equals(other.typename)&&dim==other.dim;
 	}
 

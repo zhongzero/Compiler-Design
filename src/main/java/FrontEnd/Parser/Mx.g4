@@ -35,7 +35,7 @@ statement	:expression ';'																															#stat_expression
 			|';'																																	#stat_empty
 			|variableDefinitionStatement																											#stat_vardef
 			|IF '(' condition=expression ')' ifstat=statement (ELSE elsestat=statement )?															#stat_if
-			|FOR '(' (init1=variableDefinitionList|init2=expressionList)? ';' condition=expression ';' (update=expression)? ')' forstat=statement	#stat_for
+			|FOR '(' (init1=variableDefinitionList|init2=expressionList)? ';' (condition=expression)? ';' (update=expression)? ')' forstat=statement	#stat_for
 			|WHILE '(' condition=expression ')' whilestat=statement																					#stat_while
 			|BREAK ';'																																#stat_break
 			|CONTINUE ';'																															#stat_continue

@@ -7,8 +7,8 @@ import Utils.Position;
 
 public class WhileStatNode extends BaseStatNode{
 	public BaseExprNode conditionexpr;
-	public BaseStatNode whilestat;
-	public WhileStatNode(BaseExprNode _conditionexpr, BaseStatNode _whilestat, Position _pos){
+	public BlockStatNode whilestat;
+	public WhileStatNode(BaseExprNode _conditionexpr, BlockStatNode _whilestat, Position _pos){
 		super(_pos);
 		conditionexpr=_conditionexpr;
 		whilestat=_whilestat;
