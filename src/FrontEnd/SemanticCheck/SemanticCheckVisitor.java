@@ -583,10 +583,17 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		node.isleft=true;
 	}
 	public void visitLambdaExpr(LambdaExprNode node){
-		node.returntype=new VoidTypeNode(null);
 		node.isleft=false;
 
-		currentScope=new Scope(currentScope);
+		Scope tmpScope = null;
+		if(node.haveAnd){
+			currentScope=new Scope(currentScope);
+		}
+		else {
+			tmpScope=currentScope;
+			currentScope=new Scope(null);
+		}
+
 		visit(node.paralist);
 		visit(node.paradatalist);
 
@@ -603,14 +610,24 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			BaseStatNode stat=node.block.statlist.get(i);
 			if(stat instanceof ReturnStatNode){
 				visit( ((ReturnStatNode)stat).returnexpr );
-				node.returntype=((ReturnStatNode)stat).returnexpr.returntype;
-				node.isleft=false;
+//				node.returntype=((ReturnStatNode)stat).returnexpr.returntype;
+				if(node.returntype==null)node.returntype=((ReturnStatNode)stat).returnexpr.returntype;
+				else {
+					if(!node.returntype.IsEqual(((ReturnStatNode)stat).returnexpr.returntype))throw new SemanticError("Semantic Error:different return type of Lambda expression",node.pos);
+				}
 			}
 			else {
 				visit(stat);
 			}
 		}
-		currentScope=currentScope.parent;
+		if(node.returntype==null)node.returntype=new VoidTypeNode(null);
+		node.isleft=false;
+		if(node.haveAnd){
+			currentScope=currentScope.parent;
+		}
+		else {
+			currentScope=tmpScope;
+		}
 	}
 
 	public void visitIntType(IntTypeNode node){}

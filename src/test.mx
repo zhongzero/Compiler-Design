@@ -6,12 +6,9 @@ Time: 2019-10-20
 Verdict: Success
 Origin Package: Semantic Extended
 */
-void haha(){
-	int a;
-	return;
-}
 
 int main() {
-	print("hehe\n");
-	return 0;
+	int sum = [&](int a, int b) -> { return a + b; return true;}(1, 2); // 正确
+
+	return 1;
 }

@@ -6,7 +6,7 @@ import FrontEnd.AST.TypeNodeSet.BaseTypeNode;
 import Utils.Position;
 
 public class BaseExprNode extends ASTBaseNode {
-	public BaseTypeNode returntype;
+	public BaseTypeNode returntype=null;
 	public boolean isleft;
 	public BaseExprNode(Position _pos){
 		super(_pos);

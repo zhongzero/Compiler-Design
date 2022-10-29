@@ -11,8 +11,8 @@ public class Compiler {
 		try {
 //			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
 			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
-			System.out.println(input);
-			System.out.println("-----------");
+//			System.out.println(input);
+//			System.out.println("-----------");
 
 			MxLexer lexer = new MxLexer(input);//创建一个lexer 处理输入数据
 			lexer.removeErrorListeners();//删除原来的lexer的ErrorListener
