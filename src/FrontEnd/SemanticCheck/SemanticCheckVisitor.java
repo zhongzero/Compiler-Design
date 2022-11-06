@@ -80,7 +80,7 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		}
 
 		//在globalScope中添加定义的class（classfunc和classvar的重名情况 和 classConstructor名是否满足和类名相同判断,构造函数是否有歧义判断 在AST中提前完成）
-		//并给class的var/func 的type已经确定(ASTBuilder中实现)
+		//并且class的var/func 的type已经确定(ASTBuilder中实现)
 		for(int i=0;i<node.deflist.size();i++){
 			if(node.deflist.get(i) instanceof ClassDefNode){
 				ClassDefNode tmp=(ClassDefNode)node.deflist.get(i);
