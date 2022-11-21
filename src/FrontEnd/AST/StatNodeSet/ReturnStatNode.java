@@ -12,7 +12,7 @@ public class ReturnStatNode extends BaseStatNode{
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitReturnStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitReturnStat(this);
 	}
 }

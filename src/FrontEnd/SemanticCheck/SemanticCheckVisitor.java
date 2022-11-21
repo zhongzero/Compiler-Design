@@ -21,12 +21,12 @@ import Utils.Error.SemanticError;
 
 import java.util.*;
 
-public class SemanticCheckVisitor extends ASTVisitor {
+public class SemanticCheckVisitor extends ASTVisitor<Void> {
 	public GlobalScope globalScope=new GlobalScope();
-	public Scope currentScope=new Scope(null);
-	public int loopNum=0;
-	public boolean inclass=false,infunc=false,inclassconstructor=false;
-	public void visitRoot(RootNode node){
+	Scope currentScope=new Scope(null);
+	int loopNum=0;
+	boolean inclass=false,infunc=false,inclassconstructor=false;
+	public Void visitRoot(RootNode node){
 		//在globalScope中添加内建函数
 		//void print(string str);
 		//void println(string str);
@@ -101,9 +101,10 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		for(int i=0;i<node.deflist.size();i++){
 			visit(node.deflist.get(i));
 		}
+		return null;
 	}
 
-	public void visitVarDef(VarDefNode node){
+	public Void visitVarDef(VarDefNode node){
 		if((node.vartype instanceof ClassTypeNode)&&
 				!globalScope.class_table.containsKey(node.vartype.typename) ){
 			throw new SemanticError("un-defined class name",node.pos);
@@ -121,8 +122,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			//我觉得这个要求没什么意义
 		}
 		currentScope.variable_table.put(node.varname,node.vartype);
+		return null;
 	}
-	public void visitFuncDef(FuncDefNode node){
+	public Void visitFuncDef(FuncDefNode node){
 		currentScope=new Scope(currentScope);
 		currentScope.returntype=node.returntype;
 		infunc=true;
@@ -135,9 +137,10 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		visit(node.block);
 		infunc=false;
 		currentScope=currentScope.parent;
+		return null;
 	}
 
-	public void visitClassDef(ClassDefNode node){
+	public Void visitClassDef(ClassDefNode node){
 		currentScope=new Scope(currentScope);
 		inclass=true;
 		currentScope.classtype=new ClassTypeNode(node.classname,null);
@@ -167,50 +170,57 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		}
 		inclass=false;
 		currentScope=currentScope.parent;
+		return null;
 	}
 
-	public void visitClassConstructor(ClassConstructorNode node){
+	public Void visitClassConstructor(ClassConstructorNode node){
 		currentScope=new Scope(currentScope);
 		inclassconstructor=true;
 		if(node.paralist!=null)visit(node.paralist);
 		visit(node.block);
 		inclassconstructor=false;
 		currentScope=currentScope.parent;
+		return null;
 	}
-	public void visitParaList(ParaListNode node){
+	public Void visitParaList(ParaListNode node){
 		for(int i=0;i<node.paralist.size();i++){
 			visit(node.paralist.get(i));
 		}
+		return null;
 	}
-	public void visitParaDataList(ParaDataListNode node){
+	public Void visitParaDataList(ParaDataListNode node){
 		for(int i=0;i<node.paradatalist.size();i++){
 			visit(node.paradatalist.get(i));
 		}
+		return null;
 	}
 
-	public void visitBlockStat(BlockStatNode node){
+	public Void visitBlockStat(BlockStatNode node){
 		currentScope=new Scope(currentScope);
 		for(int i=0;i<node.statlist.size();i++){
 			visit(node.statlist.get(i));
 		}
 		currentScope=currentScope.parent;
+		return null;
 	}
 
 
-	public void visitIfStat(IfStatNode node){
+	public Void visitIfStat(IfStatNode node){
 		visit(node.conditionexpr);
 		if( !(node.conditionexpr.returntype instanceof BoolTypeNode) ) throw new SemanticError("Semantic Error:condition of 'if' expr should be a boolean type",node.pos);
 		visit(node.ifstat);
 		visit(node.elsestat);
+		return null;
 	}
-	public void visitWhileStat(WhileStatNode node){
+	public Void visitWhileStat(WhileStatNode node){
 		visit(node.conditionexpr);
 		if( !(node.conditionexpr.returntype instanceof BoolTypeNode) ) throw new SemanticError("Semantic Error:condition of 'while' expr should be a boolean type",node.pos);
 		loopNum++;
 		visit(node.whilestat);
 		loopNum--;
+		return null;
 	}
-	public void visitForStat(ForStatNode node){
+	public Void visitForStat(ForStatNode node){
 		currentScope=new Scope(currentScope);
 		if(node.initdeflist!=null){
 			for(int i=0;i<node.initdeflist.size();i++){
@@ -231,14 +241,17 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		visit(node.forstat);
 		loopNum--;
 		currentScope=currentScope.parent;
+		return null;
 	}
-	public void visitBreakStat(BreakStatNode node){
+	public Void visitBreakStat(BreakStatNode node){
 		if(loopNum==0)throw new SemanticError("Semantic Error:use 'break' outside the loop",node.pos);
+		return null;
 	}
-	public void visitContinueStat(ContinueStatNode node){
+	public Void visitContinueStat(ContinueStatNode node){
 		if(loopNum==0)throw new SemanticError("Semantic Error:use 'continue' outside the loop",node.pos);
+		return null;
 	}
-	public void visitReturnStat(ReturnStatNode node){
+	public Void visitReturnStat(ReturnStatNode node){
 		if( !infunc && !inclassconstructor )throw new SemanticError("Semantic Error:use 'return' outside the function",node.pos);
 		if(inclassconstructor){
 			if( !(node.returnexpr==null||(node.returnexpr.returntype instanceof VoidTypeNode) ) )
@@ -255,45 +268,54 @@ public class SemanticCheckVisitor extends ASTVisitor {
 				) )throw new SemanticError("Semantic Error:return type doesn't match",node.pos);
 			}
 		}
+		return null;
 	}
-	public void visitVarDefStat(VarDefStatNode node){
+	public Void visitVarDefStat(VarDefStatNode node){
 		for(int i=0;i<node.vardeflist.size();i++){
 			visit(node.vardeflist.get(i));
 		}
+		return null;
 	}
-	public void visitExprStat(ExprStatNode node){
+	public Void visitExprStat(ExprStatNode node){
 		visit(node.expr);
+		return null;
 	}
 
 
-	public void visitConstIntExpr(ConstIntExprNode node){
+	public Void visitConstIntExpr(ConstIntExprNode node){
 		node.returntype=new IntTypeNode(null);
 		node.isleft=false;
+		return null;
 	}
-	public void visitConstBoolExpr(ConstBoolExprNode node){
+	public Void visitConstBoolExpr(ConstBoolExprNode node){
 		node.returntype=new BoolTypeNode(null);
 		node.isleft=false;
+		return null;
 	}
-	public void visitConstStringExpr(ConstStringExprNode node){
+	public Void visitConstStringExpr(ConstStringExprNode node){
 		node.returntype=new StringTypeNode(null);
 		node.isleft=false;
+		return null;
 	}
-	public void visitNullExpr(NullExprNode node){
+	public Void visitNullExpr(NullExprNode node){
 		node.returntype=new NullTypeNode(null);
 		node.isleft=false;
+		return null;
 	}
-	public void visitIdExpr(IdExprNode node){
+	public Void visitIdExpr(IdExprNode node){
 		//变量和函数可能重名(让函数的情况直接在visitFuncExpr中解决，不会进入这里)
 		if(!currentScope.variable_ContainKey_FromAll(node.identifier))throw new SemanticError("Semantic Error:can't find the declaration of this variable",node.pos);
 		node.returntype=currentScope.variable_Get_FromAll(node.identifier);//类的赋值是指针指向同一个地址
 		node.isleft=true;
+		return null;
 	}
-	public void visitThisExpr(ThisExprNode node){
+	public Void visitThisExpr(ThisExprNode node){
 		if(!inclass && (!infunc || !inclassconstructor) )throw new SemanticError("Semantic Error:‘this' can't be use in this scope",node.pos);
 		node.returntype=currentScope.classtype;
 		node.isleft=false;
+		return null;
 	}
-	public void visitFuncExpr(FuncExprNode node){
+	public Void visitFuncExpr(FuncExprNode node){
 		visit(node.paradatalist);
 		if(node.expr instanceof MemberExprNode){
 			MemberExprNode membernode=(MemberExprNode)node.expr;
@@ -392,8 +414,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			node.isleft=false;
 		}
 		else throw new SemanticError("Semantic Error:expr can't call function",node.pos);
+		return null;
 	}
-	public void visitMemberExpr(MemberExprNode node){
+	public Void visitMemberExpr(MemberExprNode node){
 		//这里只做var类型的member，func类型的member在FuncExprNode中完成
 		visit(node.expr);
 		BaseTypeNode classtype=node.expr.returntype;
@@ -410,8 +433,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			node.returntype=classdefnode.varHashmap.get(node.member).vartype;
 			node.isleft=true;
 		}
+		return null;
 	}
-	public void visitArrayExpr(ArrayExprNode node){
+	public Void visitArrayExpr(ArrayExprNode node){
 		visit(node.arrayname);
 		visit(node.index);
 		if( !(node.arrayname.returntype instanceof ArrayTypeNode) )throw new SemanticError("Semantic Error:Wrong array usage",node.pos);
@@ -426,8 +450,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			node.returntype=new ArrayTypeNode(node.arrayname.returntype.typename,node.arrayname.returntype.dim-1,null);
 		}
 		node.isleft=true;
+		return null;
 	}
-	public void visitNewformatExpr(NewformatExprNode node){
+	public Void visitNewformatExpr(NewformatExprNode node){
 		for(int i=0;i<node.sizelist.size();i++){
 			visit(node.sizelist.get(i));
 			if( !(node.sizelist.get(i).returntype instanceof IntTypeNode) )throw new SemanticError("Semantic Error:array index should be a 'int' type",node.pos);
@@ -438,8 +463,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		if(node.dim==0)node.returntype=node.type;
 		else node.returntype=new ArrayTypeNode(node.type.typename,node.dim,null);
 		node.isleft=false;
+		return null;
 	}
-	public void visitSingleExpr(SingleExprNode node){
+	public Void visitSingleExpr(SingleExprNode node){
 		visit(node.operand);
 		if(node.op==SingleExprNode.SingleOp.ADD){ // +
 			if( !(node.operand.returntype instanceof IntTypeNode) )
@@ -493,8 +519,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			node.returntype=new IntTypeNode(null);
 			node.isleft=false;
 		}
+		return null;
 	}
-	public void visitBinaryExpr(BinaryExprNode node){
+	public Void visitBinaryExpr(BinaryExprNode node){
 		visit(node.operand1);
 		visit(node.operand2);
 		if(node.op== BinaryExprNode.BinaryOp.ADD){ // +
@@ -568,8 +595,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 			node.returntype=new BoolTypeNode(null);
 			node.isleft=false;
 		}
+		return null;
 	}
-	public void visitAssignExpr(AssignExprNode node){
+	public Void visitAssignExpr(AssignExprNode node){
 		visit(node.operand1);
 		visit(node.operand2);
 		if( (node.operand1.returntype instanceof VoidTypeNode) || (node.operand2.returntype instanceof VoidTypeNode) )
@@ -581,8 +609,9 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		}
 		node.returntype=node.operand1.returntype;
 		node.isleft=true;
+		return null;
 	}
-	public void visitLambdaExpr(LambdaExprNode node){
+	public Void visitLambdaExpr(LambdaExprNode node){
 		node.isleft=false;
 
 		Scope tmpScope = null;
@@ -628,13 +657,14 @@ public class SemanticCheckVisitor extends ASTVisitor {
 		else {
 			currentScope=tmpScope;
 		}
+		return null;
 	}
 
-	public void visitIntType(IntTypeNode node){}
-	public void visitBoolType(BoolTypeNode node){}
-	public void visitStringType(StringTypeNode node){}
-	public void visitNullType(NullTypeNode node){}
-	public void visitClassType(ClassTypeNode node){}
-	public void visitArrayType(ArrayTypeNode node){}
-	public void visitVoidType(VoidTypeNode node){}
+	public Void visitIntType(IntTypeNode node){return null;}
+	public Void visitBoolType(BoolTypeNode node){return null;}
+	public Void visitStringType(StringTypeNode node){return null;}
+	public Void visitNullType(NullTypeNode node){return null;}
+	public Void visitClassType(ClassTypeNode node){return null;}
+	public Void visitArrayType(ArrayTypeNode node){return null;}
+	public Void visitVoidType(VoidTypeNode node){return null;}
 }

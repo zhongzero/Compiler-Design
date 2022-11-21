@@ -10,7 +10,7 @@ public class IdExprNode extends BaseExprNode{
 		identifier=_identifier;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitIdExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitIdExpr(this);
 	}
 }

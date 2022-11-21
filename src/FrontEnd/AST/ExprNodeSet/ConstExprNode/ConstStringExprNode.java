@@ -15,7 +15,7 @@ public class ConstStringExprNode extends BaseExprNode {
 				+"0";
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitConstStringExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitConstStringExpr(this);
 	}
 }

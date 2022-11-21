@@ -8,7 +8,7 @@ public class BoolTypeNode extends BaseTypeNode{
 		super("bool",0,_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitBoolType(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitBoolType(this);
 	}
 }

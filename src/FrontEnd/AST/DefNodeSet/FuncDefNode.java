@@ -24,7 +24,7 @@ public class FuncDefNode extends BaseDefNode {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitFuncDef(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitFuncDef(this);
 	}
 }

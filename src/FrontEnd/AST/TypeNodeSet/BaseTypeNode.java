@@ -18,7 +18,8 @@ public class BaseTypeNode extends ASTBaseNode{
 		return typename.equals(other.typename)&&dim==other.dim;
 	}
 
-
 	@Override
-	public void accept(ASTVisitor visitor) {}
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return null;
+	}
 }

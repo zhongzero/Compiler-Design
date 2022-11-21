@@ -15,7 +15,7 @@ public class WhileStatNode extends BaseStatNode{
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitWhileStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitWhileStat(this);
 	}
 }

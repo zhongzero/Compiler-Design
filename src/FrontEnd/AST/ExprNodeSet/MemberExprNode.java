@@ -14,7 +14,7 @@ public class MemberExprNode extends BaseExprNode{
 
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitMemberExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitMemberExpr(this);
 	}
 }

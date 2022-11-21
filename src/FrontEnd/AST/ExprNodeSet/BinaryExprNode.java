@@ -20,7 +20,7 @@ public class BinaryExprNode extends BaseExprNode{
 		op=_op;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitBinaryExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitBinaryExpr(this);
 	}
 }

@@ -10,5 +10,7 @@ public class BaseStatNode extends ASTBaseNode {
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {}
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return null;
+	}
 }

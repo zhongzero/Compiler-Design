@@ -8,7 +8,7 @@ public class ThisExprNode extends BaseExprNode{
 		super(_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitThisExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitThisExpr(this);
 	}
 }

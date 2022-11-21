@@ -13,7 +13,7 @@ public class VarDefStatNode extends BaseStatNode{
 		vardeflist=_vardeflist;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitVarDefStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitVarDefStat(this);
 	}
 }

@@ -17,7 +17,7 @@ public class NewformatExprNode extends BaseExprNode{
 		sizelist=_sizelist;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitNewformatExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitNewformatExpr(this);
 	}
 }

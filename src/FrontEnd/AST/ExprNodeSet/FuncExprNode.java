@@ -17,7 +17,7 @@ public class FuncExprNode extends BaseExprNode{
 		paradatalist=_paradatalist;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitFuncExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitFuncExpr(this);
 	}
 }

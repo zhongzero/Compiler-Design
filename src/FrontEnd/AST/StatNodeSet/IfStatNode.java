@@ -18,7 +18,7 @@ public class IfStatNode extends BaseStatNode{
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitIfStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitIfStat(this);
 	}
 }

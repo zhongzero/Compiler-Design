@@ -25,7 +25,7 @@ public class ForStatNode extends BaseStatNode{
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitForStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitForStat(this);
 	}
 }

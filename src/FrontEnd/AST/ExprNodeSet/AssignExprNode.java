@@ -12,7 +12,7 @@ public class AssignExprNode extends BaseExprNode{
 		operand2=_operand2;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitAssignExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitAssignExpr(this);
 	}
 }

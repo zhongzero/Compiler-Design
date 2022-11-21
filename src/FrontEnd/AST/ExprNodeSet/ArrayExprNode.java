@@ -12,7 +12,7 @@ public class ArrayExprNode extends BaseExprNode{
 		index=_index;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitArrayExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitArrayExpr(this);
 	}
 }

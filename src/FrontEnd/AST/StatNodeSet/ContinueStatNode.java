@@ -9,7 +9,7 @@ public class ContinueStatNode extends BaseStatNode{
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitContinueStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitContinueStat(this);
 	}
 }

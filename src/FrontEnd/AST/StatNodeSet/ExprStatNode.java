@@ -11,7 +11,7 @@ public class ExprStatNode extends BaseStatNode{
 		expr=_expr;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitExprStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitExprStat(this);
 	}
 }

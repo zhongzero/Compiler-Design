@@ -19,7 +19,7 @@ public class SingleExprNode extends BaseExprNode{
 		op = _op;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitSingleExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitSingleExpr(this);
 	}
 }

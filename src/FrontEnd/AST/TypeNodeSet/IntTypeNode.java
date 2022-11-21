@@ -8,7 +8,7 @@ public class IntTypeNode extends BaseTypeNode{
 		super("int",0,_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitIntType(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitIntType(this);
 	}
 }

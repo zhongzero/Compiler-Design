@@ -9,7 +9,7 @@ public class BreakStatNode extends BaseStatNode{
 	}
 
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitBreakStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitBreakStat(this);
 	}
 }

@@ -14,7 +14,7 @@ public class ParaDataListNode extends ASTBaseNode {
 		paradatalist=_paradatalist;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitParaDataList(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitParaDataList(this);
 	}
 }

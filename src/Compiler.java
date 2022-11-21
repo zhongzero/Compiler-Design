@@ -1,4 +1,7 @@
+//import FrontEnd.IR.IRBuilder;
+import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
+import FrontEnd.SemanticCheck.Utils.GlobalScope;
 import Utils.Error.MyBaseError;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -27,6 +30,11 @@ public class Compiler {
 			RootNode astroot = (RootNode) astbuilder.visit(cstroot);//从根结点开始visit该cst的语法分析树，生成AST的语法分析树
 			SemanticCheckVisitor semanticcheckvisitor=new SemanticCheckVisitor();////新建一个SemanticCheckVisitor类(从ASTVisitor派生)
 			semanticcheckvisitor.visit(astroot);//从根结点开始visit该ast的语法分析树，进行语法检查
+			GlobalScope semanticglobalscope=semanticcheckvisitor.globalScope;
+
+//			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
+//			irbuilder.visit(astroot);
+//			IRModule irroot=irbuilder.irModule;
 		}
 		catch (MyBaseError error){
 			error.Output();

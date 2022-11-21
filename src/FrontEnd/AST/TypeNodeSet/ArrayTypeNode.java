@@ -22,7 +22,7 @@ public class ArrayTypeNode extends BaseTypeNode{
 //		}
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitArrayType(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitArrayType(this);
 	}
 }

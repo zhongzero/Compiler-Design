@@ -9,7 +9,7 @@ public class NullExprNode extends BaseExprNode {
 		super(_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitNullExpr(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitNullExpr(this);
 	}
 }

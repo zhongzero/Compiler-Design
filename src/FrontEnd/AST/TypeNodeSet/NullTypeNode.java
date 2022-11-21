@@ -8,7 +8,7 @@ public class NullTypeNode extends BaseTypeNode{
 		super("null",0,_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitNullType(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitNullType(this);
 	}
 }

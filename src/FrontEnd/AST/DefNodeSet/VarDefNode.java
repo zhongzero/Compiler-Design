@@ -17,7 +17,7 @@ public class VarDefNode extends BaseDefNode {
 		initvalue=_initvalue;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitVarDef(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitVarDef(this);
 	}
 }

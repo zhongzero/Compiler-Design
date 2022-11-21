@@ -12,5 +12,7 @@ public class BaseExprNode extends ASTBaseNode {
 		super(_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {}
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return null;
+	}
 }

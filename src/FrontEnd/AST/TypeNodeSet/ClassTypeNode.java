@@ -11,7 +11,7 @@ public class ClassTypeNode extends BaseTypeNode{
 		super(classname,0,_pos);
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitClassType(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitClassType(this);
 	}
 }

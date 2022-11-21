@@ -25,7 +25,7 @@ public class BlockStatNode extends BaseStatNode {
 		}
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitBlockStat(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitBlockStat(this);
 	}
 }

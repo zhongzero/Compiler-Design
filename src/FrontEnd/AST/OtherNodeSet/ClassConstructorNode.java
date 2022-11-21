@@ -16,8 +16,8 @@ public class ClassConstructorNode extends ASTBaseNode {
 		block=_block;
 	}
 	@Override
-	public void accept(ASTVisitor visitor) {
-		visitor.visitClassConstructor(this);
+	public <T> T accept(ASTVisitor<T> visitor) {
+		return visitor.visitClassConstructor(this);
 	}
 
 }
