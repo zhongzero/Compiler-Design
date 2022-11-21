@@ -1,11 +1,12 @@
 package FrontEnd.IR.Instruction;
 
-import FrontEnd.IR.BasicBlock.BasicBlock;
+import FrontEnd.IR.BasicBlock.IRBasicBlock;
 import FrontEnd.IR.Operand.BaseOperand;
+import FrontEnd.IR.TypeSystem.InstType;
 
 public class LoadInst extends BaseInst{
-	public LoadInst(BaseOperand _addr, BasicBlock _belongBlock){
-		super("load",_addr.type.dePointer(),_belongBlock);
+	public LoadInst(BaseOperand _addr, IRBasicBlock _belongBlock){
+		super("load",new InstType(),_belongBlock);
 		addOperand(_addr);
 	}
 }

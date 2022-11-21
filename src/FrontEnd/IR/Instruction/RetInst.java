@@ -1,12 +1,12 @@
 package FrontEnd.IR.Instruction;
 
-import FrontEnd.IR.BasicBlock.BasicBlock;
+import FrontEnd.IR.BasicBlock.IRBasicBlock;
 import FrontEnd.IR.Operand.BaseOperand;
-import FrontEnd.IR.TypeSystem.VoidType;
+import FrontEnd.IR.TypeSystem.InstType;
 
 public class RetInst extends BaseInst{
-	public RetInst(BaseOperand returnOperand, BasicBlock _belongBlock){
-		super("ret",new VoidType(),_belongBlock);
+	public RetInst(BaseOperand returnOperand, IRBasicBlock _belongBlock){
+		super("ret",new InstType(),_belongBlock);
 		addOperand(returnOperand);
 	}
 }

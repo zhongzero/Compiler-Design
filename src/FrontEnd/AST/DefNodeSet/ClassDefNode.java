@@ -3,11 +3,9 @@ package FrontEnd.AST.DefNodeSet;
 import FrontEnd.AST.OtherNodeSet.ClassConstructorNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
-import Utils.Scope;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 public class ClassDefNode extends BaseDefNode {
 	public String classname;

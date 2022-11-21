@@ -1,6 +1,8 @@
-package FrontEnd.IR.TypeSystem;
+package FrontEnd.IR.TypeSystem.OperandType;
 
-public class PointerType extends BaseType{
+import FrontEnd.IR.TypeSystem.BaseType;
+
+public class PointerType extends BaseType {
 	public BaseType basetype;
 	public int dim;
 	public PointerType(BaseType _basetype){
@@ -26,10 +28,6 @@ public class PointerType extends BaseType{
 	@Override
 	public int bytesize(){
 		return 8;
-	}
-	@Override
-	public String toString(){
-		return basetype.toString()+"*".repeat(dim);
 	}
 	@Override
 	public boolean isEqual(BaseType other){

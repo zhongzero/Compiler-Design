@@ -1,4 +1,4 @@
-package Utils;
+package FrontEnd.SemanticCheck.Utils;
 
 import FrontEnd.AST.DefNodeSet.FuncDefNode;
 import FrontEnd.AST.DefNodeSet.ClassDefNode;

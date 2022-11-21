@@ -1,4 +1,4 @@
-package Utils;
+package FrontEnd.SemanticCheck.Utils;
 
 import FrontEnd.AST.TypeNodeSet.BaseTypeNode;
 import Utils.Error.SemanticError;

@@ -4,7 +4,6 @@ import FrontEnd.AST.DefNodeSet.VarDefNode;
 import FrontEnd.AST.ExprNodeSet.BaseExprNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
-import Utils.Scope;
 
 import java.util.ArrayList;
 

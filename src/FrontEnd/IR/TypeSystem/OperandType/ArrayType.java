@@ -1,6 +1,8 @@
-package FrontEnd.IR.TypeSystem;
+package FrontEnd.IR.TypeSystem.OperandType;
 
-public class ArrayType extends BaseType{
+import FrontEnd.IR.TypeSystem.BaseType;
+
+public class ArrayType extends BaseType {
 	public BaseType basetype;
 	public int size;
 	public ArrayType(BaseType _basetype,int _size){
@@ -10,10 +12,6 @@ public class ArrayType extends BaseType{
 	@Override
 	public int bytesize(){
 		return -1;//meaningless
-	}
-	@Override
-	public String toString(){
-		return "["+size+" x "+basetype.toString()+"]";
 	}
 	@Override
 	public boolean isEqual(BaseType other){

@@ -1,14 +1,12 @@
-package FrontEnd.IR.TypeSystem;
+package FrontEnd.IR.TypeSystem.OperandType;
 
-public class VoidType extends BaseType{
+import FrontEnd.IR.TypeSystem.BaseType;
+
+public class VoidType extends BaseType {
 	public VoidType(){}
 	@Override
 	public int bytesize(){
 		return -1;//meaningless
-	}
-	@Override
-	public String toString(){
-		return "void";
 	}
 	@Override
 	public boolean isEqual(BaseType other){

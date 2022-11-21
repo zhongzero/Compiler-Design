@@ -5,7 +5,6 @@ import FrontEnd.AST.OtherNodeSet.ParaListNode;
 import FrontEnd.AST.TypeNodeSet.BaseTypeNode;
 import FrontEnd.AST.ASTVisitor;
 import Utils.Position;
-import Utils.Scope;
 
 
 public class FuncDefNode extends BaseDefNode {

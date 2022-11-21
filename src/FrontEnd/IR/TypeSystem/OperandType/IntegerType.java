@@ -1,6 +1,8 @@
-package FrontEnd.IR.TypeSystem;
+package FrontEnd.IR.TypeSystem.OperandType;
 
-public class IntegerType extends BaseType{
+import FrontEnd.IR.TypeSystem.BaseType;
+
+public class IntegerType extends BaseType {
 	public int width;
 	public IntegerType(int _width){
 		width=_width;
@@ -8,10 +10,6 @@ public class IntegerType extends BaseType{
 	@Override
 	public int bytesize(){
 		return (width+7)/8;
-	}
-	@Override
-	public String toString(){
-		return "i"+width;
 	}
 	@Override
 	public boolean isEqual(BaseType other){

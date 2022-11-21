@@ -1,8 +1,10 @@
-package FrontEnd.IR.TypeSystem;
+package FrontEnd.IR.TypeSystem.OperandType;
+
+import FrontEnd.IR.TypeSystem.BaseType;
 
 import java.util.ArrayList;
 
-public class StructType extends BaseType{
+public class StructType extends BaseType {
 	public String structname;
 	public ArrayList<BaseType> membertype;
 	public StructType(String _structname,ArrayList<BaseType> _membertype){
@@ -16,10 +18,6 @@ public class StructType extends BaseType{
 			sum+=membertype.get(i).bytesize();
 		}
 		return sum;
-	}
-	@Override
-	public String toString(){
-		return "%"+structname;
 	}
 	@Override
 	public boolean isEqual(BaseType other){

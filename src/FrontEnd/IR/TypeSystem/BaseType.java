@@ -1,10 +1,9 @@
 package FrontEnd.IR.TypeSystem;
 
-import java.io.PipedWriter;
+import FrontEnd.IR.TypeSystem.OperandType.PointerType;
 
 public abstract class BaseType {
 	public abstract int bytesize();
-	public abstract String toString();
 	public abstract boolean isEqual(BaseType other);
 
 	public BaseType dePointer(){

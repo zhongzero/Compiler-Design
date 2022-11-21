@@ -15,8 +15,8 @@ import FrontEnd.AST.OtherNodeSet.ParaListNode;
 import FrontEnd.AST.RootNode;
 import FrontEnd.AST.StatNodeSet.*;
 import FrontEnd.AST.TypeNodeSet.*;
-import Utils.GlobalScope;
-import Utils.Scope;
+import FrontEnd.SemanticCheck.Utils.GlobalScope;
+import FrontEnd.SemanticCheck.Utils.Scope;
 import Utils.Error.SemanticError;
 
 import java.util.*;

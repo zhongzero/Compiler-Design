@@ -1,13 +1,14 @@
-package FrontEnd.IR.Operand;
+package FrontEnd.IR.Operand.Const;
 
-import FrontEnd.IR.TypeSystem.ArrayType;
-import FrontEnd.IR.TypeSystem.IntegerType;
-import FrontEnd.IR.TypeSystem.PointerType;
+import FrontEnd.IR.Operand.BaseOperand;
+import FrontEnd.IR.TypeSystem.OperandType.ArrayType;
+import FrontEnd.IR.TypeSystem.OperandType.IntegerType;
+import FrontEnd.IR.TypeSystem.OperandType.PointerType;
 
 public class ConstString extends BaseOperand {
 	String value;
 	public ConstString(String _value){
-		super("_const_string",new PointerType(new ArrayType(new IntegerType(8),_value.length())));
+		super("const_string",new PointerType(new ArrayType(new IntegerType(8),_value.length())));
 		value=_value;
 	}
 
