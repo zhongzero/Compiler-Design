@@ -1,24 +1,20 @@
 package FrontEnd.IR.Instruction;
 
+import FrontEnd.IR.Basic.Value;
 import FrontEnd.IR.BasicBlock.IRBasicBlock;
-import FrontEnd.IR.Operand.BaseOperand;
-import FrontEnd.IR.Operand.Register;
-import FrontEnd.IR.TypeSystem.InstType;
+import FrontEnd.IR.IRVisitor;
 
 public class BinaryInst extends BaseInst{
-	public enum BinaryOp{
-		add,sub,mul,sdiv,srem,//+,-,*,/,%
-		shl, //<<
-		ashr,//arithmetic >>
-		and,or,xor //&,|,^
-	}
 	public BinaryOp op;
-	public Register resRegister;
-	public BinaryInst(Register _resRegister, BaseOperand _operand1, BaseOperand _operand2, BinaryOp _op, IRBasicBlock _belongBlock){
-		super(_op.name(),new InstType(),_belongBlock);
-		resRegister=_resRegister;
+	public BinaryInst(Value _operand1, Value _operand2, BinaryOp _op, IRBasicBlock _belongBlock){
+		super(_op.name(),_operand1.type,_belongBlock);
 		addOperand(_operand1);
 		addOperand(_operand2);
 		op=_op;
+	}
+
+	@Override
+	public <T> T accept(IRVisitor<T> visitor) {
+		return visitor.visitBinaryInst(this);
 	}
 }

@@ -1,5 +1,6 @@
 package FrontEnd.IR.TypeSystem.OperandType;
 
+import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.TypeSystem.BaseType;
 
 public class PointerType extends BaseType {
@@ -34,5 +35,15 @@ public class PointerType extends BaseType {
 		if((other instanceof PointerType) && basetype.isEqual(((PointerType) other).basetype)
 				&& dim==((PointerType) other).dim)return true;
 		else return false;
+	}
+
+	@Override
+	public String toString(){
+		return basetype.toString()+"*".repeat(dim);
+	}
+
+	@Override
+	public <T> T accept(IRVisitor<T> visitor) {
+		return visitor.visitPointerType(this);
 	}
 }

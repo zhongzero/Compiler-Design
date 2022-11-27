@@ -1,5 +1,6 @@
 package FrontEnd.IR.TypeSystem.OperandType;
 
+import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.TypeSystem.BaseType;
 
 import java.util.ArrayList;
@@ -7,9 +8,12 @@ import java.util.ArrayList;
 public class StructType extends BaseType {
 	public String structname;
 	public ArrayList<BaseType> membertype;
-	public StructType(String _structname,ArrayList<BaseType> _membertype){
+	public StructType(String _structname){
 		structname=_structname;
-		membertype=_membertype;
+		membertype=new ArrayList<>();
+	}
+	public void addMember(BaseType type){
+		membertype.add(type);
 	}
 	@Override
 	public int bytesize(){
@@ -23,5 +27,15 @@ public class StructType extends BaseType {
 	public boolean isEqual(BaseType other){
 		if((other instanceof StructType) && structname.equals(((StructType) other).structname) ) return true;
 		else return false;
+	}
+
+	@Override
+	public String toString(){
+		return "%"+structname;
+	}
+
+	@Override
+	public <T> T accept(IRVisitor<T> visitor) {
+		return visitor.visitStructType(this);
 	}
 }

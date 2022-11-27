@@ -585,10 +585,22 @@ public class SemanticCheckVisitor extends ASTVisitor<Void> {
 		if(node.op== BinaryExprNode.BinaryOp.EQ||node.op== BinaryExprNode.BinaryOp.NEQ){ // ==,!=
 			if( (node.operand1.returntype instanceof VoidTypeNode) || (node.operand2.returntype instanceof VoidTypeNode) )
 				throw new SemanticError("Semantic Error: can't execute binary operator with void type",node.pos);
-			if( ! ( (node.operand1.returntype instanceof NullTypeNode)
-					||(node.operand2.returntype instanceof NullTypeNode)
-					||( node.operand1.returntype.IsEqual(node.operand2.returntype) && !(node.operand1.returntype instanceof ArrayTypeNode) )
-				) ){
+			if(node.operand1.returntype instanceof NullTypeNode){
+				if( !(node.operand2.returntype instanceof ClassTypeNode)
+						&& !(node.operand2.returntype instanceof ArrayTypeNode)
+						&& !(node.operand2.returntype instanceof NullTypeNode)){
+					if(node.op== BinaryExprNode.BinaryOp.EQ)throw new SemanticError("Semantic Error: wrong usage of binary operator '==' ",node.pos);
+					if(node.op== BinaryExprNode.BinaryOp.NEQ)throw new SemanticError("Semantic Error: wrong usage of binary operator '!=' ",node.pos);
+				}
+			}
+			else if(node.operand2.returntype instanceof NullTypeNode){
+				if( !(node.operand1.returntype instanceof ClassTypeNode)
+						&& !(node.operand1.returntype instanceof ArrayTypeNode)){
+					if(node.op== BinaryExprNode.BinaryOp.EQ)throw new SemanticError("Semantic Error: wrong usage of binary operator '==' ",node.pos);
+					if(node.op== BinaryExprNode.BinaryOp.NEQ)throw new SemanticError("Semantic Error: wrong usage of binary operator '!=' ",node.pos);
+				}
+			}
+			else if( ! ( node.operand1.returntype.IsEqual(node.operand2.returntype) && !(node.operand1.returntype instanceof ArrayTypeNode) ) ){
 				if(node.op== BinaryExprNode.BinaryOp.EQ)throw new SemanticError("Semantic Error: wrong usage of binary operator '==' ",node.pos);
 				if(node.op== BinaryExprNode.BinaryOp.NEQ)throw new SemanticError("Semantic Error: wrong usage of binary operator '!=' ",node.pos);
 			}

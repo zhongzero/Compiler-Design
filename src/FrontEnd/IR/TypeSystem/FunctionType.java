@@ -1,5 +1,7 @@
 package FrontEnd.IR.TypeSystem;
 
+import FrontEnd.IR.IRVisitor;
+
 import java.util.ArrayList;
 
 public class FunctionType extends BaseType{
@@ -16,5 +18,15 @@ public class FunctionType extends BaseType{
 	@Override
 	public boolean isEqual(BaseType other){
 		return false;//meaningless
+	}
+
+	@Override
+	public String toString(){
+		return null;
+	}
+
+	@Override
+	public <T> T accept(IRVisitor<T> visitor) {
+		return visitor.visitFunctionType(this);
 	}
 }

@@ -17,9 +17,9 @@ public abstract class ASTVisitor<T> {
 	public abstract T visitClassDef(ClassDefNode node);
 
 
+	public abstract T visitClassConstructor(ClassConstructorNode node);
 	public abstract T visitParaList(ParaListNode node);
 	public abstract T visitParaDataList(ParaDataListNode node);
-	public abstract T visitClassConstructor(ClassConstructorNode node);
 
 	public abstract T visitBlockStat(BlockStatNode node);
 	public abstract T visitExprStat(ExprStatNode node);

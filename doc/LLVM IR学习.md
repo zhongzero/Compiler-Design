@@ -113,13 +113,13 @@ define i32 @main() {
 **数据区内的数据(全局变量)** 
 
 ```
-@a =global i32 0;定义一个全局变量，初值为0，用指针@a指向它的地址
+@a =global i32 0;定义一个全局变量，初值为0，用指针@a指向它的地址(@a为i32*类型)
 external/private/internal为链接类型(不加默认为external)
-@a =external global i32;定义一个全局变量，用指针@a指向它的地址，它会在符号表中出现，且表示可以被外部引用(注意，加了external后不能直接给它赋初值了)
-@a =private global i32 0;定义一个全局变量a，初值为0，用指针@a指向它的地址，它不会出现在符号表中
-@a =internal global i32 0;定义一个全局变量a，初值为0，用指针@a指向它的地址，它在符号表中以局部符号的身份出现(类似C++中的static)
+@a =external global i32;定义一个全局变量，用指针a指向它的地址，它会在符号表中出现，且表示可以被外部引用(注意，加了external后不能直接给它赋初值了)
+@a =private global i32 0;定义一个全局变量，初值为0，用指针a指向它的地址，它不会出现在符号表中
+@a =internal global i32 0;定义一个全局变量，初值为0，用指针a指向它的地址，它在符号表中以局部符号的身份出现(类似C++中的static)
 
-@a =constant i32 0;定义一个只读全局变量a,它的值为0(类似C++中的const)
+@a =constant i32 0;定义一个只读全局变量,它的值为0，用指针a指向它的地址(类似C++中的const)
 ```
 
 
@@ -127,7 +127,7 @@ external/private/internal为链接类型(不加默认为external)
 **寄存器上的数据** 
 
 ```
-%a = add i32 1, 2;给寄存器a赋值
+%a = add i32 1, 2;给寄存器a赋值(%a为i32类型)
 ```
 
 *  LLVM IR的寄存器是虚拟寄存器，即它的大小是无穷大的，若是使用的寄存器超过上限，会将寄存器压入栈中
@@ -137,8 +137,12 @@ external/private/internal为链接类型(不加默认为external)
 **栈上的数据** 
 
 ```
-%a = alloca i32;声明一个栈上的变量，用指针%a指向它的地址
+%a = alloca i32;声明一个栈上的变量，用指针%a指向它的地址(%a为i32*类型)
 ```
+
+
+
+注：C++中new出来的数据应该放在堆上，所以应该declare一个_malloc(i32 size)的函数，并在汇编的时候实现并链接它
 
 
 
@@ -147,8 +151,9 @@ external/private/internal为链接类型(不加默认为external)
 **注意** ：全局变量和栈上变量皆指针
 
 ```
-store i32 1, i32* @a;把i32类型的1 stroe到i32*的@a所指的内存区域内(数据区内)
-store i32 1, i32* %a;把i32类型的1 stroe到i32*的%a所指的内存区域内(栈上)
+store i32 1, i32* @a;把i32类型的1 store到i32*的@a所指的内存区域内(数据区内)
+store i32 1, i32* %a;把i32类型的1 store到i32*的%a所指的内存区域内(栈上)
+%a=load i32,i32* %a_addr;把i32类型的数据从i32*的%a_addr所指的内存区域内读出(%a为i32类型)
 ```
 
 
@@ -164,7 +169,7 @@ LLVM IR遵守SSA策略，即每个寄存器上的变量只能赋值一次
 即
 
 ```
-%1 = add i32 1, 2
+%1 = add i32 1, 2(%1为i32类型)
 %1 = add i32 3, 4
 ```
 
@@ -195,7 +200,7 @@ LLVM IR遵守SSA策略，即每个寄存器上的变量只能赋值一次
 - 数组(包括字符串)
 
   ```
-  %a = alloca [4 x i32];等价于C++中的*a=new int[4](一般不能直接初始化)
+  %a = alloca [4 x i32];等价于C++中的*a=new int[4](一般不能直接初始化) (%a为[4 x i32]*类型)
   @global_array = global [4 x i32] [i32 0, i32 1, i32 2, i32 3];//全局变量定义数组(全局变量中要附初始值，除非链接类型为external)
   @global_string = global [12 x i8] c"Hello world\00";/全局变量定义字符串("\00"等价于C++中的"\0")
   @.str = private unnamed_addr constant [6 x i8] c"2333\0A\00", align 1;全局定义常量字符串，align 1表示数据存储按1字节对齐
@@ -204,8 +209,8 @@ LLVM IR遵守SSA策略，即每个寄存器上的变量只能赋值一次
   ;数组的调用和下面结构体类似
   %s=alloca [4 x i32]
   %1=getelementptr [4 x i32], [4 x i32]* %s,i32 0,i32 1
-  ;访问数组下标为1的元素
-  ;若是%s存储的是地址数组，可以继续解引用(相当于多级指针)
+  %ans=load i32 ,i32* %1 
+  ;访问数组下标为1的元素所在的地址
   ```
 
 
@@ -233,16 +238,24 @@ LLVM IR遵守SSA策略，即每个寄存器上的变量只能赋值一次
       i32,
       [5 x i32]
   };struct中有数组
-  %my_structs = alloca [4 x %MyStruct];声明struct数组
+  %my_structs = alloca [4 x %MyStruct];声明struct
   %1 = getelementptr [4 x %MyStruct], [4 x %MyStruct]* %my_structs,i32 0, i32 2, i32 1, i32 3
   ;调用中第一个参数'[4 x %MyStruct]'表示一开始指针指向的类型
   ;调用中第二个参数'[4 x %MyStruct]* %my_structs'表示一开始的指针
-  ;调用中第三个参数'i32 0'是对struct数组指针偏移0位再解引用，得到一个struct数组(即一个指向struct数组开头的struct指针)
-  ;第四个参数'i32 2'是对得到的struct数组(即一个struct指针)偏移2位再解引用,得到一个struct(即一个指向struct头部内容的指针)
-  ;第五个参数'i32 1'是在该struct内部从struct头部偏移1位(偏移几位表示偏移几个元素)再解引用，得到一个[5 x i32]数组(即一个指向i32的指针)
-  ;第六个参数'i32 3'是从指针处偏移3位，得到一个i32（即该数组下标为3的数据)
-  ;整个过程就是在一层层的 指针地址偏移+解引用(解引用本质上为修改类型)(一般来说第一个指针偏移量都为0,除非想要获取的元素不在第两个参数内)
+  ;调用中第三个参数'i32 0'是对struct数组指针偏移0位(此时指针的类型是 [4 x %MyStruct]*)
+  ;第四个参数'i32 2'是先解引用，得到一个struct数组(即一个指向struct数组开头的struct指针)，再对得到的struct数组(即一个struct指针)偏移2位(此时指针的类型是 %MyStruct*)
+  ;第五个参数'i32 1'是先解引用,得到一个struct(即一个指向struct头部内容的指针)，再在该struct内部从struct头部偏移1位(偏移几位表示偏移几个元素)(此时指针的类型是 [5 x i32]*)
+  ;第六个参数'i32 3'是先解引用，得到一个[5 x i32]数组(即一个指向i32的指针)，再从指针处偏移3位(此时指针的类型是i32*)
+  最后得到的是一个指向i32的i32*指针
+  ;整个过程就是 第三个参数为 指针地址偏移，接着的参数为一层层的 解引用+指针地址偏移(解引用本质上为修改类型)(一般来说第一个指针偏移量都为0,除非想要获取的元素不在第两个参数内) (也可认为是每次 指针地址偏移+解引用，最后生成一个指针指向得到的数据)(即最后得到的一定是一个指针类型)
   ;若是在最后多加了几个i32 0，地址不变，但是解析的结果不同(类型不同)
+  ;注意，对于struct那层做偏移时，索引(偏移量)必须要是i32的常量
+
+  getelementptr inbounds [4 x %MyStruct], [4 x %MyStruct]* %my_structs,i32 0, i32 2, i32 1, i32 3
+  ;加入inbounds参数表示加入越界检查
+
+  注：getelementptr：解析聚合类型(即数组和struct),并返回一个指针 & 指针偏移
+     load/store：解析指针
 
   ```
   ​
@@ -250,22 +263,37 @@ LLVM IR遵守SSA策略，即每个寄存器上的变量只能赋值一次
 
 
 
+
+
 **数据类型转换** 
 
-长整型 转 短整型 ：```trunc ... to...```  ( ```trunc i32 257 to i8``` )
+长整型 转 短整型 ：```%xxx = trunc ... to...```  ( ```%a = trunc i32 257 to i8``` )
 
 短整型 转 长整型 ：
 
-- 零扩展 ```zext i8 -1 to i32``` 
-- 符号位扩展 ```sext i8 -1 to i32``` 
+- 零扩展 ```%xxx = zext i8 -1 to i32``` 
+- 符号位扩展 ```%xxx = sext i8 -1 to i32``` 
 
-浮点数 转 无符号整型：`fptoui ... to` 
+浮点数 转 无符号整型：`%xxx = fptoui ... to` 
 
-浮点数 转 有符号整型：`fptosi ... to` 
+浮点数 转 有符号整型：`%xxx = fptosi ... to` 
 
-无符号整型 转 浮点数：`uitofp ... to` 
+无符号整型 转 浮点数：`%xxx = uitofp ... to` 
 
-有符号整型 转 浮点数：`sitofp ... to` 
+有符号整型 转 浮点数：`%xxx = sitofp ... to` 
+
+指针类型转换：`%xxx = bitcast ... to ...*` ( `%a = bitcast i32* %x to i8*` ) (bitcast表示在不改变%x每一位的前提下改变它的类型，要求类型占用的byte相同)(即更改对同一个数据的解释方法)
+
+
+
+### 常量
+
+* iN xxx (`i32 2333`)
+* 常量字符串 (`@.str = private unnamed_addr constant [5 x i8] c"2233\00", align 1`)
+* null(专门给指针的)
+* iN zeroinitializer (`@a = global i8 zeroinitializer, align 4 ;可用于给global variable赋无意义的初值`)
+
+
 
 
 
@@ -300,7 +328,7 @@ B:
 **比较指令** 
 
 ```
-%flag = icmp uge i32 %a, %b
+%flag = icmp uge i32 %a, %b (%flag为i1类型)
 ;等价于 bool flag = ((unsigned int)a >= (unsigned int)b);
 
 比较类型
@@ -329,6 +357,38 @@ br label %A
 br i1 %flag, label %A, label %B
 ;等价于 if(flag==true)goto A;else goto B;
 ```
+
+
+
+## 计算指令
+
+```
+add %a,%b // +
+sub %a,%b // -
+mul %a,%b // *
+udiv %a,%b //unsigned /
+sdiv %a,%b //signed /
+urem %a,%b //unsigned %
+srem %a,%b //signed %
+shl %a,%b //<< //左移没有logic和arithmetic的区别，两者是一样的
+lshr %a,%b //logic >>
+ashr %a,%b //arithmetic >>
+and %a,%b // &
+or %a,%b // |
+xor %a,%b // ^
+
+// 整型iN（%a,%b）默认都是有符号数
+
+fadd %a,%b // float +
+fsub %a,%b // float -
+fmul %a,%b // float *
+
+%a,%b也可以是i32 233这样的常数
+```
+
+
+
+**注：每一条指令的临时寄存器的类型 都是由 指令类型和后面的参数 唯一确定的** 
 
 
 
@@ -401,6 +461,18 @@ define void @bar() {
     %1 = call i32 @foo(i32 1)
 }
 ```
+
+ 
+
+**函数声明** 
+
+```
+declare i8* @_f_malloc(i32 %n)
+```
+
+函数声明后可以不在当前.ll文件内实现，而是在其他地方实现，进行一个链接即可
+
+函数声明后即可被当前.ll文件调用
 
 
 

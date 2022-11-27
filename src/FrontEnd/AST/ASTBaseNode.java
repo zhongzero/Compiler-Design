@@ -7,5 +7,5 @@ public abstract class ASTBaseNode {
 	public ASTBaseNode(Position _pos){
 		pos=_pos;
 	}
-	abstract public <T> T accept(ASTVisitor<T> visitor);
+	public abstract <T> T accept(ASTVisitor<T> visitor);
 }

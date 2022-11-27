@@ -1,5 +1,7 @@
 package FrontEnd.IR.TypeSystem;
 
+import FrontEnd.AST.ASTVisitor;
+import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.TypeSystem.OperandType.PointerType;
 
 public abstract class BaseType {
@@ -12,4 +14,7 @@ public abstract class BaseType {
 		else return new PointerType(((PointerType)this).basetype,((PointerType)this).dim-1);
 	}
 
+	public abstract String toString();
+
+	public abstract <T> T accept(IRVisitor<T> visitor);
 }

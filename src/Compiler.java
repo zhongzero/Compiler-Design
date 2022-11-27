@@ -1,4 +1,4 @@
-//import FrontEnd.IR.IRBuilder;
+import FrontEnd.IR.IRBuilder;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
 import FrontEnd.SemanticCheck.Utils.GlobalScope;

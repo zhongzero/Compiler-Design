@@ -1,6 +1,8 @@
 package FrontEnd.IR.Basic;
 
 
+import FrontEnd.AST.ASTVisitor;
+import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.TypeSystem.BaseType;
 
 import java.util.ArrayList;
@@ -29,5 +31,9 @@ public class Value {
 	}
 	public void addUser(User user){
 		userlist.add(user);
+	}
+
+	public <T> T accept(IRVisitor<T> visitor) {
+		return visitor.visitValue(this);
 	}
 }

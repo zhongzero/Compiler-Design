@@ -1,5 +1,7 @@
 package FrontEnd.IR.Basic;
 
+import FrontEnd.AST.ASTVisitor;
+import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.TypeSystem.BaseType;
 
 import java.util.ArrayList;
@@ -15,5 +17,10 @@ public class User extends Value{
 	}
 	public Value getOperand(int i){
 		return operandlist.get(i);
+	}
+
+	@Override
+	public <T> T accept(IRVisitor<T> visitor) {
+		return visitor.visitUser(this);
 	}
 }
