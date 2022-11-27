@@ -1,5 +1,28 @@
+int HHH=4*6;
+string HHH2="2333";
+bool HHH3=true;
+class node2{
+	int a,b;
+};
+class node{
+	node2 sss;
+	string sssss;
+	int a;
+	bool b;
+	void F(int a,int b){
+	}
+	node(){
+		a=1;
+		sssss=HHH2;
+		string HHHHH=sssss;
+	}
+};
 int main() {
-  int a,b;
-  b=2=2;
+  string GGG="44"+"55";
+  //A.b=true;
+  //if(A.b==true)int a;
+  //else int b;
+  //int[] a=new int[10];
+  //a[3]=2;
   return 0;
 }

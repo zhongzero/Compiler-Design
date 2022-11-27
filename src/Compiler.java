@@ -1,4 +1,5 @@
 import FrontEnd.IR.IRBuilder;
+import FrontEnd.IR.IRPrinter;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
 import FrontEnd.SemanticCheck.Utils.GlobalScope;
@@ -32,9 +33,11 @@ public class Compiler {
 			semanticcheckvisitor.visit(astroot);//从根结点开始visit该ast的语法分析树，进行语法检查
 			GlobalScope semanticglobalscope=semanticcheckvisitor.globalScope;
 
-//			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
-//			irbuilder.visit(astroot);
-//			IRModule irroot=irbuilder.irModule;
+			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
+			irbuilder.visit(astroot);
+			IRModule irroot=irbuilder.irModule;
+//			IRPrinter irprinter=new IRPrinter();
+//			irprinter.visit(irroot);
 		}
 		catch (MyBaseError error){
 			error.Output();
