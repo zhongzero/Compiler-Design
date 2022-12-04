@@ -30,11 +30,11 @@ $_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_ = comdat any
 
 @_ZStL8__ioinit = internal global %"class.std::ios_base::Init" zeroinitializer, align 1
 @__dso_handle = external hidden global i8
-@.str = private unnamed_addr constant [3 x i8] c"%d\00", align 1
-@_ZSt3cin = external dso_local global %"class.std::basic_istream", align 8
-@.str.1 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
-@.str.2 = private unnamed_addr constant [4 x i8] c"%s\0A\00", align 1
+@.str = private unnamed_addr constant [3 x i8] c"%s\00", align 1
+@.str.1 = private unnamed_addr constant [4 x i8] c"%s\0A\00", align 1
+@.str.2 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
 @.str.3 = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@_ZSt3cin = external dso_local global %"class.std::basic_istream", align 8
 @llvm.global_ctors = appending global [1 x { i32, void ()*, i8* }] [{ i32, void ()*, i8* } { i32 65535, void ()* @_GLOBAL__sub_I_builtin.cpp, i8* null }]
 
 ; Function Attrs: noinline uwtable
@@ -53,14 +53,42 @@ declare dso_local void @_ZNSt8ios_base4InitD1Ev(%"class.std::ios_base::Init"*) u
 declare dso_local i32 @__cxa_atexit(void (i8*)*, i8*, i8*) #3
 
 ; Function Attrs: noinline optnone uwtable
-define dso_local i32 @f_getInt_1() #4 {
-  %1 = alloca i32, align 4
-  %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32* %1)
-  %3 = load i32, i32* %1, align 4
-  ret i32 %3
+define dso_local void @f_print_1(i8* %0) #4 {
+  %2 = alloca i8*, align 8
+  store i8* %0, i8** %2, align 8
+  %3 = load i8*, i8** %2, align 8
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i8* %3)
+  ret void
 }
 
-declare dso_local i32 @__isoc99_scanf(i8*, ...) #1
+declare dso_local i32 @printf(i8*, ...) #1
+
+; Function Attrs: noinline optnone uwtable
+define dso_local void @f_println_1(i8* %0) #4 {
+  %2 = alloca i8*, align 8
+  store i8* %0, i8** %2, align 8
+  %3 = load i8*, i8** %2, align 8
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.1, i64 0, i64 0), i8* %3)
+  ret void
+}
+
+; Function Attrs: noinline optnone uwtable
+define dso_local void @f_printInt_1(i32 %0) #4 {
+  %2 = alloca i32, align 4
+  store i32 %0, i32* %2, align 4
+  %3 = load i32, i32* %2, align 4
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.2, i64 0, i64 0), i32 %3)
+  ret void
+}
+
+; Function Attrs: noinline optnone uwtable
+define dso_local void @f_printlnInt_1(i32 %0) #4 {
+  %2 = alloca i32, align 4
+  store i32 %0, i32* %2, align 4
+  %3 = load i32, i32* %2, align 4
+  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.3, i64 0, i64 0), i32 %3)
+  ret void
+}
 
 ; Function Attrs: noinline optnone uwtable
 define dso_local i8* @f_getString_1() #4 personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*) {
@@ -132,80 +160,243 @@ declare dso_local i8* @strcpy(i8*, i8*) #2
 ; Function Attrs: nounwind
 declare dso_local void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev(%"class.std::__cxx11::basic_string"*) unnamed_addr #2
 
-; Function Attrs: noinline nounwind optnone uwtable
-define dso_local i32 @_string_parseInt_1(i8* %0) #7 {
+; Function Attrs: noinline optnone uwtable
+define dso_local i32 @f_getInt_1() #4 {
+  %1 = alloca i32, align 4
+  %2 = call i32 (i8*, ...) @__isoc99_scanf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.2, i64 0, i64 0), i32* %1)
+  %3 = load i32, i32* %1, align 4
+  ret i32 %3
+}
+
+declare dso_local i32 @__isoc99_scanf(i8*, ...) #1
+
+; Function Attrs: noinline optnone uwtable
+define dso_local i8* @f_toString_1(i32 %0) #4 personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*) {
   %2 = alloca i8*, align 8
   %3 = alloca i32, align 4
-  %4 = alloca i32, align 4
-  store i8* %0, i8** %2, align 8
-  store i32 0, i32* %3, align 4
-  store i32 0, i32* %4, align 4
-  br label %5
+  %4 = alloca %"class.std::__cxx11::basic_string", align 8
+  %5 = alloca i32, align 4
+  %6 = alloca i8*, align 8
+  %7 = alloca i8*
+  %8 = alloca i32
+  %9 = alloca i32, align 4
+  %10 = alloca i8*, align 8
+  %11 = alloca i32, align 4
+  %12 = alloca i32, align 4
+  store i32 %0, i32* %3, align 4
+  call void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev(%"class.std::__cxx11::basic_string"* %4) #3
+  store i32 0, i32* %5, align 4
+  %13 = load i32, i32* %3, align 4
+  %14 = icmp eq i32 %13, 0
+  br i1 %14, label %15, label %28
 
-5:                                                ; preds = %13, %1
-  %6 = load i8*, i8** %2, align 8
-  %7 = load i32, i32* %4, align 4
-  %8 = sext i32 %7 to i64
-  %9 = getelementptr inbounds i8, i8* %6, i64 %8
-  %10 = load i8, i8* %9, align 1
-  %11 = sext i8 %10 to i32
-  %12 = icmp ne i32 %11, 0
-  br i1 %12, label %13, label %26
+15:                                               ; preds = %1
+  %16 = invoke i8* @_Znam(i64 2) #9
+          to label %17 unwind label %24
 
-13:                                               ; preds = %5
-  %14 = load i32, i32* %3, align 4
-  %15 = mul nsw i32 %14, 10
-  %16 = load i8*, i8** %2, align 8
-  %17 = load i32, i32* %4, align 4
-  %18 = sext i32 %17 to i64
-  %19 = getelementptr inbounds i8, i8* %16, i64 %18
-  %20 = load i8, i8* %19, align 1
-  %21 = sext i8 %20 to i32
-  %22 = add nsw i32 %15, %21
-  %23 = sub nsw i32 %22, 48
-  store i32 %23, i32* %3, align 4
-  %24 = load i32, i32* %4, align 4
-  %25 = add nsw i32 %24, 1
-  store i32 %25, i32* %4, align 4
-  br label %5
+17:                                               ; preds = %15
+  store i8* %16, i8** %6, align 8
+  %18 = load i8*, i8** %6, align 8
+  %19 = getelementptr inbounds i8, i8* %18, i64 0
+  store i8 48, i8* %19, align 1
+  %20 = load i8*, i8** %6, align 8
+  %21 = getelementptr inbounds i8, i8* %20, i64 1
+  store i8 0, i8* %21, align 1
+  %22 = load i8*, i8** %6, align 8
+  %23 = getelementptr inbounds i8, i8* %22, i64 0
+  store i8* %23, i8** %2, align 8
+  store i32 1, i32* %9, align 4
+  br label %89
 
-26:                                               ; preds = %5
-  %27 = load i32, i32* %3, align 4
-  ret i32 %27
+24:                                               ; preds = %53, %50, %38, %15
+  %25 = landingpad { i8*, i32 }
+          cleanup
+  %26 = extractvalue { i8*, i32 } %25, 0
+  store i8* %26, i8** %7, align 8
+  %27 = extractvalue { i8*, i32 } %25, 1
+  store i32 %27, i32* %8, align 4
+  call void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev(%"class.std::__cxx11::basic_string"* %4) #3
+  br label %91
+
+28:                                               ; preds = %1
+  %29 = load i32, i32* %3, align 4
+  %30 = icmp slt i32 %29, 0
+  br i1 %30, label %31, label %34
+
+31:                                               ; preds = %28
+  store i32 1, i32* %5, align 4
+  %32 = load i32, i32* %3, align 4
+  %33 = sub nsw i32 0, %32
+  store i32 %33, i32* %3, align 4
+  br label %34
+
+34:                                               ; preds = %31, %28
+  br label %35
+
+35:                                               ; preds = %44, %34
+  %36 = load i32, i32* %3, align 4
+  %37 = icmp ne i32 %36, 0
+  br i1 %37, label %38, label %47
+
+38:                                               ; preds = %35
+  %39 = load i32, i32* %3, align 4
+  %40 = srem i32 %39, 10
+  %41 = add nsw i32 %40, 48
+  %42 = trunc i32 %41 to i8
+  %43 = invoke dereferenceable(32) %"class.std::__cxx11::basic_string"* @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEpLEc(%"class.std::__cxx11::basic_string"* %4, i8 signext %42)
+          to label %44 unwind label %24
+
+44:                                               ; preds = %38
+  %45 = load i32, i32* %3, align 4
+  %46 = sdiv i32 %45, 10
+  store i32 %46, i32* %3, align 4
+  br label %35
+
+47:                                               ; preds = %35
+  %48 = load i32, i32* %5, align 4
+  %49 = icmp ne i32 %48, 0
+  br i1 %49, label %50, label %53
+
+50:                                               ; preds = %47
+  %51 = invoke dereferenceable(32) %"class.std::__cxx11::basic_string"* @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEpLEc(%"class.std::__cxx11::basic_string"* %4, i8 signext 45)
+          to label %52 unwind label %24
+
+52:                                               ; preds = %50
+  br label %53
+
+53:                                               ; preds = %52, %47
+  %54 = call i8* @_ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE5c_strEv(%"class.std::__cxx11::basic_string"* %4) #3
+  %55 = call i64 @strlen(i8* %54) #8
+  %56 = add i64 %55, 1
+  %57 = invoke i8* @_Znam(i64 %56) #9
+          to label %58 unwind label %24
+
+58:                                               ; preds = %53
+  store i8* %57, i8** %10, align 8
+  %59 = load i8*, i8** %10, align 8
+  %60 = call i8* @_ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE5c_strEv(%"class.std::__cxx11::basic_string"* %4) #3
+  %61 = call i8* @strcpy(i8* %59, i8* %60) #3
+  %62 = load i8*, i8** %10, align 8
+  %63 = call i64 @strlen(i8* %62) #8
+  %64 = trunc i64 %63 to i32
+  store i32 %64, i32* %11, align 4
+  %65 = load i32, i32* %11, align 4
+  %66 = sub nsw i32 %65, 1
+  %67 = sdiv i32 %66, 2
+  store i32 %67, i32* %12, align 4
+  br label %68
+
+68:                                               ; preds = %83, %58
+  %69 = load i32, i32* %12, align 4
+  %70 = icmp sge i32 %69, 0
+  br i1 %70, label %71, label %86
+
+71:                                               ; preds = %68
+  %72 = load i8*, i8** %10, align 8
+  %73 = load i32, i32* %12, align 4
+  %74 = sext i32 %73 to i64
+  %75 = getelementptr inbounds i8, i8* %72, i64 %74
+  %76 = load i8*, i8** %10, align 8
+  %77 = load i32, i32* %11, align 4
+  %78 = load i32, i32* %12, align 4
+  %79 = sub nsw i32 %77, %78
+  %80 = sub nsw i32 %79, 1
+  %81 = sext i32 %80 to i64
+  %82 = getelementptr inbounds i8, i8* %76, i64 %81
+  call void @_ZSt4swapIcENSt9enable_ifIXsr6__and_ISt6__not_ISt15__is_tuple_likeIT_EESt21is_move_constructibleIS3_ESt18is_move_assignableIS3_EEE5valueEvE4typeERS3_SC_(i8* dereferenceable(1) %75, i8* dereferenceable(1) %82) #3
+  br label %83
+
+83:                                               ; preds = %71
+  %84 = load i32, i32* %12, align 4
+  %85 = add nsw i32 %84, -1
+  store i32 %85, i32* %12, align 4
+  br label %68
+
+86:                                               ; preds = %68
+  %87 = load i8*, i8** %10, align 8
+  %88 = getelementptr inbounds i8, i8* %87, i64 0
+  store i8* %88, i8** %2, align 8
+  store i32 1, i32* %9, align 4
+  br label %89
+
+89:                                               ; preds = %86, %17
+  call void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev(%"class.std::__cxx11::basic_string"* %4) #3
+  %90 = load i8*, i8** %2, align 8
+  ret i8* %90
+
+91:                                               ; preds = %24
+  %92 = load i8*, i8** %7, align 8
+  %93 = load i32, i32* %8, align 4
+  %94 = insertvalue { i8*, i32 } undef, i8* %92, 0
+  %95 = insertvalue { i8*, i32 } %94, i32 %93, 1
+  resume { i8*, i32 } %95
 }
 
-; Function Attrs: noinline optnone uwtable
-define dso_local void @f_print_1(i8* %0) #4 {
-  %2 = alloca i8*, align 8
-  store i8* %0, i8** %2, align 8
-  %3 = load i8*, i8** %2, align 8
-  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i64 0, i64 0), i8* %3)
-  ret void
-}
-
-declare dso_local i32 @printf(i8*, ...) #1
+declare dso_local dereferenceable(32) %"class.std::__cxx11::basic_string"* @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEpLEc(%"class.std::__cxx11::basic_string"*, i8 signext) #1
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local i8* @_heap_malloc_1(i32 %0) #7 {
-  %2 = alloca i32, align 4
-  store i32 %0, i32* %2, align 4
-  %3 = load i32, i32* %2, align 4
-  %4 = add nsw i32 %3, 8
-  %5 = sext i32 %4 to i64
-  %6 = call noalias i8* @malloc(i64 %5) #3
-  ret i8* %6
+define linkonce_odr dso_local void @_ZSt4swapIcENSt9enable_ifIXsr6__and_ISt6__not_ISt15__is_tuple_likeIT_EESt21is_move_constructibleIS3_ESt18is_move_assignableIS3_EEE5valueEvE4typeERS3_SC_(i8* dereferenceable(1) %0, i8* dereferenceable(1) %1) #7 comdat {
+  %3 = alloca i8*, align 8
+  %4 = alloca i8*, align 8
+  %5 = alloca i8, align 1
+  store i8* %0, i8** %3, align 8
+  store i8* %1, i8** %4, align 8
+  %6 = load i8*, i8** %3, align 8
+  %7 = call dereferenceable(1) i8* @_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_(i8* dereferenceable(1) %6) #3
+  %8 = load i8, i8* %7, align 1
+  store i8 %8, i8* %5, align 1
+  %9 = load i8*, i8** %4, align 8
+  %10 = call dereferenceable(1) i8* @_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_(i8* dereferenceable(1) %9) #3
+  %11 = load i8, i8* %10, align 1
+  %12 = load i8*, i8** %3, align 8
+  store i8 %11, i8* %12, align 1
+  %13 = call dereferenceable(1) i8* @_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_(i8* dereferenceable(1) %5) #3
+  %14 = load i8, i8* %13, align 1
+  %15 = load i8*, i8** %4, align 8
+  store i8 %14, i8* %15, align 1
+  ret void
 }
 
-; Function Attrs: nounwind
-declare dso_local noalias i8* @malloc(i64) #2
+; Function Attrs: noinline nounwind optnone uwtable
+define dso_local zeroext i1 @_stringcmp_eq_1(i8* %0, i8* %1) #7 {
+  %3 = alloca i8*, align 8
+  %4 = alloca i8*, align 8
+  store i8* %0, i8** %3, align 8
+  store i8* %1, i8** %4, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = load i8*, i8** %4, align 8
+  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
+  %8 = icmp eq i32 %7, 0
+  ret i1 %8
+}
 
-; Function Attrs: noinline optnone uwtable
-define dso_local void @f_println_1(i8* %0) #4 {
-  %2 = alloca i8*, align 8
-  store i8* %0, i8** %2, align 8
-  %3 = load i8*, i8** %2, align 8
-  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.2, i64 0, i64 0), i8* %3)
-  ret void
+; Function Attrs: nounwind readonly
+declare dso_local i32 @strcmp(i8*, i8*) #5
+
+; Function Attrs: noinline nounwind optnone uwtable
+define dso_local zeroext i1 @_stringcmp_neq_1(i8* %0, i8* %1) #7 {
+  %3 = alloca i8*, align 8
+  %4 = alloca i8*, align 8
+  store i8* %0, i8** %3, align 8
+  store i8* %1, i8** %4, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = load i8*, i8** %4, align 8
+  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
+  %8 = icmp ne i32 %7, 0
+  ret i1 %8
+}
+
+; Function Attrs: noinline nounwind optnone uwtable
+define dso_local zeroext i1 @_stringcmp_less_1(i8* %0, i8* %1) #7 {
+  %3 = alloca i8*, align 8
+  %4 = alloca i8*, align 8
+  store i8* %0, i8** %3, align 8
+  store i8* %1, i8** %4, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = load i8*, i8** %4, align 8
+  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
+  %8 = icmp slt i32 %7, 0
+  ret i1 %8
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
@@ -221,8 +412,18 @@ define dso_local zeroext i1 @_stringcmp_greater_1(i8* %0, i8* %1) #7 {
   ret i1 %8
 }
 
-; Function Attrs: nounwind readonly
-declare dso_local i32 @strcmp(i8*, i8*) #5
+; Function Attrs: noinline nounwind optnone uwtable
+define dso_local zeroext i1 @_stringcmp_leq_1(i8* %0, i8* %1) #7 {
+  %3 = alloca i8*, align 8
+  %4 = alloca i8*, align 8
+  store i8* %0, i8** %3, align 8
+  store i8* %1, i8** %4, align 8
+  %5 = load i8*, i8** %3, align 8
+  %6 = load i8*, i8** %4, align 8
+  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
+  %8 = icmp sle i32 %7, 0
+  ret i1 %8
+}
 
 ; Function Attrs: noinline nounwind optnone uwtable
 define dso_local zeroext i1 @_stringcmp_geq_1(i8* %0, i8* %1) #7 {
@@ -362,58 +563,17 @@ define dso_local i8* @_string_merge_1(i8* %0, i8* %1) #4 {
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local zeroext i1 @_stringcmp_eq_1(i8* %0, i8* %1) #7 {
-  %3 = alloca i8*, align 8
-  %4 = alloca i8*, align 8
-  store i8* %0, i8** %3, align 8
-  store i8* %1, i8** %4, align 8
-  %5 = load i8*, i8** %3, align 8
-  %6 = load i8*, i8** %4, align 8
-  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
-  %8 = icmp eq i32 %7, 0
-  ret i1 %8
+define dso_local i8* @_heap_malloc_1(i32 %0) #7 {
+  %2 = alloca i32, align 4
+  store i32 %0, i32* %2, align 4
+  %3 = load i32, i32* %2, align 4
+  %4 = sext i32 %3 to i64
+  %5 = call noalias i8* @malloc(i64 %4) #3
+  ret i8* %5
 }
 
-; Function Attrs: noinline nounwind optnone uwtable
-define dso_local zeroext i1 @_stringcmp_leq(i8* %0, i8* %1) #7 {
-  %3 = alloca i8*, align 8
-  %4 = alloca i8*, align 8
-  store i8* %0, i8** %3, align 8
-  store i8* %1, i8** %4, align 8
-  %5 = load i8*, i8** %3, align 8
-  %6 = load i8*, i8** %4, align 8
-  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
-  %8 = icmp sle i32 %7, 0
-  ret i1 %8
-}
-
-; Function Attrs: noinline nounwind optnone uwtable
-define dso_local zeroext i1 @_stringcmp_neq_(i8* %0, i8* %1) #7 {
-  %3 = alloca i8*, align 8
-  %4 = alloca i8*, align 8
-  store i8* %0, i8** %3, align 8
-  store i8* %1, i8** %4, align 8
-  %5 = load i8*, i8** %3, align 8
-  %6 = load i8*, i8** %4, align 8
-  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
-  %8 = icmp ne i32 %7, 0
-  ret i1 %8
-}
-
-; Function Attrs: noinline nounwind optnone uwtable
-define dso_local i32 @_string_ord_1(i8* %0, i32 %1) #7 {
-  %3 = alloca i8*, align 8
-  %4 = alloca i32, align 4
-  store i8* %0, i8** %3, align 8
-  store i32 %1, i32* %4, align 4
-  %5 = load i8*, i8** %3, align 8
-  %6 = load i32, i32* %4, align 4
-  %7 = sext i32 %6 to i64
-  %8 = getelementptr inbounds i8, i8* %5, i64 %7
-  %9 = load i8, i8* %8, align 1
-  %10 = sext i8 %9 to i32
-  ret i32 %10
-}
+; Function Attrs: nounwind
+declare dso_local noalias i8* @malloc(i64) #2
 
 ; Function Attrs: noinline optnone uwtable
 define dso_local i8* @_string_substring_1(i8* %0, i32 %1, i32 %2) #4 {
@@ -468,163 +628,60 @@ define dso_local i8* @_string_substring_1(i8* %0, i32 %1, i32 %2) #4 {
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define dso_local zeroext i1 @_stringcmp_less_1(i8* %0, i8* %1) #7 {
-  %3 = alloca i8*, align 8
-  %4 = alloca i8*, align 8
-  store i8* %0, i8** %3, align 8
-  store i8* %1, i8** %4, align 8
-  %5 = load i8*, i8** %3, align 8
-  %6 = load i8*, i8** %4, align 8
-  %7 = call i32 @strcmp(i8* %5, i8* %6) #8
-  %8 = icmp slt i32 %7, 0
-  ret i1 %8
+define dso_local i32 @_string_parseInt_1(i8* %0) #7 {
+  %2 = alloca i8*, align 8
+  %3 = alloca i32, align 4
+  %4 = alloca i32, align 4
+  store i8* %0, i8** %2, align 8
+  store i32 0, i32* %3, align 4
+  store i32 0, i32* %4, align 4
+  br label %5
+
+5:                                                ; preds = %13, %1
+  %6 = load i8*, i8** %2, align 8
+  %7 = load i32, i32* %4, align 4
+  %8 = sext i32 %7 to i64
+  %9 = getelementptr inbounds i8, i8* %6, i64 %8
+  %10 = load i8, i8* %9, align 1
+  %11 = sext i8 %10 to i32
+  %12 = icmp ne i32 %11, 0
+  br i1 %12, label %13, label %26
+
+13:                                               ; preds = %5
+  %14 = load i32, i32* %3, align 4
+  %15 = mul nsw i32 %14, 10
+  %16 = load i8*, i8** %2, align 8
+  %17 = load i32, i32* %4, align 4
+  %18 = sext i32 %17 to i64
+  %19 = getelementptr inbounds i8, i8* %16, i64 %18
+  %20 = load i8, i8* %19, align 1
+  %21 = sext i8 %20 to i32
+  %22 = add nsw i32 %15, %21
+  %23 = sub nsw i32 %22, 48
+  store i32 %23, i32* %3, align 4
+  %24 = load i32, i32* %4, align 4
+  %25 = add nsw i32 %24, 1
+  store i32 %25, i32* %4, align 4
+  br label %5
+
+26:                                               ; preds = %5
+  %27 = load i32, i32* %3, align 4
+  ret i32 %27
 }
-
-; Function Attrs: noinline optnone uwtable
-define dso_local void @f_printInt_1(i32 %0) #4 {
-  %2 = alloca i32, align 4
-  store i32 %0, i32* %2, align 4
-  %3 = load i32, i32* %2, align 4
-  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i64 0, i64 0), i32 %3)
-  ret void
-}
-
-; Function Attrs: noinline optnone uwtable
-define dso_local void @f_printlnInt_1(i32 %0) #4 {
-  %2 = alloca i32, align 4
-  store i32 %0, i32* %2, align 4
-  %3 = load i32, i32* %2, align 4
-  %4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.3, i64 0, i64 0), i32 %3)
-  ret void
-}
-
-; Function Attrs: noinline optnone uwtable
-define dso_local i8* @f_toString_1(i32 %0) #4 personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*) {
-  %2 = alloca i32, align 4
-  %3 = alloca %"class.std::__cxx11::basic_string", align 8
-  %4 = alloca i8*
-  %5 = alloca i32
-  %6 = alloca i8*, align 8
-  %7 = alloca i32, align 4
-  %8 = alloca i32, align 4
-  store i32 %0, i32* %2, align 4
-  call void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1Ev(%"class.std::__cxx11::basic_string"* %3) #3
-  br label %9
-
-9:                                                ; preds = %18, %1
-  %10 = load i32, i32* %2, align 4
-  %11 = icmp ne i32 %10, 0
-  br i1 %11, label %12, label %25
-
-12:                                               ; preds = %9
-  %13 = load i32, i32* %2, align 4
-  %14 = srem i32 %13, 10
-  %15 = add nsw i32 %14, 48
-  %16 = trunc i32 %15 to i8
-  %17 = invoke dereferenceable(32) %"class.std::__cxx11::basic_string"* @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEpLEc(%"class.std::__cxx11::basic_string"* %3, i8 signext %16)
-          to label %18 unwind label %21
-
-18:                                               ; preds = %12
-  %19 = load i32, i32* %2, align 4
-  %20 = sdiv i32 %19, 10
-  store i32 %20, i32* %2, align 4
-  br label %9
-
-21:                                               ; preds = %25, %12
-  %22 = landingpad { i8*, i32 }
-          cleanup
-  %23 = extractvalue { i8*, i32 } %22, 0
-  store i8* %23, i8** %4, align 8
-  %24 = extractvalue { i8*, i32 } %22, 1
-  store i32 %24, i32* %5, align 4
-  call void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev(%"class.std::__cxx11::basic_string"* %3) #3
-  br label %61
-
-25:                                               ; preds = %9
-  %26 = call i8* @_ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE5c_strEv(%"class.std::__cxx11::basic_string"* %3) #3
-  %27 = call i64 @strlen(i8* %26) #8
-  %28 = add i64 %27, 1
-  %29 = invoke i8* @_Znam(i64 %28) #9
-          to label %30 unwind label %21
-
-30:                                               ; preds = %25
-  store i8* %29, i8** %6, align 8
-  %31 = load i8*, i8** %6, align 8
-  %32 = call i8* @_ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE5c_strEv(%"class.std::__cxx11::basic_string"* %3) #3
-  %33 = call i8* @strcpy(i8* %31, i8* %32) #3
-  %34 = load i8*, i8** %6, align 8
-  %35 = call i64 @strlen(i8* %34) #8
-  %36 = trunc i64 %35 to i32
-  store i32 %36, i32* %7, align 4
-  %37 = load i32, i32* %7, align 4
-  %38 = sub nsw i32 %37, 1
-  %39 = sdiv i32 %38, 2
-  store i32 %39, i32* %8, align 4
-  br label %40
-
-40:                                               ; preds = %55, %30
-  %41 = load i32, i32* %8, align 4
-  %42 = icmp sge i32 %41, 0
-  br i1 %42, label %43, label %58
-
-43:                                               ; preds = %40
-  %44 = load i8*, i8** %6, align 8
-  %45 = load i32, i32* %8, align 4
-  %46 = sext i32 %45 to i64
-  %47 = getelementptr inbounds i8, i8* %44, i64 %46
-  %48 = load i8*, i8** %6, align 8
-  %49 = load i32, i32* %7, align 4
-  %50 = load i32, i32* %8, align 4
-  %51 = sub nsw i32 %49, %50
-  %52 = sub nsw i32 %51, 1
-  %53 = sext i32 %52 to i64
-  %54 = getelementptr inbounds i8, i8* %48, i64 %53
-  call void @_ZSt4swapIcENSt9enable_ifIXsr6__and_ISt6__not_ISt15__is_tuple_likeIT_EESt21is_move_constructibleIS3_ESt18is_move_assignableIS3_EEE5valueEvE4typeERS3_SC_(i8* dereferenceable(1) %47, i8* dereferenceable(1) %54) #3
-  br label %55
-
-55:                                               ; preds = %43
-  %56 = load i32, i32* %8, align 4
-  %57 = add nsw i32 %56, -1
-  store i32 %57, i32* %8, align 4
-  br label %40
-
-58:                                               ; preds = %40
-  %59 = load i8*, i8** %6, align 8
-  %60 = getelementptr inbounds i8, i8* %59, i64 0
-  call void @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev(%"class.std::__cxx11::basic_string"* %3) #3
-  ret i8* %60
-
-61:                                               ; preds = %21
-  %62 = load i8*, i8** %4, align 8
-  %63 = load i32, i32* %5, align 4
-  %64 = insertvalue { i8*, i32 } undef, i8* %62, 0
-  %65 = insertvalue { i8*, i32 } %64, i32 %63, 1
-  resume { i8*, i32 } %65
-}
-
-declare dso_local dereferenceable(32) %"class.std::__cxx11::basic_string"* @_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEpLEc(%"class.std::__cxx11::basic_string"*, i8 signext) #1
 
 ; Function Attrs: noinline nounwind optnone uwtable
-define linkonce_odr dso_local void @_ZSt4swapIcENSt9enable_ifIXsr6__and_ISt6__not_ISt15__is_tuple_likeIT_EESt21is_move_constructibleIS3_ESt18is_move_assignableIS3_EEE5valueEvE4typeERS3_SC_(i8* dereferenceable(1) %0, i8* dereferenceable(1) %1) #7 comdat {
+define dso_local i32 @_string_ord_1(i8* %0, i32 %1) #7 {
   %3 = alloca i8*, align 8
-  %4 = alloca i8*, align 8
-  %5 = alloca i8, align 1
+  %4 = alloca i32, align 4
   store i8* %0, i8** %3, align 8
-  store i8* %1, i8** %4, align 8
-  %6 = load i8*, i8** %3, align 8
-  %7 = call dereferenceable(1) i8* @_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_(i8* dereferenceable(1) %6) #3
-  %8 = load i8, i8* %7, align 1
-  store i8 %8, i8* %5, align 1
-  %9 = load i8*, i8** %4, align 8
-  %10 = call dereferenceable(1) i8* @_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_(i8* dereferenceable(1) %9) #3
-  %11 = load i8, i8* %10, align 1
-  %12 = load i8*, i8** %3, align 8
-  store i8 %11, i8* %12, align 1
-  %13 = call dereferenceable(1) i8* @_ZSt4moveIRcEONSt16remove_referenceIT_E4typeEOS2_(i8* dereferenceable(1) %5) #3
-  %14 = load i8, i8* %13, align 1
-  %15 = load i8*, i8** %4, align 8
-  store i8 %14, i8* %15, align 1
-  ret void
+  store i32 %1, i32* %4, align 4
+  %5 = load i8*, i8** %3, align 8
+  %6 = load i32, i32* %4, align 4
+  %7 = sext i32 %6 to i64
+  %8 = getelementptr inbounds i8, i8* %5, i64 %7
+  %9 = load i8, i8* %8, align 1
+  %10 = sext i8 %9 to i32
+  ret i32 %10
 }
 
 ; Function Attrs: noinline nounwind optnone uwtable

@@ -27,10 +27,18 @@ int f_getInt_1(){
 }
 char* f_toString_1(int i_1){
 	string str;
+	int flag=0;
+	if(i_1==0){
+		char *str2=new char[2];
+		str2[0]='0',str2[1]='\0';
+		return &str2[0];
+	}
+	if(i_1<0)flag=1,i_1=-i_1;
 	while(i_1){
 		str+=(char)(i_1%10+'0');
 		i_1/=10;
 	}
+	if(flag)str+=char('-');
 	char *str2=new char[strlen(str.c_str())+1];
 	strcpy(str2,str.c_str());
 	int size=strlen(str2);
@@ -55,6 +63,11 @@ bool _stringcmp_leq_1(char* str1_5,char* str2_5){
 bool _stringcmp_geq_1(char* str1_6,char* str2_6){
 	return strcmp(str1_6,str2_6)>=0;
 }
+int _string_length_1(char* str_3){
+	int x=0;
+	while(str_3[x]!='\0')x++;
+	return x;
+}
 char* _string_merge_1(char* str1_7,char* str2_7){
 	int len1=_string_length_1(str1_7),len2=_string_length_1(str2_7);
 	char* str=new char[len1+len2+1];
@@ -64,12 +77,7 @@ char* _string_merge_1(char* str1_7,char* str2_7){
 	return str;
 }
 char* _heap_malloc_1(int n_3){
-	return (char*)malloc(n_3+8);
-}
-int _string_length_1(char* str_3){
-	int x=0;
-	while(str_3[x]!='\0')x++;
-	return x;
+	return (char*)malloc(n_3);
 }
 char* _string_substring_1(char* str_4,int l_1,int r_1){
 	char* str=new char[r_1-l_1];

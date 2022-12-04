@@ -4,7 +4,6 @@ import FrontEnd.IR.Basic.User;
 import FrontEnd.IR.Basic.Value;
 import FrontEnd.IR.BasicBlock.IRBasicBlock;
 import FrontEnd.IR.IRVisitor;
-import FrontEnd.IR.Instruction.AllocInst;
 import FrontEnd.IR.TypeSystem.BaseType;
 import FrontEnd.IR.TypeSystem.FunctionType;
 
@@ -14,7 +13,8 @@ public class IRFunction extends User {
 	public ArrayList<IRBasicBlock> blockList;
 	public boolean isExternal;
 	public Value funcReturnAddr;
-	public IRBasicBlock funcReturnBlock;
+	public IRBasicBlock funcBeginBlock;
+	public IRBasicBlock funcEndBlock;
 	public IRFunction(String _name,BaseType _type, ArrayList<Value> _paradata,boolean _isExternal){
 		super(_name,_type);
 		for(int i=0;i<_paradata.size();i++){

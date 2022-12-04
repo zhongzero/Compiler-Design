@@ -1,23 +1,24 @@
 import os
 import time
 
-command = "cp {code_file} ../src/irtestspace/test.mx && sh ir-auto-test.sh < {input_file} > {output_file}"
+os.system("export CLASSPATH=\"/mnt/e/Compiler-Design/antlr-4.10.1-complete.jar:$CLASSPATH\"")
 
-judge_list = open("testcases/codegen/judgelist.txt").readlines()
+judge_list = open("../Compiler-2021-testcases/codegen/judgelist.txt").readlines()
 
 cnt = 0
 
 fail_collect = list()
 
-os.system("cd src/ && javac Compiler.java && cd ..")
 
 for judge in judge_list:
     cnt += 1
 
-    code_file = judge.replace("\n", "").replace("./", "testcases/codegen/")
-    input_file = "./src/irtestspace/input.txt"
-    output_file = "./src/irtestspace/output.txt"
-    std_file = "./src/irtestspace/std.txt"
+    code_file = judge.replace("\n", "").replace("./", "../Compiler-2021-testcases/codegen/")
+    print(code_file)
+    print("cp {code_file} test.mx".format(code_file=code_file))
+    input_file = "input.txt"
+    output_file = "output.txt"
+    std_file = "std.txt"
 
     input_fp = open(input_file, "w")
     output_fp = open(output_file, "w")
@@ -47,9 +48,11 @@ for judge in judge_list:
     std_fp.close()
 
     print("\033[34m Loading finish. Start to run LLVM IR.")
+    
+    os.system("cd ../src && javac Compiler.java &&  cp {code_file} test.mx && java Compiler<test.mx>test.ll &&cd ../debug".format(code_file=code_file))
+    
+    os.system("cp ../src/test.ll test.ll && ./test-llvm-ir.sh<{input_file}>{output_file}".format(input_file=input_file,output_file=output_file))
 
-    os.system(command.format(code_file=code_file,
-              input_file=input_file, output_file=output_file))
 
     wrap = os.popen(
         "diff {file1} {file2} -w -B".format(file1=output_file, file2=std_file))
@@ -68,4 +71,4 @@ for judge in judge_list:
 
 print(fail_collect)
 
-os.system("rm ./**/*.class")
+os.system("cd ../src && rm ./*.class && rm ./*/*.class && rm ./*/*/*.class && rm ./*/*/*/*.class && rm ./*/*/*/*/*.class && cd ../debug")

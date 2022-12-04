@@ -2,6 +2,7 @@ package FrontEnd.IR.Const;
 
 import FrontEnd.IR.Basic.User;
 import FrontEnd.IR.IRVisitor;
+import FrontEnd.IR.TypeSystem.BaseType;
 import FrontEnd.IR.TypeSystem.OperandType.IntegerType;
 import FrontEnd.IR.TypeSystem.OperandType.PointerType;
 import FrontEnd.IR.TypeSystem.OperandType.VoidType;
@@ -10,6 +11,10 @@ public class ConstNull extends BaseConst {
 	public ConstNull(){
 		super("null",new PointerType(new IntegerType(32)));
 		//先随机指定null的类型(这里是i32*)
+	}
+	public ConstNull(BaseType _type){
+		super("null",_type);
+		type=_type;
 	}
 	public ConstNull(PointerType _type){
 		super("_null",_type);

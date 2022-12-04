@@ -29,7 +29,6 @@ import FrontEnd.IR.TypeSystem.OperandType.*;
 import FrontEnd.IR.Utils.IRScope;
 import FrontEnd.SemanticCheck.Utils.GlobalScope;
 
-import javax.lang.model.type.NullType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +66,22 @@ public class IRBuilder extends ASTVisitor<Void> {
 	}
 	@Override
 	public Void visitRoot(RootNode node){
+		//class def
+		for (HashMap.Entry<String,ClassDefNode> entry: semanticGlobalScope.class_table.entrySet()) {
+			ClassDefNode tmpclass = entry.getValue();
+			irModule.structHashMap.put(tmpclass.classname, new StructType(tmpclass.classname));
+		}
+		for (HashMap.Entry<String,ClassDefNode> entry: semanticGlobalScope.class_table.entrySet()) {
+			ClassDefNode tmpclass=entry.getValue();
+			StructType structType=irModule.structHashMap.get(tmpclass.classname);
+			for (HashMap.Entry<String,VarDefNode> entry2: tmpclass.varHashmap.entrySet()) {
+				VarDefNode tmp2=entry2.getValue();
+				BaseType type=transType(tmp2.vartype);
+				structType.addMember(type);
+			}
+
+		}
+
 		//some builtin function is contained in semanticGlobalScope.function_table
 		//void print(string str);		//string->i8*
 		//void println(string str);		//string->i8*
@@ -128,22 +143,6 @@ public class IRBuilder extends ASTVisitor<Void> {
 		tmpfunc=new IRFunction("_main_initial",new FunctionType(new VoidType(),new ArrayList<>()),new ArrayList<>(),false);
 		irModule.funcHashMap.put("_main_initial",tmpfunc);
 
-
-		//class def
-		for (HashMap.Entry<String,ClassDefNode> entry: semanticGlobalScope.class_table.entrySet()) {
-			ClassDefNode tmpclass = entry.getValue();
-			irModule.structHashMap.put(tmpclass.classname, new StructType(tmpclass.classname));
-		}
-		for (HashMap.Entry<String,ClassDefNode> entry: semanticGlobalScope.class_table.entrySet()) {
-			ClassDefNode tmpclass=entry.getValue();
-			StructType structType=irModule.structHashMap.get(tmpclass.classname);
-			for (HashMap.Entry<String,VarDefNode> entry2: tmpclass.varHashmap.entrySet()) {
-				VarDefNode tmp2=entry2.getValue();
-				BaseType type=transType(tmp2.vartype);
-				structType.addMember(type);
-			}
-
-		}
 
 		//class function def
 		for (HashMap.Entry<String,ClassDefNode> entry: semanticGlobalScope.class_table.entrySet()) {
@@ -211,7 +210,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		}
 		//local Variable
 		else {
-			AllocInst allocaddr=new AllocInst(node.varname,transType(node.vartype),currentBlock);
+			AllocInst allocaddr=new AllocInst(node.varname,transType(node.vartype),currentFunction.funcBeginBlock);
 			irCurrentScope.varHashMap.put(node.varname,allocaddr);
 			if(node.initvalue!=null){
 				visit(node.initvalue);
@@ -219,13 +218,17 @@ public class IRBuilder extends ASTVisitor<Void> {
 					Value addr2=creat_and_getConstString((ConstString) node.initvalue.irOperand);//addr2 i8*
 					new StoreInst(allocaddr,addr2,currentBlock);//allocaddr i8**
 				}
+				else if(node.initvalue.irOperand instanceof ConstNull){
+					node.initvalue.irOperand.type=allocaddr.type.dePoint();
+					new StoreInst(allocaddr,node.initvalue.irOperand,currentBlock);
+				}
 				else {
 					new StoreInst(allocaddr,node.initvalue.irOperand,currentBlock);
 				}
 			}
 			else{
 				if((node.vartype instanceof ClassTypeNode) || (node.vartype instanceof ArrayTypeNode)){
-					new StoreInst(allocaddr,new ConstNull(),currentBlock);
+					new StoreInst(allocaddr,new ConstNull(allocaddr.type.dePoint()),currentBlock);
 				}
 			}
 		}
@@ -237,21 +240,23 @@ public class IRBuilder extends ASTVisitor<Void> {
 		currentFunction=irModule.funcHashMap.get(currentfunctionname);
 		IRBasicBlock beginblock=new IRBasicBlock("func_begin_block",currentFunction);
 		IRBasicBlock endblock=new IRBasicBlock("func_end_block",currentFunction);
-		currentFunction.funcReturnBlock=endblock;
+		IRBasicBlock normalblock=new IRBasicBlock("normal_block",currentFunction);
+		currentFunction.funcBeginBlock=beginblock;
+		currentFunction.funcEndBlock =endblock;
 		if(((FunctionType)currentFunction.type).returntype instanceof VoidType){
 			currentBlock=endblock;
 			new RetInst(new Value("meaningless",new VoidType()),currentBlock);
 		}
 		else {
 			currentBlock=beginblock;
-			currentFunction.funcReturnAddr=new AllocInst("funcReturn",((FunctionType)currentFunction.type).returntype,currentBlock);
+			currentFunction.funcReturnAddr=new AllocInst("funcReturn",((FunctionType)currentFunction.type).returntype,currentFunction.funcBeginBlock);
 
 			currentBlock=endblock;
 			LoadInst load=new LoadInst(currentFunction.funcReturnAddr,currentBlock);
 			new RetInst(load,currentBlock);
 		}
 
-		currentBlock=beginblock;
+		currentBlock=normalblock;
 		if(isInClass)addThisPtr();
 		visit(node.paralist);
 		if(currentfunctionname.equals("f_main")){
@@ -259,7 +264,8 @@ public class IRBuilder extends ASTVisitor<Void> {
 			new CallInst(initfunc,new ArrayList<>(),currentBlock);
 		}
 		visit(node.block);
-		new BrInst(null,currentFunction.funcReturnBlock,null,currentBlock);
+		new BrInst(null,currentFunction.funcEndBlock,null,currentBlock);
+		new BrInst(null,normalblock,null,currentFunction.funcBeginBlock);
 		currentFunction=null;
 		currentBlock=null;
 		irCurrentScope=irCurrentScope.parent;
@@ -274,19 +280,31 @@ public class IRBuilder extends ASTVisitor<Void> {
 			VarDefNode tmp=entry.getValue();
 			irCurrentScope.varHashMap.put(tmp.varname,new Value("meaningless",null));
 		}
+
 		for (HashMap.Entry<String,FuncDefNode> entry: node.funcHashmap.entrySet()) {
 			FuncDefNode tmp=entry.getValue();
 			currentfunctionname="class_f_"+node.classname+"."+tmp.funcname;
 			visit(tmp);
 			currentfunctionname=null;
 		}
+
+		currentfunctionname="class_constructor_"+node.classname+"."+ node.classname;
+		boolean HaveExplicitConstructor=false;
 		for(int i=0;i<node.classconstructorList.size();i++){
 			ClassConstructorNode tmp=node.classconstructorList.get(i);
 			if(tmp.paralist.paralist.size()!=0)continue;// not support class constructor with parameter
-			currentfunctionname="class_constructor_"+node.classname+"."+ node.classname;
+			HaveExplicitConstructor=true;
 			visit(tmp);
-			currentfunctionname=null;
 		}
+		if(!HaveExplicitConstructor){
+			currentFunction=irModule.funcHashMap.get(currentfunctionname);
+			currentBlock=new IRBasicBlock("normal_block",currentFunction);
+			new RetInst(new Value("meaningless",new VoidType()),currentBlock);
+			currentBlock=null;
+			currentFunction=null;
+		}
+		currentfunctionname=null;
+
 		isInClass=false;
 		currentclassname="";
 		irCurrentScope=irCurrentScope.parent;
@@ -298,16 +316,19 @@ public class IRBuilder extends ASTVisitor<Void> {
 		currentFunction=irModule.funcHashMap.get(currentfunctionname);
 		IRBasicBlock beginblock=new IRBasicBlock("func_begin_block",currentFunction);
 		IRBasicBlock endblock=new IRBasicBlock("func_end_block",currentFunction);
-		currentFunction.funcReturnBlock=endblock;
+		IRBasicBlock normalblock=new IRBasicBlock("normal_block",currentFunction);
+		currentFunction.funcBeginBlock=beginblock;
+		currentFunction.funcEndBlock =endblock;
 
 		currentBlock=endblock;
 		new RetInst(new Value("meaningless",new VoidType()),currentBlock);
 
-		currentBlock=beginblock;
+		currentBlock=normalblock;
 		addThisPtr();
 		visit(node.paralist);
 		visit(node.block);
-		new BrInst(null,currentFunction.funcReturnBlock,null,currentBlock);
+		new BrInst(null,currentFunction.funcEndBlock,null,currentBlock);
+		new BrInst(null,normalblock,null,currentFunction.funcBeginBlock);
 		currentFunction=null;
 		currentBlock=null;
 		irCurrentScope=irCurrentScope.parent;
@@ -317,7 +338,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 	public Void visitParaList(ParaListNode node){
 		for(int i=0;i<node.paralist.size();i++){
 			VarDefNode tmp=node.paralist.get(i);
-			AllocInst allocaddr=new AllocInst(tmp.varname,transType(tmp.vartype),currentBlock);
+			AllocInst allocaddr=new AllocInst(tmp.varname,transType(tmp.vartype),currentFunction.funcBeginBlock);
 			new StoreInst(allocaddr,currentFunction.operandlist.get(isInClass?i+1:i),currentBlock);
 			irCurrentScope.varHashMap.put(tmp.varname,allocaddr);
 			//给每个parameter开一个指针指向它(irCurrentScope.varHashMap记录的都是指向数据的指针)
@@ -371,11 +392,14 @@ public class IRBuilder extends ASTVisitor<Void> {
 				Value addr2=creat_and_getConstString((ConstString) node.returnexpr.irOperand);
 				new StoreInst(currentFunction.funcReturnAddr,addr2,currentBlock);
 			}
+			else if(node.returnexpr.irOperand instanceof ConstNull){
+				node.returnexpr.irOperand.type=currentFunction.funcReturnAddr.type.dePoint();
+			}
 			else {
 				new StoreInst(currentFunction.funcReturnAddr,node.returnexpr.irOperand,currentBlock);
 			}
 		}
-		new BrInst(null,currentFunction.funcReturnBlock,null,currentBlock);
+		new BrInst(null,currentFunction.funcEndBlock,null,currentBlock);
 		currentBlock=endreturnblock;
 		return null;
 	}
@@ -461,8 +485,12 @@ public class IRBuilder extends ASTVisitor<Void> {
 
 		irCurrentScope=new IRScope(irCurrentScope);
 		currentBlock=conditionblock;
-		visit(node.conditionexpr);
-		Value condition=node.conditionexpr.irOperand;
+		Value condition;
+		if(node.conditionexpr!=null){
+			visit(node.conditionexpr);
+			condition=node.conditionexpr.irOperand;
+		}
+		else condition=new ConstBool(true);
 		new BrInst(condition,forbodyblock,endforblock,currentBlock);
 
 		continueStack.push(forupdateblock);
@@ -473,7 +501,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		new BrInst(null,forupdateblock,null,currentBlock);
 
 		currentBlock=forupdateblock;
-		visit(node.updateexpr);
+		if(node.updateexpr!=null)visit(node.updateexpr);
 		new BrInst(null,conditionblock,null,currentBlock);
 
 		continueStack.pop();
@@ -536,7 +564,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 	@Override
 	public Void visitMemberExpr(MemberExprNode node){
 		needAddr.push(false);
-		if(!(node.expr instanceof ThisExprNode))visit(node.expr);// node.expr.irOperand : struct*
+		visit(node.expr);// node.expr.irOperand : struct*
 		needAddr.pop();
 		GetElementPtrInst gep=class_member_gep(node.expr.irOperand,node.expr.returntype.typename,node.member);
 		// gep : membertype*(i32* / i8**/ struct** ...)
@@ -550,6 +578,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 	}
 	@Override
 	public Void visitFuncExpr(FuncExprNode node){
+		boolean is_classfunc=false;
 		IRFunction tmpfunc=null;
 		ArrayList<Value> paradata=new ArrayList<>();
 		if(node.expr instanceof MemberExprNode){
@@ -577,6 +606,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 				paradata.add(membernode.expr.irOperand); // membernode.expr.irOperand : i8*
 			}
 			else if(classtype instanceof ClassTypeNode){
+				is_classfunc=true;
 				needAddr.push(true);
 				visit(membernode.expr);// membernode.expr.irOperand : struct**
 				tmpfunc=irModule.funcHashMap.get("class_f_"+classtype.typename+"."+membernode.member);
@@ -587,6 +617,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		}
 		else if(node.expr instanceof IdExprNode){
 			if(isInClass && irModule.funcHashMap.containsKey("class_f_"+currentclassname+"."+((IdExprNode) node.expr).identifier)){
+				is_classfunc=true;
 				tmpfunc=irModule.funcHashMap.get("class_f_"+currentclassname+"."+((IdExprNode) node.expr).identifier);
 				paradata.add(irCurrentScope.variable_Get_FromAll("this"));
 			}
@@ -594,20 +625,30 @@ public class IRBuilder extends ASTVisitor<Void> {
 		}
 		else throw new RuntimeException("??? error in visitFuncExpr ???");
 
-		//needAddr.peek() : false
-		assert needAddr.peek();
 		for(int i=0;i<node.paradatalist.paradatalist.size();i++){
 			BaseExprNode tmp=node.paradatalist.paradatalist.get(i);
+			needAddr.push(false);
 			visit(tmp);
+			needAddr.pop();
 			if(tmp.irOperand instanceof ConstString){
 				Value addr=creat_and_getConstString((ConstString) tmp.irOperand);
 				paradata.add(addr);
+			}
+			else if(tmp.irOperand instanceof ConstNull){
+				tmp.irOperand.type=tmpfunc.operandlist.get(is_classfunc?i+1:i).type.dePoint();
+				paradata.add(tmp.irOperand);
 			}
 			else {
 				paradata.add(tmp.irOperand);
 			}
 		}
-		node.irOperand=new CallInst(tmpfunc,paradata,currentBlock);
+		CallInst call=new CallInst(tmpfunc,paradata,currentBlock);
+		if(needAddr.peek()){
+			AllocInst addr=new AllocInst("tmp",call.type,currentFunction.funcBeginBlock);
+			new StoreInst(addr,call,currentBlock);
+			node.irOperand=addr;
+		}
+		else node.irOperand=call;
 		return null;
 	}
 	@Override
@@ -666,7 +707,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 			BaseType targettype = basetype;
 			BitCastInst bitcast = new BitCastInst(call, targettype, currentBlock);
 			//bitcast : struct*
-			AllocInst classptr=new AllocInst("classptr",bitcast.type,currentBlock);
+			AllocInst classptr=new AllocInst("classptr",bitcast.type,currentFunction.funcBeginBlock);
 			new StoreInst(classptr,bitcast,currentBlock);
 			class_constructor_execute(classptr,node.type.typename);
 			node.irOperand=bitcast;
@@ -769,7 +810,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 				IRBasicBlock ifbodyblock=new IRBasicBlock("short_circuit_if_body_block",currentFunction);
 				IRBasicBlock elsebodyblock=new IRBasicBlock("short_circuit_else_body_block",currentFunction);
 				IRBasicBlock endblock=new IRBasicBlock("short_circuit_end_block",currentFunction);
-				AllocInst alloc=new AllocInst("shortCircuit",new IntegerType(1),currentBlock);
+				AllocInst alloc=new AllocInst("shortCircuit",new IntegerType(1),currentFunction.funcBeginBlock);
 				new BrInst(node.operand1.irOperand,ifbodyblock,elsebodyblock,currentBlock);
 
 				currentBlock=ifbodyblock;
@@ -792,7 +833,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 				IRBasicBlock ifbodyblock=new IRBasicBlock("short_circuit_if_body_block",currentFunction);
 				IRBasicBlock elsebodyblock=new IRBasicBlock("short_circuit_else_body_block",currentFunction);
 				IRBasicBlock endblock=new IRBasicBlock("short_circuit_end_block",currentFunction);
-				AllocInst alloc=new AllocInst("shortCircuit",new IntegerType(1),currentBlock);
+				AllocInst alloc=new AllocInst("shortCircuit",new IntegerType(1),currentFunction.funcBeginBlock);
 				new BrInst(node.operand1.irOperand,ifbodyblock,elsebodyblock,currentBlock);
 
 				currentBlock=ifbodyblock;
@@ -855,8 +896,8 @@ public class IRBuilder extends ASTVisitor<Void> {
 			operand = creat_and_getConstString((ConstString) node.operand2.irOperand);
 			node.irOperand = new StoreInst(addr, operand, currentBlock);//addr i8**,operand i8*
 		}
-		else if(node.operand2.returntype instanceof NullTypeNode){// class/array = null
-			node.operand2.irOperand.type=node.operand1.irOperand.type;
+		else if(node.operand2.irOperand instanceof ConstNull){// class/array = null
+			node.operand2.irOperand.type=node.operand1.irOperand.type.dePoint();
 			node.irOperand=new StoreInst(addr,operand,currentBlock);
 		}
 		else {
@@ -1028,19 +1069,22 @@ public class IRBuilder extends ASTVisitor<Void> {
 		currentFunction=tmpfunc;
 		IRBasicBlock beginblock=new IRBasicBlock("func_begin_block",currentFunction);
 		IRBasicBlock endblock=new IRBasicBlock("func_end_block",currentFunction);
-		currentFunction.funcReturnBlock=endblock;
+		IRBasicBlock normalblock=new IRBasicBlock("normal_block",currentFunction);
+		currentFunction.funcBeginBlock=beginblock;
+		currentFunction.funcEndBlock =endblock;
 
 		currentBlock=endblock;
 		new RetInst(new Value("meaningless",new VoidType()),currentBlock);
 
-		currentBlock=beginblock;
+		currentBlock=normalblock;
 
 		for(int i=0;i<globalVarInitList.size();i++){
 			VarDefNode tmp=globalVarInitList.get(i);
-			visit(tmp.initvalue);
+			if(tmp.initvalue!=null)visit(tmp.initvalue);
 			Value addr=irCurrentScope.variable_Get_FromAll(tmp.varname);
-			if(tmp.initvalue==null){// class/array默认赋值为null
-				new StoreInst(addr,new ConstNull(),currentBlock);
+			if(tmp.initvalue==null ||(tmp.initvalue instanceof NullExprNode)){// class/array默认赋值为null
+				new StoreInst(addr,new ConstNull(addr.type.dePoint()),currentBlock);
+				continue;
 			}
 			Value initoperand=tmp.initvalue.irOperand;
 			if(initoperand instanceof BaseConst){
@@ -1053,6 +1097,10 @@ public class IRBuilder extends ASTVisitor<Void> {
 					Value addr2=creat_and_getConstString((ConstString) initoperand);//addr2 i8*
 					new StoreInst(addr,addr2,currentBlock);//addr i8**
 				}
+				else if(initoperand instanceof ConstNull){
+					initoperand.type=addr.type.dePoint();
+					new StoreInst(addr,initoperand,currentBlock);
+				}
 				else {
 					new StoreInst(addr,initoperand,currentBlock);
 				}
@@ -1064,7 +1112,8 @@ public class IRBuilder extends ASTVisitor<Void> {
 			}
 			else throw new RuntimeException("?? error in generate_main_initial ??");
 		}
-		new BrInst(null,currentFunction.funcReturnBlock,null,currentBlock);
+		new BrInst(null,currentFunction.funcEndBlock,null,currentBlock);
+		new BrInst(null,normalblock,null,currentFunction.funcBeginBlock);
 
 		currentFunction=null;
 		currentBlock=null;
@@ -1088,7 +1137,8 @@ public class IRBuilder extends ASTVisitor<Void> {
 		Value value1=node.operand1.irOperand;
 		Value value2=node.operand2.irOperand;
 		if((value1 instanceof ConstString) && (value2 instanceof ConstString)){
-			node.irOperand=new ConstString(((ConstString) value1).value+((ConstString) value2).value);
+			String str1=((ConstString) value1).value,str2=((ConstString) value2).value;
+			node.irOperand=new ConstString(str1.substring(0,str1.length()-1)+str2);
 		}
 		else {
 			Value addr1,addr2;
@@ -1145,7 +1195,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		BitCastInst bitcast=new BitCastInst(ptr,new PointerType(new IntegerType(32)),currentBlock);
 		ArrayList<Value> offset=new ArrayList<>();
 		offset.add(new ConstInt(-1));
-		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,ptr.type,currentBlock);
+		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,bitcast.type,currentBlock);
 		return new LoadInst(gep,currentBlock);
 	}
 	void class_constructor_execute(Value thisptr,String classname){
@@ -1173,7 +1223,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		if (index instanceof ConstInt) bytesize = new ConstInt(basebytesize2 * ((ConstInt) index).value+4);
 		else {
 			BinaryInst mul = new BinaryInst(new ConstInt(basebytesize2), index, BinaryOp.mul, currentBlock);
-			bytesize=new BinaryInst(index,new ConstInt(4), BinaryOp.add, currentBlock);
+			bytesize=new BinaryInst(mul,new ConstInt(4), BinaryOp.add, currentBlock);
 		}
 
 		paradata.add(bytesize);
@@ -1184,9 +1234,9 @@ public class IRBuilder extends ASTVisitor<Void> {
 		new StoreInst(bitcast,index,currentBlock);
 		ArrayList<Value> offset=new ArrayList();
 		offset.add(new ConstInt(1));
-		new GetElementPtrInst(bitcast,offset,bitcast.type,currentBlock);
+		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,bitcast.type,currentBlock);
 
-		BitCastInst bitcast2 = new BitCastInst(call, targettype, currentBlock);
+		BitCastInst bitcast2 = new BitCastInst(gep, targettype, currentBlock);
 
 		if(pos+1<node.sizelist.size()){
 			IRBasicBlock conditionblock=new IRBasicBlock("new_array_condition_block",currentFunction);
@@ -1196,7 +1246,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 //			for(int count=0;count<index;count++){
 //
 //			}
-			AllocInst countaddr=new AllocInst("newarraycount",new IntegerType(32),currentBlock);
+			AllocInst countaddr=new AllocInst("newarraycount",new IntegerType(32),currentFunction.funcBeginBlock);
 			new StoreInst(countaddr,new ConstInt(0),currentBlock);
 			new BrInst(null,conditionblock,null,currentBlock);
 
@@ -1208,9 +1258,9 @@ public class IRBuilder extends ASTVisitor<Void> {
 			currentBlock=bodyblock;
 			ArrayList<Value> offset2=new ArrayList();
 			offset2.add(countload);
-			GetElementPtrInst gep=new GetElementPtrInst(bitcast2,offset2,bitcast2.type,currentBlock);
+			GetElementPtrInst gep2=new GetElementPtrInst(bitcast2,offset2,bitcast2.type,currentBlock);
 			Value tmp=generate_all_new_array(node,pos+1,mallocfunc,basetype,basebytesize);
-			new StoreInst(gep,tmp,currentBlock);
+			new StoreInst(gep2,tmp,currentBlock);
 			BinaryInst add=new BinaryInst(countload,new ConstInt(1),BinaryOp.add,currentBlock);
 			new StoreInst(countaddr,add,currentBlock);
 			new BrInst(null,conditionblock,null,currentBlock);

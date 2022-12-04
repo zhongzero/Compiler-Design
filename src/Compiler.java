@@ -14,9 +14,10 @@ import java.io.PrintStream;
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
-			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
-//			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
-			PrintStream ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
+//			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
+			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
+//			PrintStream ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
+			PrintStream ps=System.out;
 //			System.out.println(input);
 //			System.out.println("-----------");
 
