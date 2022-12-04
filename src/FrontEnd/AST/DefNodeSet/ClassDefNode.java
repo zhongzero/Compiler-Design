@@ -6,15 +6,16 @@ import Utils.Position;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ClassDefNode extends BaseDefNode {
 	public String classname;
-	public HashMap<String,VarDefNode> varHashmap;
-	public HashMap<String,FuncDefNode> funcHashmap;
+	public LinkedHashMap<String,VarDefNode> varHashmap;
+	public LinkedHashMap<String,FuncDefNode> funcHashmap;
 	public ArrayList<ClassConstructorNode> classconstructorList;
 	public ClassDefNode(String _classname,
-						HashMap<String,VarDefNode> _varHashmap,
-						HashMap<String,FuncDefNode> _funcHashmap,
+						LinkedHashMap<String,VarDefNode> _varHashmap,
+						LinkedHashMap<String,FuncDefNode> _funcHashmap,
 						ArrayList<ClassConstructorNode> _classconstructorList,
 						Position _pos){
 		super(_pos);

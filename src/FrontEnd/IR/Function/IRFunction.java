@@ -4,6 +4,7 @@ import FrontEnd.IR.Basic.User;
 import FrontEnd.IR.Basic.Value;
 import FrontEnd.IR.BasicBlock.IRBasicBlock;
 import FrontEnd.IR.IRVisitor;
+import FrontEnd.IR.Instruction.AllocInst;
 import FrontEnd.IR.TypeSystem.BaseType;
 import FrontEnd.IR.TypeSystem.FunctionType;
 
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 public class IRFunction extends User {
 	public ArrayList<IRBasicBlock> blockList;
 	public boolean isExternal;
+	public Value funcReturnAddr;
+	public IRBasicBlock funcReturnBlock;
 	public IRFunction(String _name,BaseType _type, ArrayList<Value> _paradata,boolean _isExternal){
 		super(_name,_type);
 		for(int i=0;i<_paradata.size();i++){
@@ -24,14 +27,36 @@ public class IRFunction extends User {
 		blockList.add(_basicBlock);
 	}
 
-	public String Funcname_and_para(){
-		StringBuilder str= new StringBuilder("@" + name + "(");
+	public String Functype_name_and_para(){
+		StringBuilder str= new StringBuilder(((FunctionType)type).returntype.toString()+ " @" + (name.equals("f_main_1")?"main":name) + "(");
 		for(int i=0;i<operandlist.size();i++){
 			if(i!=0) str.append(",");
-			str.append(operandlist.get(i).type.toString()).append(" %").append(operandlist.get(i).name);
+			str.append(operandlist.get(i).type.toString()+" %"+operandlist.get(i).name);
 		}
 		str.append(")");
 		return str.toString();
+	}
+
+	@Override
+	public String getName(){
+		return "@"+name;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder ans=new StringBuilder();
+		if(isExternal){
+			ans.append("declare "+Functype_name_and_para());
+		}
+		else {
+			ans.append("define "+Functype_name_and_para());
+			ans.append("{\n");
+			for(int i=0;i<blockList.size();i++){
+				ans.append(blockList.get(i).toString());
+			}
+			ans.append("}");
+		}
+		return ans.toString();
 	}
 
 	@Override

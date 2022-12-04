@@ -12,6 +12,11 @@ public class ConstInt extends BaseConst {
 	}
 
 	@Override
+	public String getName(){
+		return String.valueOf(value);
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitConstInt(this);
 	}

@@ -12,6 +12,11 @@ public class ConstBool extends BaseConst {
 	}
 
 	@Override
+	public String getName(){
+		return String.valueOf(value?1:0);
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitConstBool(this);
 	}

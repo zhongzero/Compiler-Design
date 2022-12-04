@@ -15,6 +15,12 @@ public class IcmpInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		return this.getName()+"=icmp "+op.toString()+" "+operandlist.get(0).getType_Name()+","+operandlist.get(1).getName();
+//		%eq1=icmp eq i32 1,%a
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitIcmpInst(this);
 	}

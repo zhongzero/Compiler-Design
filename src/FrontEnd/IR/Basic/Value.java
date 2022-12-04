@@ -25,12 +25,24 @@ public class Value {
 			return _name+"_"+num;
 		}
 		else {
-			Map.put(_name,0);
+			Map.put(_name,1);
 			return _name+"_1";
 		}
 	}
 	public void addUser(User user){
 		userlist.add(user);
+	}
+
+
+	public String getName(){
+		//para不属于inst/GlobalVarDef任何一类,直接定义为Value，要输出%xxx
+		return "%"+name;
+	}
+	public String getType(){
+		return type.toString();
+	}
+	public String getType_Name(){
+		return getType()+" "+getName();
 	}
 
 	public <T> T accept(IRVisitor<T> visitor) {

@@ -22,6 +22,7 @@ import Utils.Error.SemanticError;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 	@Override public ASTBaseNode visitProgram(MxParser.ProgramContext ctx) {
@@ -51,8 +52,8 @@ public class ASTBuilder extends MxBaseVisitor<ASTBaseNode> {
 				(BlockStatNode) visit(ctx.block()), new Position(ctx.block()));
 	}
 	@Override public ASTBaseNode visitClassDefinitionStatement(MxParser.ClassDefinitionStatementContext ctx) {
-		HashMap<String,VarDefNode> varHashmap=new HashMap<>();
-		HashMap<String,FuncDefNode> funcHashmap=new HashMap<>();
+		LinkedHashMap<String,VarDefNode> varHashmap=new LinkedHashMap<>();
+		LinkedHashMap<String,FuncDefNode> funcHashmap=new LinkedHashMap<>();
 		String classname=ctx.IDENTIFIER().getText();
 		ArrayList<ClassConstructorNode> classconstructorList=new ArrayList<>();
 

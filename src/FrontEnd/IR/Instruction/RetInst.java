@@ -12,6 +12,13 @@ public class RetInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		if(operandlist.get(0).type instanceof VoidType)return "ret void";
+		else return "ret "+operandlist.get(0).getType_Name();
+//		ret i32 %a
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitRetInst(this);
 	}

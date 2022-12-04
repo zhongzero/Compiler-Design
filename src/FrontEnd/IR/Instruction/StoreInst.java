@@ -13,6 +13,12 @@ public class StoreInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		return "store "+operandlist.get(1).getType_Name()+","+operandlist.get(0).getType_Name()+",align "+operandlist.get(1).type.bytesize();
+//		store i32 0,i32* %addr,align 4
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitStoreInst(this);
 	}

@@ -12,6 +12,12 @@ public class AllocInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		return this.getName()+"=alloca "+type.dePoint()+",align "+type.dePoint().bytesize();
+//		%return_addr = alloca i32, align 4
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitAllocInst(this);
 	}

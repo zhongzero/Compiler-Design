@@ -6,8 +6,14 @@ import FrontEnd.IR.IRVisitor;
 
 public class LoadInst extends BaseInst{
 	public LoadInst(Value _addr, IRBasicBlock _belongBlock){
-		super("load",_addr.type.dePointer(),_belongBlock);
+		super("load",_addr.type.dePoint(),_belongBlock);
 		addOperand(_addr);
+	}
+
+	@Override
+	public String toString() {
+		return this.getName()+"=load "+this.getType()+","+operandlist.get(0).getType_Name()+",align "+type.bytesize();
+//		%a_load=load i32,i32* %addr,align 4
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class ArrayType extends BaseType {
 	}
 	@Override
 	public int bytesize(){
-		return -1;//meaningless
+		return basetype.bytesize()*size;
 	}
 	@Override
 	public boolean isEqual(BaseType other){

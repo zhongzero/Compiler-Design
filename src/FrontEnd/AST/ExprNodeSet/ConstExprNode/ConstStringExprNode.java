@@ -12,7 +12,7 @@ public class ConstStringExprNode extends BaseExprNode {
 				.replace("\\\\","\\")
 				.replace("\\n","\n")
 				.replace("\\\"","\"")
-				+"0";
+				+"\0";
 	}
 	@Override
 	public <T> T accept(ASTVisitor<T> visitor) {

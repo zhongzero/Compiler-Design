@@ -14,6 +14,12 @@ public class BinaryInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		return this.getName()+"="+op.toString()+" "+operandlist.get(0).getType_Name()+","+operandlist.get(1).getName();
+//		%add1=add i32 %a,2
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitBinaryInst(this);
 	}

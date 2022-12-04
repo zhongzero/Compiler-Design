@@ -29,6 +29,17 @@ public class StructType extends BaseType {
 		else return false;
 	}
 
+	public String defStructString(){
+		StringBuilder ans= new StringBuilder("%" + structname + " = type  {");
+		for(int i=0;i<membertype.size();i++) {
+			if(i!=0)ans.append(",");
+			ans.append((membertype.get(i)).toString());
+		}
+		ans.append("};");
+		return ans.toString();
+//		%class_node = type { i32, i32 };
+	}
+
 	@Override
 	public String toString(){
 		return "%"+structname;

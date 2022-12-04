@@ -14,12 +14,18 @@ public class ConstString extends BaseConst {
 	}
 
 	@Override
+	public String getName(){
+		return "@"+name;
+	}
+
+	@Override
 	public String toString() {
-		return "@"+name+"=private unnamed_addr constant ["+(value.length()+1)+" x i8] c\""+
+		return "@"+name+"=private unnamed_addr constant ["+value.length()+" x i8] c\""+
 				value.replace("\\", "\\5C").replace("\n", "\\0A").
 						replace("\t", "\\09").replace("\"", "\\22").
 						replace("\0", "\\00")+
 				"\",align 1";
+//		@_str=private unnamed_addr constant [5 x i8] c"2333\00",align 1;
 	}
 
 	@Override

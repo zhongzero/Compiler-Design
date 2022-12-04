@@ -1,28 +1,30 @@
-int HHH=4*6;
-string HHH2="2333";
-bool HHH3=true;
-class node2{
-	int a,b;
-};
+int a=233;
+bool b=false;
+string c="2333";
 class node{
-	node2 sss;
-	string sssss;
-	int a;
-	bool b;
-	void F(int a,int b){
-	}
-	node(){
-		a=1;
-		sssss=HHH2;
-		string HHHHH=sssss;
-	}
+  int a,b,c;
+  node(){
+    a=2;
+    b=3;
+  }
+  void F(int x){
+    a=x;
+    b=a;
+  }
+  int F2(){
+  	return 233;
+  }
 };
 int main() {
-  string GGG="44"+"55";
-  //A.b=true;
-  //if(A.b==true)int a;
-  //else int b;
-  //int[] a=new int[10];
-  //a[3]=2;
+  node A=new node();
+  A.F(10);
+  printlnInt(A.a);
+  printlnInt(A.b);
+  printlnInt(A.F2());
+  int x=0;
+  while(x<=10){
+    printlnInt(x);
+    x=x+2;
+  }
   return 0;
 }

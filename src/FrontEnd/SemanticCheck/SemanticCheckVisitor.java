@@ -35,7 +35,7 @@ public class SemanticCheckVisitor extends ASTVisitor<Void> {
 		//string getString();
 		//int getInt();
 		//string toString(int i);
-		globalScope.function_table=new HashMap<>();
+		globalScope.function_table=new LinkedHashMap<>();
 		{
 			ArrayList<VarDefNode> paralist = new ArrayList<>();
 			paralist.add(new VarDefNode(new StringTypeNode(null),"str",null,null));

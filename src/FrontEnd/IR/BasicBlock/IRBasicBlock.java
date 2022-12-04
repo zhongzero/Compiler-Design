@@ -4,6 +4,7 @@ import FrontEnd.IR.Basic.Value;
 import FrontEnd.IR.Function.IRFunction;
 import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.Instruction.BaseInst;
+import FrontEnd.IR.TypeSystem.FunctionType;
 import FrontEnd.IR.TypeSystem.LabelType;
 
 import java.util.ArrayList;
@@ -15,10 +16,25 @@ public class IRBasicBlock extends Value {
 		super(_blockname,new LabelType());
 		instList=new ArrayList<>();
 		belongFunc=_belongFunc;
-		belongFunc.addBasicBlock(this);
+		if(belongFunc!=null)belongFunc.addBasicBlock(this);
 	}
 	public void addInstruction(BaseInst _inst){
 		instList.add(_inst);
+	}
+
+	@Override
+	public String getName(){
+		return "%"+name;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder ans=new StringBuilder();
+		ans.append(name+":\n");
+		for(int i=0;i<instList.size();i++){
+			ans.append("\t"+instList.get(i).toString()+"\n");
+		}
+		return ans.toString();
 	}
 
 	@Override

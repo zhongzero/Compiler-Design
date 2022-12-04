@@ -1,5 +1,4 @@
 import FrontEnd.IR.IRBuilder;
-import FrontEnd.IR.IRPrinter;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
 import FrontEnd.SemanticCheck.Utils.GlobalScope;
@@ -10,11 +9,14 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import FrontEnd.Parser.*;
 import FrontEnd.AST.*;
 
+import java.io.PrintStream;
+
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
 			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
 //			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
+			PrintStream ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
 //			System.out.println(input);
 //			System.out.println("-----------");
 
@@ -35,9 +37,8 @@ public class Compiler {
 
 			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
 			irbuilder.visit(astroot);
-			IRModule irroot=irbuilder.irModule;
-//			IRPrinter irprinter=new IRPrinter();
-//			irprinter.visit(irroot);
+			IRModule irmodule=irbuilder.irModule;
+			ps.println(irmodule.toString());
 		}
 		catch (MyBaseError error){
 			error.Output();

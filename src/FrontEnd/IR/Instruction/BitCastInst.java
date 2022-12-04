@@ -12,6 +12,12 @@ public class BitCastInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		return this.getName()+"=bitcast "+operandlist.get(0).getType_Name()+" to "+type.toString();
+//		%bitCast1=bitcast i8* %a to %class_node*
+	}
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitBitCastInst(this);
 	}

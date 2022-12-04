@@ -33,6 +33,7 @@ LLVM IR有三种格式
 ```
 clang++ a.cpp -S -emit-llvm //生成a.ll文件
 clang++ a.cpp -c -emit-llvm //生成a.bc文件
+llvm-dis a.bc // a.bc转a.ll
 clang++ a.ll -o a //由a.ll生成可执行文件
 nm a //查看可执行文件的符号表
 llc a.ll //由a.ll生成汇编代码a.s

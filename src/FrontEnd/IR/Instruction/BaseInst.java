@@ -14,6 +14,10 @@ public class BaseInst extends User {
 		if(belongBlock!=null)belongBlock.addInstruction(this);
 	}
 	@Override
+	public String getName(){
+		return "%"+name;
+	}
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitBaseInst(this);
 	}

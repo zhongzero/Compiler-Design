@@ -17,7 +17,7 @@ public class VoidType extends BaseType {
 
 	@Override
 	public String toString(){
-		return null;
+		return "void";
 	}
 
 	@Override

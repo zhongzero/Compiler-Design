@@ -18,6 +18,15 @@ public class BrInst extends BaseInst{
 	}
 
 	@Override
+	public String toString() {
+		if(condition==null)return "br label "+ifBlock.getName();
+		else return "br "+condition.getType_Name()+",label "+ifBlock.getName()+",label "+elseBlock.getName();
+//		br label %block1
+//		br i1 %a,label %block1,label %block2
+	}
+
+
+	@Override
 	public <T> T accept(IRVisitor<T> visitor) {
 		return visitor.visitBrInst(this);
 	}
