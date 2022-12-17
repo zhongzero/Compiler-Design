@@ -1,3 +1,5 @@
+import BackEnd.ASM.ASMBuilder;
+import BackEnd.ASM.Module.ASMModule;
 import FrontEnd.IR.IRBuilder;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
@@ -40,6 +42,11 @@ public class Compiler {
 			irbuilder.visit(astroot);
 			IRModule irmodule=irbuilder.irModule;
 			ps.println(irmodule.toString());
+
+			ASMBuilder asmbuilder=new ASMBuilder();
+			asmbuilder.visit(irmodule);
+			ASMModule asmmodule=asmbuilder.asmModule;
+			ps.println(asmmodule.toString());
 		}
 		catch (MyBaseError error){
 			error.Output();

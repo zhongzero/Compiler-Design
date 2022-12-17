@@ -1,7 +1,8 @@
 import os
 import time
 
-os.system("export CLASSPATH=\"/mnt/e/Compiler-Design/antlr-4.10.1-complete.jar:$CLASSPATH\"")
+# export CLASSPATH="/mnt/e/Compiler-Design/antlr-4.10.1-complete.jar:$CLASSPATH"
+
 
 judge_list = open("../Compiler-2021-testcases/codegen/judgelist.txt").readlines()
 
@@ -15,10 +16,10 @@ for judge in judge_list:
 
     code_file = judge.replace("\n", "").replace("./", "../Compiler-2021-testcases/codegen/")
     print(code_file)
-    print("cp {code_file} test.mx".format(code_file=code_file))
-    input_file = "input.txt"
-    output_file = "output.txt"
-    std_file = "std.txt"
+
+    input_file = "1.in"
+    output_file = "1.out"
+    std_file = "1.ans"
 
     input_fp = open(input_file, "w")
     output_fp = open(output_file, "w")

@@ -1,0 +1,1 @@
+ravel --input-file=1.in --output-file=1.out test.s builtin.s
