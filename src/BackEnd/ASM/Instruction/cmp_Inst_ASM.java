@@ -1,15 +1,14 @@
 package BackEnd.ASM.Instruction;
 
 import BackEnd.ASM.BasicBlock.ASMBasicBlock;
-import BackEnd.ASM.Operand.Imm_ASM;
-import BackEnd.ASM.Operand.Reg_ASM;
+import BackEnd.ASM.Operand.Register_ASM;
 
-public class cmp_Inst_ASM extends Base_Inst_ASM{
+public class Cmp_Inst_ASM extends Base_Inst_ASM{
 //	slt		t1,	t2,	t3
 //	seqz	t1,	t2
 	public String op;
 	//seqz,snez,sgt,slt // ==0, !=0, signed >, signed <
-	public cmp_Inst_ASM(String _op,Reg_ASM _rd, Reg_ASM _rs1, Reg_ASM _rs2, ASMBasicBlock _belongBlock){
+	public Cmp_Inst_ASM(String _op, Register_ASM _rd, Register_ASM _rs1, Register_ASM _rs2, ASMBasicBlock _belongBlock){
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		op=_op;
 		rd=_rd;

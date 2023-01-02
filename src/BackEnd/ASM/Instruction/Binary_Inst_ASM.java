@@ -2,7 +2,7 @@ package BackEnd.ASM.Instruction;
 
 import BackEnd.ASM.BasicBlock.ASMBasicBlock;
 import BackEnd.ASM.Operand.Imm_ASM;
-import BackEnd.ASM.Operand.Reg_ASM;
+import BackEnd.ASM.Operand.Register_ASM;
 
 public class Binary_Inst_ASM extends Base_Inst_ASM{
 //	add		a0,a1,a2
@@ -12,7 +12,7 @@ public class Binary_Inst_ASM extends Base_Inst_ASM{
 	//sll,sra, //<<,arithmetic >>
 	//and,or,xor //&,|,^
 	//addi //+
-	public Binary_Inst_ASM(String _op,Reg_ASM _rd, Reg_ASM _rs1, Reg_ASM _rs2,Imm_ASM _imm, ASMBasicBlock _belongBlock){
+	public Binary_Inst_ASM(String _op, Register_ASM _rd, Register_ASM _rs1, Register_ASM _rs2, Imm_ASM _imm, ASMBasicBlock _belongBlock){
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		op=_op;
 		rd=_rd;

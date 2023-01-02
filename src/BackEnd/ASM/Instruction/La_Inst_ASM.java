@@ -1,12 +1,12 @@
 package BackEnd.ASM.Instruction;
 
 import BackEnd.ASM.BasicBlock.ASMBasicBlock;
-import BackEnd.ASM.Operand.Reg_ASM;
+import BackEnd.ASM.Operand.Register_ASM;
 
 public class La_Inst_ASM extends Base_Inst_ASM{
 //	la		t0,	AAA
 	String symbolname;
-	public La_Inst_ASM(Reg_ASM _rd,String _symbolname,ASMBasicBlock _belongBlock){
+	public La_Inst_ASM(Register_ASM _rd, String _symbolname, ASMBasicBlock _belongBlock){
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		symbolname=_symbolname;
 		rd=_rd;

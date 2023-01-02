@@ -1,5 +1,7 @@
 import BackEnd.ASM.ASMBuilder;
+import BackEnd.ASM.ForceStackAlloc;
 import BackEnd.ASM.Module.ASMModule;
+import BackEnd.ASM.UpdateInst;
 import FrontEnd.IR.IRBuilder;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
@@ -46,6 +48,10 @@ public class Compiler {
 			ASMBuilder asmbuilder=new ASMBuilder();
 			asmbuilder.visit(irmodule);
 			ASMModule asmmodule=asmbuilder.asmModule;
+			ForceStackAlloc regalloc=new ForceStackAlloc(asmmodule);
+			regalloc.process();//暴力用压栈代替寄存器分配,即寄存器分配时让它全部溢出
+			UpdateInst updateinst=new UpdateInst(asmmodule);
+			updateinst.process();
 			ps.println(asmmodule.toString());
 		}
 		catch (MyBaseError error){

@@ -8,12 +8,15 @@ import FrontEnd.IR.TypeSystem.BaseType;
 import java.util.ArrayList;
 
 public class GetElementPtrInst extends BaseInst{
-	public GetElementPtrInst(Value _pointer, ArrayList<Value> _offset,BaseType _returntype, IRBasicBlock _belongBlock) {
+	//注:IRBuilder中生成的GetElementPtrInst只会有最多有两个offset，且如果offset等于2时第一位一定是0
+	public int offsetInSecond;//offset有两位时第二位实际偏移offset
+	public GetElementPtrInst(Value _pointer, ArrayList<Value> _offset,BaseType _returntype,int _offsetInSecond, IRBasicBlock _belongBlock) {
 		super("gep", _returntype, _belongBlock);
 		addOperand(_pointer);//0 pointer
-		for(int i=0;i<_offset.size();i++){ //1,2,3... offset
+		for(int i=0;i<_offset.size();i++){ //1,2... offset
 			addOperand(_offset.get(i));
 		}
+		offsetInSecond=_offsetInSecond;//_offsetInSecond==-1表示无意义
 	}
 
 	@Override

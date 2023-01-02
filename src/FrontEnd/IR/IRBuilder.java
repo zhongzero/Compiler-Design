@@ -668,7 +668,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 
 		ArrayList<Value> offset=new ArrayList<>();
 		offset.add(node.index.irOperand);
-		GetElementPtrInst gep=new GetElementPtrInst(node.arrayname.irOperand,offset,node.arrayname.irOperand.type,currentBlock);
+		GetElementPtrInst gep=new GetElementPtrInst(node.arrayname.irOperand,offset,node.arrayname.irOperand.type,-1,currentBlock);
 		//gep : i32** ,point to S[][][index]
 
 		if(needAddr.peek())node.irOperand=gep;
@@ -1123,7 +1123,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		ArrayList<Value> offset=new ArrayList<>();
 		offset.add(new ConstInt(0));
 		offset.add(new ConstInt(0));
-		return new GetElementPtrInst(node,offset,new PointerType(new IntegerType(8)),currentBlock);
+		return new GetElementPtrInst(node,offset,new PointerType(new IntegerType(8)),0,currentBlock);
 	}
 	boolean isCompareOp(BinaryExprNode.BinaryOp op) {
 		return op== BinaryExprNode.BinaryOp.LESS
@@ -1179,6 +1179,18 @@ public class IRBuilder extends ASTVisitor<Void> {
 		}
 		return -1;
 	}
+	int getStructMemberOffsetByte(String classname,String member) {//for asm
+		ClassDefNode tmpclass=semanticGlobalScope.class_table.get(classname);
+		int sum=0;
+		for (HashMap.Entry<String,VarDefNode> entry: tmpclass.varHashmap.entrySet()) {
+			VarDefNode tmp = entry.getValue();
+			if (tmp.varname.equals(member))return sum;
+			int bytesize=transType(tmp.vartype).bytesize();
+			if(bytesize==1)bytesize=4;//asm中 bool占4位
+			sum+=bytesize;
+		}
+		return -1;
+	}
 	BaseType getStructMemberType(String classname, String member) {
 		ClassDefNode tmpclass=semanticGlobalScope.class_table.get(classname);
 		VarDefNode vardef=tmpclass.varHashmap.get(member);
@@ -1189,13 +1201,13 @@ public class IRBuilder extends ASTVisitor<Void> {
 		ArrayList<Value> offset=new ArrayList<>();
 		offset.add(new ConstInt(0));
 		offset.add(new ConstInt(getStructMemberIndex(classname,member)));
-		return new GetElementPtrInst(ptr,offset,new PointerType(getStructMemberType(classname,member)),currentBlock);
+		return new GetElementPtrInst(ptr,offset,new PointerType(getStructMemberType(classname,member)),getStructMemberOffsetByte(classname,member),currentBlock);
 	}
 	LoadInst getArraySize(Value ptr){
 		BitCastInst bitcast=new BitCastInst(ptr,new PointerType(new IntegerType(32)),currentBlock);
 		ArrayList<Value> offset=new ArrayList<>();
 		offset.add(new ConstInt(-1));
-		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,bitcast.type,currentBlock);
+		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,bitcast.type,-1,currentBlock);
 		return new LoadInst(gep,currentBlock);
 	}
 	void class_constructor_execute(Value thisptr,String classname){
@@ -1234,7 +1246,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		new StoreInst(bitcast,index,currentBlock);
 		ArrayList<Value> offset=new ArrayList();
 		offset.add(new ConstInt(1));
-		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,bitcast.type,currentBlock);
+		GetElementPtrInst gep=new GetElementPtrInst(bitcast,offset,bitcast.type,-1,currentBlock);
 
 		BitCastInst bitcast2 = new BitCastInst(gep, targettype, currentBlock);
 
@@ -1258,7 +1270,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 			currentBlock=bodyblock;
 			ArrayList<Value> offset2=new ArrayList();
 			offset2.add(countload);
-			GetElementPtrInst gep2=new GetElementPtrInst(bitcast2,offset2,bitcast2.type,currentBlock);
+			GetElementPtrInst gep2=new GetElementPtrInst(bitcast2,offset2,bitcast2.type,-1,currentBlock);
 			Value tmp=generate_all_new_array(node,pos+1,mallocfunc,basetype,basebytesize);
 			new StoreInst(gep2,tmp,currentBlock);
 			BinaryInst add=new BinaryInst(countload,new ConstInt(1),BinaryOp.add,currentBlock);

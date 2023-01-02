@@ -2,12 +2,12 @@ package BackEnd.ASM.Instruction;
 
 import BackEnd.ASM.BasicBlock.ASMBasicBlock;
 import BackEnd.ASM.Operand.Imm_ASM;
-import BackEnd.ASM.Operand.Reg_ASM;
+import BackEnd.ASM.Operand.Register_ASM;
 
 public class Load_Inst_ASM extends Base_Inst_ASM{
 	public int loadbyte;
 //	lw		t1,	8(sp)
-	public Load_Inst_ASM(int _loadbyte,Reg_ASM _rd, Reg_ASM _rs1, Imm_ASM _offset, ASMBasicBlock _belongBlock){
+	public Load_Inst_ASM(int _loadbyte, Register_ASM _rd, Register_ASM _rs1, Imm_ASM _offset, ASMBasicBlock _belongBlock){
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		loadbyte=_loadbyte;
 		rd=_rd;
