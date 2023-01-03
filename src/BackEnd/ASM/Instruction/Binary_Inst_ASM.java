@@ -3,6 +3,7 @@ package BackEnd.ASM.Instruction;
 import BackEnd.ASM.BasicBlock.ASMBasicBlock;
 import BackEnd.ASM.Operand.Imm_ASM;
 import BackEnd.ASM.Operand.Register_ASM;
+import BackEnd.ASM.Operand.VirtualRegister_ASM;
 
 public class Binary_Inst_ASM extends Base_Inst_ASM{
 //	add		a0,a1,a2

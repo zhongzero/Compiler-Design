@@ -15,7 +15,7 @@ public class Li_Inst_ASM extends Base_Inst_ASM{
 	@Override
 	public String toString() {
 		StringBuilder ans = new StringBuilder();
-		ans.append("\tli\t\t."+rd.toString()+",\t"+imm.toString()+"\n");
+		ans.append("\tli\t\t"+rd.toString()+",\t"+imm.toString()+"\n");
 		return ans.toString();
 	}
 }

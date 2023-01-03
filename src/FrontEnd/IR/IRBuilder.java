@@ -297,11 +297,13 @@ public class IRBuilder extends ASTVisitor<Void> {
 			visit(tmp);
 		}
 		if(!HaveExplicitConstructor){
-			currentFunction=irModule.funcHashMap.get(currentfunctionname);
-			currentBlock=new IRBasicBlock("normal_block",currentFunction);
-			new RetInst(new Value("meaningless",new VoidType()),currentBlock);
-			currentBlock=null;
-			currentFunction=null;
+			ClassConstructorNode tmp=new ClassConstructorNode(node.classname,new ParaListNode(new ArrayList<>(),null),new BlockStatNode(new ArrayList<>(),null),null);
+			visit(tmp);
+//			currentFunction=irModule.funcHashMap.get(currentfunctionname);
+//			currentBlock=new IRBasicBlock("normal_block",currentFunction);
+//			new RetInst(new Value("meaningless",new VoidType()),currentBlock);
+//			currentBlock=null;
+//			currentFunction=null;
 		}
 		currentfunctionname=null;
 
@@ -318,7 +320,7 @@ public class IRBuilder extends ASTVisitor<Void> {
 		IRBasicBlock endblock=new IRBasicBlock("func_end_block",currentFunction);
 		IRBasicBlock normalblock=new IRBasicBlock("normal_block",currentFunction);
 		currentFunction.funcBeginBlock=beginblock;
-		currentFunction.funcEndBlock =endblock;
+		currentFunction.funcEndBlock=endblock;
 
 		currentBlock=endblock;
 		new RetInst(new Value("meaningless",new VoidType()),currentBlock);

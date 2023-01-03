@@ -8,4 +8,8 @@ public class PhysicalRegister_ASM extends Register_ASM {
 	public boolean equals(PhysicalRegister_ASM other){
 		return name.equals(other.name);
 	}
+	@Override
+	public String toString() {
+		return name;
+	}
 }

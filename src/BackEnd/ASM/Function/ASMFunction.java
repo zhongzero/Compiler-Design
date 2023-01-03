@@ -30,7 +30,6 @@ public class ASMFunction {
 	public int getOffset(VirtualRegister_ASM reg){
 		if(!VReg_offset_Map.containsKey(reg))throw new RuntimeException("can't find this virtual register's place in stack");
 		return VReg_offset_Map.get(reg);
-		!!!!要提前定义出每个Virtual Register的实例，记录在IR BaseInst中，再取相应实例放入hashmap中(string相同不行)
 	}
 	@Override
 		public String toString(){

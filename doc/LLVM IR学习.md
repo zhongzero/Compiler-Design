@@ -31,12 +31,13 @@ LLVM IR有三种格式
 编译命令
 
 ```
-clang++ a.cpp -S -emit-llvm //生成a.ll文件
-clang++ a.cpp -c -emit-llvm //生成a.bc文件
+clang a.c -S -emit-llvm //生成a.ll文件
+clang a.c -c -emit-llvm //生成a.bc文件
 llvm-dis a.bc // a.bc转a.ll
-clang++ a.ll -o a //由a.ll生成可执行文件
+clang a.ll -o a //由a.ll生成可执行文件
 nm a //查看可执行文件的符号表
-llc a.ll //由a.ll生成汇编代码a.s
+llc a.ll //由a.ll生成汇编代码a.s(默认会生成为当前的编译环境平台的汇编代码)
+llc a.ll -o a.s -march=riscv32 -mattr=+m //由a.ll生成汇编代码a.s （生成riscv32的汇编代码）(-mattr=+m表示不用__mul而是用mul)
 ```
 
 

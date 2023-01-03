@@ -69,6 +69,8 @@ public class ASMBuilder extends IRVisitor<Void> {
 		}
 		for (HashMap.Entry<String, IRFunction> entry: node.funcHashMap.entrySet()) {
 			IRFunction tmp=entry.getValue();
+			if(tmp.blockList.size()==0)continue;//function declare不需要写入asm
+			if(tmp.name.equals("f_main_1"))tmp.name="main";
 			currentFunction=new ASMFunction(tmp.name);
 			asmModule.funcList.add(currentFunction);
 			visit(tmp);
@@ -95,13 +97,13 @@ public class ASMBuilder extends IRVisitor<Void> {
 				currentFunction.stackAllocSize+=8;
 
 				for(int j=0;j<node.operandlist.size();j++){
-					String paraname=node.operandlist.get(j).name;
-					VirtualRegister_ASM vReg0=new VirtualRegister_ASM(paraname);
+					Value para=node.operandlist.get(j);
+					VirtualRegister_ASM vReg0=Creat_and_Get_vReg(para);
 					if(j<parasize){
 						new Mv_Inst_ASM(vReg0,new PhysicalRegister_ASM("a"+j),currentBlock);
 					}
 					else {
-						VirtualRegister_ASM pres0=new VirtualRegister_ASM("s0__");//保证"__"结尾没有用过
+						VirtualRegister_ASM pres0=new VirtualRegister_ASM("s0__");
 						if(j==3)new Load_Inst_ASM(4,pres0,sp,new Imm_ASM(0),currentBlock);//把原函数的s0(stack头)取出放入pres0中
 						new Load_Inst_ASM(4,vReg0,pres0,new Imm_ASM(-(j+1-parasize)*4),currentBlock);//通过原函数的s0(stack头)找到原函数传入的其余参数的存储位置
 					}
@@ -137,11 +139,11 @@ public class ASMBuilder extends IRVisitor<Void> {
 	public Void visitGlobalVarDef(GlobalVarDef node){return null;}
 
 	public Void visitAllocInst(AllocInst node){
-		currentFunction.StackAlloc(new VirtualRegister_ASM(node.name));
-		//给虚拟寄存器(形如xxx_addr_3)分配栈上的地址
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
-		int offset=currentFunction.getOffset(new VirtualRegister_ASM(node.name));
-		new Binary_Inst_ASM("addi",vReg0,sp,null,new Imm_ASM(offset),currentBlock);
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
+		VirtualRegister_ASM value=new VirtualRegister_ASM("value__");
+		currentFunction.StackAlloc(value);//分配栈上的地址
+		int offset=currentFunction.getOffset(value);
+		new Binary_Inst_ASM("addi",vReg0,sp,null,new Imm_ASM(offset),currentBlock);//把xx_addr(一个vReg)的值赋成对应的地址
 		return null;
 	}
 	public Void visitBinaryInst(BinaryInst node){
@@ -153,22 +155,11 @@ public class ASMBuilder extends IRVisitor<Void> {
 		and,or,xor, //&,|,^
 		保证operand1,operand2,targetoperand都是i32类型(imm or virtual reg)
 		 */
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
 		Value operand1=node.operandlist.get(0);
 		Value operand2=node.operandlist.get(1);
-		VirtualRegister_ASM vReg1,vReg2;
-		if(operand1 instanceof BaseConst){
-			vReg1=new VirtualRegister_ASM("binaryconstInt1__");
-			new Li_Inst_ASM(vReg1,new Imm_ASM(TransConstToInt(operand1)),currentBlock);
-			//实际上考虑到cpu并行，把li到的vReg设成每个都不一样的再进行寄存器分配，结果可能会好一点，但由于不考虑cpu这里就简单写了
-		}
-		else vReg1=new VirtualRegister_ASM(operand1.name);//Virtual register
-		if(operand2 instanceof BaseConst){
-			vReg2=new VirtualRegister_ASM("binaryconstInt2__");
-			new Li_Inst_ASM(vReg2,new Imm_ASM(TransConstToInt(operand2)),currentBlock);
-			//实际上考虑到cpu并行，把li到的vReg设成每个都不一样的再进行寄存器分配，结果可能会好一点，但由于不考虑cpu这里就简单写了
-		}
-		else vReg2=new VirtualRegister_ASM(operand2.name);//Virtual register
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
+		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(operand1);
+		VirtualRegister_ASM vReg2=Creat_and_Get_vReg(operand2);
 
 		new Binary_Inst_ASM(TransOp(node.op),vReg0,vReg1,vReg2,null,currentBlock);
 		return null;
@@ -186,20 +177,9 @@ public class ASMBuilder extends IRVisitor<Void> {
 		 */
 		Value operand1=node.operandlist.get(0);
 		Value operand2=node.operandlist.get(1);
-		VirtualRegister_ASM vReg1,vReg2;
-		if(operand1 instanceof BaseConst){
-			vReg1=new VirtualRegister_ASM("icmpconst1__");
-			new Li_Inst_ASM(vReg1,new Imm_ASM(TransConstToInt(operand1)),currentBlock);
-			//实际上考虑到cpu并行，把li到的vReg设成每个都不一样的再进行寄存器分配，结果可能会好一点，但由于不考虑cpu这里就简单写了
-		}
-		else vReg1=new VirtualRegister_ASM(operand1.name);//Virtual register
-		if(operand2 instanceof BaseConst){
-			vReg2=new VirtualRegister_ASM("icmpconst2__");
-			new Li_Inst_ASM(vReg2,new Imm_ASM(TransConstToInt(operand2)),currentBlock);
-			//实际上考虑到cpu并行，把li到的vReg设成每个都不一样的再进行寄存器分配，结果可能会好一点，但由于不考虑cpu这里就简单写了
-		}
-		else vReg2=new VirtualRegister_ASM(operand2.name);//Virtual register
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
+		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(operand1);
+		VirtualRegister_ASM vReg2=Creat_and_Get_vReg(operand2);
 
 		if(node.op==BinaryOp.eq){
 			new Binary_Inst_ASM("xor",vReg0,vReg1,vReg2,null,currentBlock);
@@ -226,52 +206,27 @@ public class ASMBuilder extends IRVisitor<Void> {
 		return null;
 	}
 	public Void visitLoadInst(LoadInst node){
+		//addr一定是vReg(不是imm)
 		Value addr=node.operandlist.get(0);
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
-		VirtualRegister_ASM vReg1=new VirtualRegister_ASM(addr.name);
-		if(addr instanceof GlobalVarDef){
-			new La_Inst_ASM(vReg0,addr.name,currentBlock);
-			new Load_Inst_ASM(4,vReg0,vReg0,new Imm_ASM(0),currentBlock);
-		}
-		else {
-			new Load_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
-//			Imm_ASM offset=new Imm_ASM(currentFunction.getOffset(vReg1));
-//			if(BetweenImm(offset.imm))new Load_Inst_ASM(4,vReg0,sp,offset,currentBlock);
-//			else {
-//				VirtualRegister_ASM tmpReg=new VirtualRegister_ASM("load__");
-//				new Li_Inst_ASM(tmpReg,offset,currentBlock);
-//				new Binary_Inst_ASM("add",tmpReg,sp,tmpReg,null,currentBlock);
-//				new Load_Inst_ASM(4,vReg0,tmpReg,new Imm_ASM(0),currentBlock);
-//			}
-		}
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
+		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(addr);
+		new Load_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
 		return null;
 	}
 	public Void visitStoreInst(StoreInst node){
+		//addr一定是vReg(不是imm)
 		Value addr=node.operandlist.get(0);
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
-		VirtualRegister_ASM vReg1=new VirtualRegister_ASM(addr.name);
-		if(addr instanceof GlobalVarDef){
-			new La_Inst_ASM(vReg0,addr.name,currentBlock);
-			new Store_Inst_ASM(4,vReg0,vReg0,new Imm_ASM(0),currentBlock);
-		}
-		else {
-			new Store_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
-//			Imm_ASM offset=new Imm_ASM(currentFunction.getOffset(vReg1));
-//			if(BetweenImm(offset.imm))new Store_Inst_ASM(4,vReg0,sp,offset,currentBlock);
-//			else {
-//				VirtualRegister_ASM tmpReg=new VirtualRegister_ASM("load__");
-//				new Li_Inst_ASM(tmpReg,offset,currentBlock);
-//				new Binary_Inst_ASM("add",tmpReg,sp,tmpReg,null,currentBlock);
-//				new Store_Inst_ASM(4,vReg0,tmpReg,new Imm_ASM(0),currentBlock);
-//			}
-		}
+		Value value=node.operandlist.get(1);
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(value);
+		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(addr);
+		new Store_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
 		return null;
 	}
 	public Void visitBrInst(BrInst node){
 		if(node.condition==null)new Branch_Inst_ASM("j",null,node.ifBlock.name,currentBlock);
 		else {
-			VirtualRegister_ASM vReg=new VirtualRegister_ASM(node.condition.name);
-			new Branch_Inst_ASM("beqz",vReg,node.elseBlock.name,currentBlock);
+			VirtualRegister_ASM vReg1=Creat_and_Get_vReg(node.condition);
+			new Branch_Inst_ASM("beqz",vReg1,node.elseBlock.name,currentBlock);
 			new Branch_Inst_ASM("j",null,node.ifBlock.name,currentBlock);
 		}
 		return null;
@@ -279,28 +234,24 @@ public class ASMBuilder extends IRVisitor<Void> {
 	public Void visitRetInst(RetInst node){
 		Value operand=node.operandlist.get(0);
 		if(!(operand.type instanceof VoidType)){
-			VirtualRegister_ASM vReg;
-			if(operand instanceof BaseConst){
-				vReg=new VirtualRegister_ASM("ret__");
-				new Li_Inst_ASM(vReg,new Imm_ASM(TransConstToInt(operand)),currentBlock);
-			}
-			else vReg=new VirtualRegister_ASM(operand.name);
-			new Mv_Inst_ASM(a0,vReg,currentBlock);
+			VirtualRegister_ASM vReg1=Creat_and_Get_vReg(operand);
+			new Mv_Inst_ASM(a0,vReg1,currentBlock);
 		}
 		//ret指令先不做，最后做
 		return null;
 	}
 	public Void visitBitCastInst(BitCastInst node){
-		VirtualRegister_ASM vReg1=new VirtualRegister_ASM(node.operandlist.get(0).name);
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
+		//node.operandlist.get(0)一定是vReg(不是imm)
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
+		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(node.operandlist.get(0));
 		new Mv_Inst_ASM(vReg0,vReg1,currentBlock);
 		return null;
 	}
 	public Void visitCallInst(CallInst node){
 		IRFunction targetfunc= (IRFunction) node.operandlist.get(0);
 		for(int i=1;i<node.operandlist.size();i++){//paradata
-			String paradataname=node.operandlist.get(i).name;
-			VirtualRegister_ASM vReg=new VirtualRegister_ASM(paradataname);
+			Value paradata=node.operandlist.get(i);
+			VirtualRegister_ASM vReg=Creat_and_Get_vReg(paradata);
 			if(i-1<parasize){
 				new Mv_Inst_ASM(new PhysicalRegister_ASM("a"+(i-1)),vReg,currentBlock);
 			}
@@ -310,25 +261,26 @@ public class ASMBuilder extends IRVisitor<Void> {
 		}
 		new Call_Inst_ASM(targetfunc.name,currentBlock);
 		if(!(node.type instanceof VoidType)) {
-			VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
+			VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
 			new Mv_Inst_ASM(vReg0, s0, currentBlock);
 		}
 		return null;
 	}
 	public Void visitGetElementPtrInst(GetElementPtrInst node){
 		//注:IRBuilder中生成的GetElementPtrInst只会有最多有两个offset，且如果offset等于2时第一位一定是0
+		//pointer一定是vReg(不是imm)
 		Value pointer=node.operandlist.get(0);
-		VirtualRegister_ASM vReg1=new VirtualRegister_ASM(pointer.name);
-		VirtualRegister_ASM vReg0=new VirtualRegister_ASM(node.name);
+		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(pointer);
+		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
 		if(node.operandlist.size()==2){//1位offset
 			Value operand1=node.operandlist.get(1);
-			if(operand1 instanceof BaseConst){
+			if(operand1 instanceof BaseConst){//opt，压了一个li和一个mul
 				assert (operand1 instanceof ConstInt);
 				Imm_ASM offset=new Imm_ASM(((ConstInt) operand1).value*4);
 				new Binary_Inst_ASM("addi",vReg0,vReg1,null,offset,currentBlock);
 			}
 			else {
-				VirtualRegister_ASM vReg2=new VirtualRegister_ASM(operand1.name);
+				VirtualRegister_ASM vReg2=Creat_and_Get_vReg(operand1);
 				VirtualRegister_ASM tmpReg=new VirtualRegister_ASM("const4__");
 				new Li_Inst_ASM(tmpReg,new Imm_ASM(4),currentBlock);
 				new Binary_Inst_ASM("mul",tmpReg,tmpReg,vReg2,null,currentBlock);
@@ -421,5 +373,25 @@ public class ASMBuilder extends IRVisitor<Void> {
 	}
 	public boolean BetweenImm(int offset){
 		return -2048<=offset&&offset<2048;//在load/store地址偏移范围内
+	}
+	VirtualRegister_ASM Creat_and_Get_vReg(Value value){//value要么是const要么是vReg(inst or globalVar)
+		//注：对于const类型返回的是值
+		//注：对于globalVar类型返回的是指针
+		//注：对于inst类型返回的是值或指针
+		if(value instanceof BaseConst){
+			VirtualRegister_ASM vReg=new VirtualRegister_ASM("const__");
+			new Li_Inst_ASM(vReg,new Imm_ASM(TransConstToInt(value)),currentBlock);
+			return vReg;
+		}
+		else if(value instanceof BaseInst){
+			if(value.vReg==null)value.vReg=new VirtualRegister_ASM(value.name);
+			return value.vReg;
+		}
+		else if(value instanceof GlobalVarDef){
+			VirtualRegister_ASM vReg=new VirtualRegister_ASM("const__");
+			new La_Inst_ASM(vReg,value.name,currentBlock);
+			return vReg;
+		}
+		else throw new RuntimeException("value is neither a const nor a inst nor a globalVar");
 	}
 }

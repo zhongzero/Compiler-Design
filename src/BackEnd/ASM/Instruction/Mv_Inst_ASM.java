@@ -14,7 +14,7 @@ public class Mv_Inst_ASM extends Base_Inst_ASM{
 	@Override
 	public String toString() {
 		StringBuilder ans = new StringBuilder();
-		ans.append("\tmv\t\t."+rd.toString()+",\t"+rs1.toString()+"\n");
+		ans.append("\tmv\t\t"+rd.toString()+",\t"+rs1.toString()+"\n");
 		return ans.toString();
 	}
 }

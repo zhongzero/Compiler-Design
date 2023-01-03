@@ -23,6 +23,8 @@ public class UpdateInst {
 		//填入function开头和结尾sp(和s0)用到的stacksize(已在ASMBuilder中占位)
 		for(int i=0;i<asmmodule.funcList.size();i++){
 			ASMFunction tmpfunc=asmmodule.funcList.get(i);
+			System.out.println(tmpfunc.name);
+			System.out.println(tmpfunc.blockList.size());
 			ASMBasicBlock beginBlock=tmpfunc.beginBlock;
 			int stacksize=tmpfunc.stackAllocSize+tmpfunc.stackParaSize;
 			beginBlock.instList.get(0).imm=new Imm_ASM(-(stacksize));//addi sp sp -stacksize

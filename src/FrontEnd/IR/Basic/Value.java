@@ -1,6 +1,7 @@
 package FrontEnd.IR.Basic;
 
 
+import BackEnd.ASM.Operand.VirtualRegister_ASM;
 import FrontEnd.AST.ASTVisitor;
 import FrontEnd.IR.IRVisitor;
 import FrontEnd.IR.TypeSystem.BaseType;
@@ -13,6 +14,7 @@ public class Value {
 	public BaseType type;
 	public ArrayList<User> userlist;
 	public static HashMap<String,Integer> Map=new HashMap<>();
+	public VirtualRegister_ASM vReg;
 	public Value(String _name,BaseType _type){
 		name=GetUniqueName(_name);
 		type=_type;

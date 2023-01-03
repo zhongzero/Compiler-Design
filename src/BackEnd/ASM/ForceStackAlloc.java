@@ -17,6 +17,9 @@ public class ForceStackAlloc {
 	//先做暴力压栈，把所有都压入栈中，用于分配的寄存器只用t0,t1,t2,t3
 
 	ASMModule asmmodule;
+	ASMFunction currentfunction;
+	ASMBasicBlock currentblock;
+	ListIterator<Base_Inst_ASM> iterator;
 
 	PhysicalRegister_ASM sp=new PhysicalRegister_ASM("sp");
 	PhysicalRegister_ASM t0=new PhysicalRegister_ASM("t0");
@@ -28,55 +31,55 @@ public class ForceStackAlloc {
 	}
 	public void process(){
 		for(int i=0;i<asmmodule.funcList.size();i++){
-			ASMFunction tmpfunc=asmmodule.funcList.get(i);
-			for(int j=0;j<tmpfunc.blockList.size();j++){
-				ASMBasicBlock tmpblock=tmpfunc.blockList.get(j);
-				ListIterator<Base_Inst_ASM> iterator=tmpblock.instList.listIterator();
+			currentfunction=asmmodule.funcList.get(i);
+			for(int j=0;j<currentfunction.blockList.size();j++){
+				currentblock=currentfunction.blockList.get(j);
+				iterator=currentblock.instList.listIterator(0);
 				while(iterator.hasNext()){
 					Base_Inst_ASM inst=iterator.next();
 					if(inst.rs1!=null&&inst.rs1 instanceof VirtualRegister_ASM){
-						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs1,t1,tmpfunc,tmpblock,iterator);
+						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs1,t1);
 						inst.rs1=new PhysicalRegister_ASM("t1");
 					}
 					if(inst.rs2!=null&&inst.rs2 instanceof VirtualRegister_ASM){
-						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs2,t2,tmpfunc,tmpblock,iterator);
+						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs2,t2);
 						inst.rs2=new PhysicalRegister_ASM("t2");
 					}
 					if(inst.rd!=null&&inst.rd instanceof VirtualRegister_ASM){
-						StackAllocLoadStore("store", (VirtualRegister_ASM) inst.rd,t0,tmpfunc,tmpblock,iterator);
+						StackAllocLoadStore("store", (VirtualRegister_ASM) inst.rd,t0);
 						inst.rd=new PhysicalRegister_ASM("t0");
 					}
 				}
 			}
 		}
 	}
-	public void StackAllocLoadStore(String tp, VirtualRegister_ASM vReg,PhysicalRegister_ASM rd,ASMFunction tmpfunc,ASMBasicBlock tmpblock,ListIterator<Base_Inst_ASM> iterator){
+	public void StackAllocLoadStore(String tp, VirtualRegister_ASM vReg,PhysicalRegister_ASM rd){
 		if(tp.equals("load")){
-			if(!tmpfunc.VReg_offset_Map.containsKey(vReg))tmpfunc.StackAlloc(vReg);
-			Imm_ASM offset=new Imm_ASM(tmpfunc.getOffset(vReg));
+			if(!currentfunction.VReg_offset_Map.containsKey(vReg))currentfunction.StackAlloc(vReg);
+			Imm_ASM offset=new Imm_ASM(currentfunction.getOffset(vReg));
 			if(BetweenImm(offset.imm)){
 				iterator.previous();
-				iterator.add(new Load_Inst_ASM(4,rd,sp,offset,tmpblock));
+				iterator.add(new Load_Inst_ASM(4,rd,sp,offset,null));
 				iterator.next();
 			}
 			else {
 				iterator.previous();
-				iterator.add(new Li_Inst_ASM(t3,offset,tmpblock));
-				iterator.add(new Binary_Inst_ASM("add",t3,sp,t3,null,tmpblock));
-				iterator.add(new Load_Inst_ASM(4,rd,t3,new Imm_ASM(0),tmpblock));
+				iterator.add(new Li_Inst_ASM(t3,offset,null));
+				iterator.add(new Binary_Inst_ASM("add",t3,sp,t3,null,null));
+				iterator.add(new Load_Inst_ASM(4,rd,t3,new Imm_ASM(0),null));
 				iterator.next();
 			}
 		}
 		if(tp.equals("store")){
-			if(!tmpfunc.VReg_offset_Map.containsKey(vReg))tmpfunc.StackAlloc(vReg);
-			Imm_ASM offset=new Imm_ASM(tmpfunc.getOffset(vReg));
+			if(!currentfunction.VReg_offset_Map.containsKey(vReg))currentfunction.StackAlloc(vReg);
+			Imm_ASM offset=new Imm_ASM(currentfunction.getOffset(vReg));
 			if(BetweenImm(offset.imm)){
-				iterator.add(new Store_Inst_ASM(4,rd,sp,offset,tmpblock));
+				iterator.add(new Store_Inst_ASM(4,rd,sp,offset,null));
 			}
 			else {
-				iterator.add(new Li_Inst_ASM(t3,offset,tmpblock));
-				iterator.add(new Binary_Inst_ASM("add",t3,sp,t3,null,tmpblock));
-				iterator.add(new Store_Inst_ASM(4,rd,t3,new Imm_ASM(0),tmpblock));
+				iterator.add(new Li_Inst_ASM(t3,offset,null));
+				iterator.add(new Binary_Inst_ASM("add",t3,sp,t3,null,null));
+				iterator.add(new Store_Inst_ASM(4,rd,t3,new Imm_ASM(0),null));
 			}
 		}
 	}

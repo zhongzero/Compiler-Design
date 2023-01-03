@@ -22,6 +22,7 @@ public class Compiler {
 			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
 //			PrintStream ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
 			PrintStream ps=System.out;
+
 //			System.out.println(input);
 //			System.out.println("-----------");
 
