@@ -1,4 +1,4 @@
-package PrintBuiltin_s;
+package PrintBuiltin;
 
 public class PrintBuiltin {
 	public String str="\t.text\n" +

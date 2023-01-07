@@ -6,7 +6,7 @@ import FrontEnd.IR.IRBuilder;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
 import FrontEnd.SemanticCheck.Utils.GlobalScope;
-import PrintBuiltin_s.PrintBuiltin;
+import PrintBuiltin.PrintBuiltin;
 import Utils.Error.MyBaseError;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
