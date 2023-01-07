@@ -20,6 +20,7 @@ for judge in judge_list:
     input_file = "1.in"
     output_file = "1.out"
     std_file = "1.ans"
+    #这三个文件名不能改(要和test-asm.sh中保持一致)
 
     input_fp = open(input_file, "w")
     output_fp = open(output_file, "w")
@@ -50,9 +51,9 @@ for judge in judge_list:
 
     print("\033[34m Loading finish. Start to run.")
     
-    os.system("cd ../src && javac Compiler.java &&  cp {code_file} test.mx && java Compiler<test.mx>test.ll &&cd ../debug".format(code_file=code_file))
+    os.system("cd ../src && javac Compiler.java &&  cp {code_file} test.mx && java Compiler<test.mx>test.s &&cd ../debug".format(code_file=code_file))
     
-    os.system("cp ../src/test.ll test.ll && ./test-llvm-ir.sh<{input_file}>{output_file}".format(input_file=input_file,output_file=output_file))
+    os.system("cp ../src/test.s test.s && ./test-asm.sh")
 
 
     wrap = os.popen(
@@ -67,6 +68,7 @@ for judge in judge_list:
             testpoint=code_file + ", point " + str(cnt)))
         # print("[info]: ", info)
         fail_collect.append(code_file)
+        break
 
     time.sleep(1)
 

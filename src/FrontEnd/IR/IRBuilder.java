@@ -600,6 +600,9 @@ public class IRBuilder extends ASTVisitor<Void> {
 			else if(classtype instanceof StringTypeNode){
 				needAddr.push(false);
 				visit(membernode.expr);// membernode.expr.irOperand : i8*
+				if(membernode.expr.irOperand instanceof ConstString){
+					membernode.expr.irOperand=creat_and_getConstString((ConstString) membernode.expr.irOperand);
+				}
 				if(membernode.member.equals("length"))tmpfunc=irModule.funcHashMap.get("_string_length");
 				else if(membernode.member.equals("substring"))tmpfunc=irModule.funcHashMap.get("_string_substring");
 				else if(membernode.member.equals("parseInt"))tmpfunc=irModule.funcHashMap.get("_string_parseInt");

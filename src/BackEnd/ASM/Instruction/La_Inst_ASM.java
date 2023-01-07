@@ -15,7 +15,7 @@ public class La_Inst_ASM extends Base_Inst_ASM{
 	@Override
 	public String toString() {
 		StringBuilder ans = new StringBuilder();
-		ans.append("\tla\t\t."+rd.toString()+",\t"+symbolname+"\n");
+		ans.append("\tla\t\t"+rd.toString()+",\t"+symbolname+"\n");
 		return ans.toString();
 	}
 }

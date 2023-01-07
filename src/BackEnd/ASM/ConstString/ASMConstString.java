@@ -12,7 +12,12 @@ public class ASMConstString {
 		StringBuilder ans = new StringBuilder();
 		ans.append("\t.type\t" + name + ",@object\n");
 		ans.append(name + ":\n");
-		ans.append("\t.string\t\""+str+"\"\n");
+		String str2=str.replace("\\", "\\\\")
+				.replace("\n", "\\n")
+				.replace("\0", "")
+				.replace("\t", "\\t")
+				.replace("\"", "\\\"");
+		ans.append("\t.string\t\""+str2+"\"\n");
 		ans.append("\t.size\t" + name + ",\t"+ (str.length() + 1) +"\n\n");
 		return ans.toString();
 	}

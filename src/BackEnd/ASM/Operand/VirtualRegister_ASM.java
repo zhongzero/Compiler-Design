@@ -7,6 +7,7 @@ public class VirtualRegister_ASM extends Register_ASM {
 	}
 	@Override
 	public String toString() {
+//		return name;
 		throw new RuntimeException("why use vReg in printer?");
 	}
 }

@@ -256,13 +256,13 @@ public class ASMBuilder extends IRVisitor<Void> {
 				new Mv_Inst_ASM(new PhysicalRegister_ASM("a"+(i-1)),vReg,currentBlock);
 			}
 			else {
-				new Store_Inst_ASM(4,vReg,s0,new Imm_ASM(-((i-1)+1-parasize)*4),currentBlock);//通过原函数的s0(stack头)找到原函数传入的其余参数的存储位置
+				new Store_Inst_ASM(4,vReg,s0,new Imm_ASM(-((i-1)+1-parasize)*4),currentBlock);//把要传入的其余参数从当前stack顶依次往下存
 			}
 		}
 		new Call_Inst_ASM(targetfunc.name,currentBlock);
 		if(!(node.type instanceof VoidType)) {
 			VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
-			new Mv_Inst_ASM(vReg0, s0, currentBlock);
+			new Mv_Inst_ASM(vReg0, a0, currentBlock);
 		}
 		return null;
 	}
@@ -378,7 +378,7 @@ public class ASMBuilder extends IRVisitor<Void> {
 		//注：对于const类型返回的是值
 		//注：对于globalVar类型返回的是指针
 		//注：对于inst类型返回的是值或指针
-		if(value instanceof BaseConst){
+		if((value instanceof BaseConst) && !(value instanceof ConstString)){
 			VirtualRegister_ASM vReg=new VirtualRegister_ASM("const__");
 			new Li_Inst_ASM(vReg,new Imm_ASM(TransConstToInt(value)),currentBlock);
 			return vReg;
@@ -387,11 +387,14 @@ public class ASMBuilder extends IRVisitor<Void> {
 			if(value.vReg==null)value.vReg=new VirtualRegister_ASM(value.name);
 			return value.vReg;
 		}
-		else if(value instanceof GlobalVarDef){
+		else if((value instanceof GlobalVarDef) || (value instanceof ConstString)){
 			VirtualRegister_ASM vReg=new VirtualRegister_ASM("const__");
 			new La_Inst_ASM(vReg,value.name,currentBlock);
 			return vReg;
 		}
-		else throw new RuntimeException("value is neither a const nor a inst nor a globalVar");
+		else {//function parameter(type: Value)
+			if(value.vReg==null)value.vReg=new VirtualRegister_ASM(value.name);
+			return value.vReg;
+		}
 	}
 }

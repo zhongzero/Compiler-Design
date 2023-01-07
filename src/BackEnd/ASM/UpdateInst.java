@@ -23,8 +23,8 @@ public class UpdateInst {
 		//填入function开头和结尾sp(和s0)用到的stacksize(已在ASMBuilder中占位)
 		for(int i=0;i<asmmodule.funcList.size();i++){
 			ASMFunction tmpfunc=asmmodule.funcList.get(i);
-			System.out.println(tmpfunc.name);
-			System.out.println(tmpfunc.blockList.size());
+//			System.out.println(tmpfunc.name);
+//			System.out.println(tmpfunc.blockList.size());
 			ASMBasicBlock beginBlock=tmpfunc.beginBlock;
 			int stacksize=tmpfunc.stackAllocSize+tmpfunc.stackParaSize;
 			beginBlock.instList.get(0).imm=new Imm_ASM(-(stacksize));//addi sp sp -stacksize
@@ -46,8 +46,8 @@ public class UpdateInst {
 					if((inst instanceof Binary_Inst_ASM) && ((Binary_Inst_ASM) inst).op.equals("addi")){
 						if(!BetweenImm(inst.imm.imm)){
 							iterator.previous();
-							iterator.add(new Li_Inst_ASM(t0,inst.imm,tmpblock));
-							iterator.add(new Binary_Inst_ASM("add",inst.rd,inst.rs1,t0,null,tmpblock));
+							iterator.add(new Li_Inst_ASM(t0,inst.imm,null));
+							iterator.add(new Binary_Inst_ASM("add",inst.rd,inst.rs1,t0,null,null));
 							iterator.next();
 							iterator.remove();
 						}

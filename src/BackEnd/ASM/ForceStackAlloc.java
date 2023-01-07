@@ -32,8 +32,10 @@ public class ForceStackAlloc {
 	public void process(){
 		for(int i=0;i<asmmodule.funcList.size();i++){
 			currentfunction=asmmodule.funcList.get(i);
+//			System.out.println(currentfunction.name);
 			for(int j=0;j<currentfunction.blockList.size();j++){
 				currentblock=currentfunction.blockList.get(j);
+//				System.out.println(currentblock.name);
 				iterator=currentblock.instList.listIterator(0);
 				while(iterator.hasNext()){
 					Base_Inst_ASM inst=iterator.next();

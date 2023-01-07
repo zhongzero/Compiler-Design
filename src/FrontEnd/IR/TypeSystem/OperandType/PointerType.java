@@ -28,7 +28,7 @@ public class PointerType extends BaseType {
 	}
 	@Override
 	public int bytesize(){
-		return 8;
+		return 8;//llvm ir在64位机子上占8字节
 	}
 	@Override
 	public boolean isEqual(BaseType other){

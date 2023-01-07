@@ -18,10 +18,14 @@ import java.io.PrintStream;
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
-//			CharStream input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
-			CharStream input = CharStreams.fromStream(System.in); // 从stdin读取数据
-//			PrintStream ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
+			boolean input_from_file=true;
+			boolean IR_output_to_file=true;
+			boolean ASM_output_to_file=true;
+			CharStream input;
 			PrintStream ps=System.out;
+
+			if(input_from_file)input = CharStreams.fromFileName("E:\\Compiler-Design\\src\\test.mx");//新建一个CharStream读取数据
+			else input = CharStreams.fromStream(System.in); // 从stdin读取数据;
 
 //			System.out.println(input);
 //			System.out.println("-----------");
@@ -41,11 +45,13 @@ public class Compiler {
 			semanticcheckvisitor.visit(astroot);//从根结点开始visit该ast的语法分析树，进行语法检查
 			GlobalScope semanticglobalscope=semanticcheckvisitor.globalScope;
 
+			if(IR_output_to_file)ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
 			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
 			irbuilder.visit(astroot);
 			IRModule irmodule=irbuilder.irModule;
 			ps.println(irmodule.toString());
 
+			if(ASM_output_to_file)ps=new PrintStream("E:\\Compiler-Design\\debug\\test.s");
 			ASMBuilder asmbuilder=new ASMBuilder();
 			asmbuilder.visit(irmodule);
 			ASMModule asmmodule=asmbuilder.asmModule;
