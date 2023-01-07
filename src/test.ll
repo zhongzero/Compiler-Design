@@ -38,8 +38,8 @@ func_begin_block_2:
 	%i_addr_1=alloca i32,align 4
 	%j_addr_1=alloca i32,align 4
 	%x_addr_1=alloca %Edge*,align 8
-	%shortCircuit_addr_1=alloca i1,align 1
-	%shortCircuit_addr_2=alloca i1,align 1
+	%shortCircuit_addr_1=alloca i1,align 4
+	%shortCircuit_addr_2=alloca i1,align 4
 	br label %normal_block_2
 func_end_block_2:
 	ret void
@@ -114,13 +114,13 @@ short_circuit_if_body_block_1:
 	%gep_4=getelementptr inbounds %Edge,%Edge* %load_16,i32 0,i32 2
 	%load_17=load i32,i32* %gep_4,align 4
 	%icmp_4=icmp sge i32 %load_15,%load_17
-	store i1 %icmp_4,i1* %shortCircuit_addr_1,align 1
+	store i1 %icmp_4,i1* %shortCircuit_addr_1,align 4
 	br label %short_circuit_end_block_1
 short_circuit_else_body_block_1:
-	store i1 0,i1* %shortCircuit_addr_1,align 1
+	store i1 0,i1* %shortCircuit_addr_1,align 4
 	br label %short_circuit_end_block_1
 short_circuit_end_block_1:
-	%load_18=load i1,i1* %shortCircuit_addr_1,align 1
+	%load_18=load i1,i1* %shortCircuit_addr_1,align 4
 	br i1 %load_18,label %while_body_block_2,label %normal_block_5
 if_body_block_2:
 	%load_22=load %Edge**,%Edge*** %e_addr_2,align 8
@@ -163,13 +163,13 @@ short_circuit_if_body_block_2:
 	%gep_9=getelementptr inbounds %Edge,%Edge* %load_34,i32 0,i32 2
 	%load_35=load i32,i32* %gep_9,align 4
 	%icmp_7=icmp slt i32 %load_33,%load_35
-	store i1 %icmp_7,i1* %shortCircuit_addr_2,align 1
+	store i1 %icmp_7,i1* %shortCircuit_addr_2,align 4
 	br label %short_circuit_end_block_2
 short_circuit_else_body_block_2:
-	store i1 0,i1* %shortCircuit_addr_2,align 1
+	store i1 0,i1* %shortCircuit_addr_2,align 4
 	br label %short_circuit_end_block_2
 short_circuit_end_block_2:
-	%load_36=load i1,i1* %shortCircuit_addr_2,align 1
+	%load_36=load i1,i1* %shortCircuit_addr_2,align 4
 	br i1 %load_36,label %while_body_block_3,label %normal_block_7
 if_body_block_3:
 	%load_40=load %Edge**,%Edge*** %e_addr_2,align 8
@@ -281,12 +281,12 @@ normal_block_14:
 }
 define i1 @f_union_1(i32 %x_2,i32 %y_1){
 func_begin_block_5:
-	%funcReturn_addr_2=alloca i1,align 1
+	%funcReturn_addr_2=alloca i1,align 4
 	%x_addr_3=alloca i32,align 4
 	%y_addr_1=alloca i32,align 4
 	br label %normal_block_15
 func_end_block_5:
-	%load_77=load i1,i1* %funcReturn_addr_2,align 1
+	%load_77=load i1,i1* %funcReturn_addr_2,align 4
 	ret i1 %load_77
 normal_block_15:
 	store i32 %x_2,i32* %x_addr_3,align 4
@@ -302,7 +302,7 @@ normal_block_15:
 	%icmp_11=icmp eq i32 %load_80,%load_81
 	br i1 %icmp_11,label %if_body_block_5,label %normal_block_16
 if_body_block_5:
-	store i1 0,i1* %funcReturn_addr_2,align 1
+	store i1 0,i1* %funcReturn_addr_2,align 4
 	br label %func_end_block_5
 normal_block_16:
 	%load_82=load i32*,i32** @rk_addr_1,align 8
@@ -358,7 +358,7 @@ else_body_block_6:
 	store i32 %add_12,i32* %gep_27,align 4
 	br label %normal_block_18
 normal_block_18:
-	store i1 1,i1* %funcReturn_addr_2,align 1
+	store i1 1,i1* %funcReturn_addr_2,align 4
 	br label %func_end_block_5
 normal_block_19:
 	br label %func_end_block_5

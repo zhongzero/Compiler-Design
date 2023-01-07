@@ -46,12 +46,14 @@ public class Compiler {
 			GlobalScope semanticglobalscope=semanticcheckvisitor.globalScope;
 
 			if(IR_output_to_file)ps=new PrintStream("E:\\Compiler-Design\\debug\\test.ll");
+			else ps=System.out;
 			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
 			irbuilder.visit(astroot);
 			IRModule irmodule=irbuilder.irModule;
 			ps.println(irmodule.toString());
 
 			if(ASM_output_to_file)ps=new PrintStream("E:\\Compiler-Design\\debug\\test.s");
+			else ps=System.out;
 			ASMBuilder asmbuilder=new ASMBuilder();
 			asmbuilder.visit(irmodule);
 			ASMModule asmmodule=asmbuilder.asmModule;
