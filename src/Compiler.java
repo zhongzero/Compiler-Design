@@ -6,6 +6,7 @@ import FrontEnd.IR.IRBuilder;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
 import FrontEnd.SemanticCheck.Utils.GlobalScope;
+import PrintBuiltin_s.PrintBuiltin;
 import Utils.Error.MyBaseError;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -20,7 +21,7 @@ public class Compiler {
 		try {
 			boolean input_from_file=false;
 			boolean IR_output_to_file=true;
-			boolean ASM_output_to_file=false;
+			boolean ASM_output_to_file=true;
 			CharStream input;
 			PrintStream ps=System.out;
 
@@ -50,9 +51,10 @@ public class Compiler {
 			IRBuilder irbuilder=new IRBuilder(semanticglobalscope);
 			irbuilder.visit(astroot);
 			IRModule irmodule=irbuilder.irModule;
-			ps.println(irmodule.toString());
+//			ps.println(irmodule.toString());
 
-			if(ASM_output_to_file)ps=new PrintStream("E:\\Compiler-Design\\debug\\test.s");
+//			if(ASM_output_to_file)ps=new PrintStream("E:\\Compiler-Design\\debug\\test.s");
+			if(ASM_output_to_file)ps=new PrintStream("output.s");
 			else ps=System.out;
 			ASMBuilder asmbuilder=new ASMBuilder();
 			asmbuilder.visit(irmodule);
@@ -62,6 +64,9 @@ public class Compiler {
 			UpdateInst updateinst=new UpdateInst(asmmodule);
 			updateinst.process();
 			ps.println(asmmodule.toString());
+
+			ps=new PrintStream("builtin.s");
+			ps.println(new PrintBuiltin().str);
 		}
 		catch (MyBaseError error){
 			error.Output();
