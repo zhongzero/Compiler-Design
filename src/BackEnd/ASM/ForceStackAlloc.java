@@ -12,8 +12,6 @@ import BackEnd.ASM.Operand.VirtualRegister_ASM;
 import java.util.ListIterator;
 
 public class ForceStackAlloc {
-	//zero,ra,sp,s0,a0,a1,a2,t0不用做分配
-	//t1~t6,s1~s11,a3~a7,gp,tp全部用于寄存器分配
 	//先做暴力压栈，把所有都压入栈中，用于分配的寄存器只用t0,t1,t2,t3
 
 	ASMModule asmmodule;

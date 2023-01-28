@@ -12,8 +12,6 @@ import BackEnd.ASM.Operand.PhysicalRegister_ASM;
 import java.util.ListIterator;
 
 public class UpdateInst {
-	//zero,ra,sp,s0,a0,a1,a2,t0不用做分配
-	//t1~t6,s1~s11,a3~a7,gp,tp全部用于寄存器分配
 	ASMModule asmmodule;
 	PhysicalRegister_ASM t0=new PhysicalRegister_ASM("t0");
 	public UpdateInst(ASMModule _asmmodule) {

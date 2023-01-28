@@ -584,3 +584,4 @@ _string_ord_1:                          # @_string_ord_1
 	.addrsig_sym sprintf
 	.addrsig_sym strcmp
 	.addrsig_sym _string_length_1
+

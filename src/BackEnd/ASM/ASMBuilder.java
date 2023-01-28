@@ -28,8 +28,9 @@ import FrontEnd.IR.TypeSystem.OperandType.*;
 import java.util.HashMap;
 
 public class ASMBuilder extends IRVisitor<Void> {
-	//zero,ra,sp,s0,a0,a1,a2,t0不用做分配
-	//t1~t6,s1~s11,a3~a7,gp,tp全部用于寄存器分配
+	//zero,ra,sp,s0,t0不用做分配(t0在最后updateInst的时候需要用到当中间变量)
+	//t1~t6,s1~s11,a0~a7,gp,tp全部用于寄存器分配
+	//(a0~a7可能在寄存器分配之前就在传参中被直接使用，即要考虑预着色，所以传参时)
 
 	/*
 	栈的分布规则
@@ -46,7 +47,7 @@ public class ASMBuilder extends IRVisitor<Void> {
 	sp	(0)		原函数的ra
 	 */
 
-	private static final int parasize = 3;//用于传参的register数量(a0,a1,a2)
+	private static final int parasize = 8;//用于传参的register数量(a0,a1,a2...a_{parasize-1})
 	public ASMModule asmModule=new ASMModule();
 	public ASMFunction currentFunction=null;
 	public ASMBasicBlock currentBlock=null;
@@ -104,7 +105,7 @@ public class ASMBuilder extends IRVisitor<Void> {
 						new Mv_Inst_ASM(vReg0,new PhysicalRegister_ASM("a"+j),currentBlock);
 					}
 					else {
-						if(j==3)new Load_Inst_ASM(4,pres0,sp,new Imm_ASM(0),currentBlock);//把原函数的s0(stack头)取出放入pres0中
+						if(j==parasize)new Load_Inst_ASM(4,pres0,sp,new Imm_ASM(0),currentBlock);//把原函数的s0(stack头)取出放入pres0中
 						new Load_Inst_ASM(4,vReg0,pres0,new Imm_ASM(-(j+1-parasize)*4),currentBlock);//通过原函数的s0(stack头)找到原函数传入的其余参数的存储位置
 					}
 				}
