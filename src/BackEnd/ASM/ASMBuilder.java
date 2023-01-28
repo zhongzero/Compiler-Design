@@ -47,7 +47,7 @@ public class ASMBuilder extends IRVisitor<Void> {
 	sp	(0)		原函数的ra
 	 */
 
-	private static final int parasize = 3;//用于传参的register数量(a0,a1,a2...a_{parasize-1})
+	private static final int parasize = 8;//用于传参的register数量(a0,a1,a2...a_{parasize-1})
 	public ASMModule asmModule=new ASMModule();
 	public ASMFunction currentFunction=null;
 	public ASMBasicBlock currentBlock=null;
