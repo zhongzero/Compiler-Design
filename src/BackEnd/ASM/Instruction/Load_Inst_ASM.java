@@ -13,6 +13,7 @@ public class Load_Inst_ASM extends Base_Inst_ASM{
 		rd=_rd;
 		rs1=_rs1;
 		imm=_offset;
+		update_use_def();
 	}
 
 	@Override

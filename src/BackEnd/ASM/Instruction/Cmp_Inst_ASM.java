@@ -14,6 +14,7 @@ public class Cmp_Inst_ASM extends Base_Inst_ASM{
 		rd=_rd;
 		rs1=_rs1;
 		rs2=_rs2;
+		update_use_def();
 	}
 
 	@Override

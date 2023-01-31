@@ -19,13 +19,18 @@ public class ForceStackAlloc {
 	ASMBasicBlock currentblock;
 	ListIterator<Base_Inst_ASM> iterator;
 
-	PhysicalRegister_ASM sp=new PhysicalRegister_ASM("sp");
-	PhysicalRegister_ASM t0=new PhysicalRegister_ASM("t0");
-	PhysicalRegister_ASM t1=new PhysicalRegister_ASM("t1");
-	PhysicalRegister_ASM t2=new PhysicalRegister_ASM("t2");
-	PhysicalRegister_ASM t3=new PhysicalRegister_ASM("t3");
+	PhysicalRegister_ASM sp;
+	PhysicalRegister_ASM t0;
+	PhysicalRegister_ASM t1;
+	PhysicalRegister_ASM t2;
+	PhysicalRegister_ASM t3;
 	public ForceStackAlloc(ASMModule _asmmodule) {
 		asmmodule=_asmmodule;
+		sp=asmmodule.sp;
+		t0=asmmodule.t0;
+		t1=asmmodule.t1;
+		t2=asmmodule.t2;
+		t3=asmmodule.t3;
 	}
 	public void process(){
 		for(int i=0;i<asmmodule.funcList.size();i++){
@@ -39,15 +44,15 @@ public class ForceStackAlloc {
 					Base_Inst_ASM inst=iterator.next();
 					if(inst.rs1!=null&&inst.rs1 instanceof VirtualRegister_ASM){
 						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs1,t1);
-						inst.rs1=new PhysicalRegister_ASM("t1");
+						inst.rs1=t1;
 					}
 					if(inst.rs2!=null&&inst.rs2 instanceof VirtualRegister_ASM){
 						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs2,t2);
-						inst.rs2=new PhysicalRegister_ASM("t2");
+						inst.rs2=t2;
 					}
 					if(inst.rd!=null&&inst.rd instanceof VirtualRegister_ASM){
 						StackAllocLoadStore("store", (VirtualRegister_ASM) inst.rd,t0);
-						inst.rd=new PhysicalRegister_ASM("t0");
+						inst.rd=t0;
 					}
 				}
 			}

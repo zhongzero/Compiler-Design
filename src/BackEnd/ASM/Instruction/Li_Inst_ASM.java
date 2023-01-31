@@ -10,6 +10,7 @@ public class Li_Inst_ASM extends Base_Inst_ASM{
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		rd=_rd;
 		imm=_imm;
+		update_use_def();
 	}
 
 	@Override

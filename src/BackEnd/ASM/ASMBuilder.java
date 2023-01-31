@@ -28,9 +28,6 @@ import FrontEnd.IR.TypeSystem.OperandType.*;
 import java.util.HashMap;
 
 public class ASMBuilder extends IRVisitor<Void> {
-	//zero,ra,sp,s0,t0不用做分配(t0在最后updateInst的时候需要用到当中间变量)
-	//t1~t6,s1~s11,a0~a7,gp,tp全部用于寄存器分配
-	//(a0~a7可能在寄存器分配之前就在传参中被直接使用，即要考虑预着色，所以传参时)
 
 	/*
 	栈的分布规则
@@ -48,17 +45,23 @@ public class ASMBuilder extends IRVisitor<Void> {
 	 */
 
 	private static final int parasize = 8;//用于传参的register数量(a0,a1,a2...a_{parasize-1})
-	public ASMModule asmModule=new ASMModule();
+	public ASMModule asmModule;
 	public ASMFunction currentFunction=null;
 	public ASMBasicBlock currentBlock=null;
 
 
-	PhysicalRegister_ASM sp=new PhysicalRegister_ASM("sp");
-	PhysicalRegister_ASM s0=new PhysicalRegister_ASM("s0");
-	PhysicalRegister_ASM ra=new PhysicalRegister_ASM("ra");
-	PhysicalRegister_ASM a0=new PhysicalRegister_ASM("a0");
+	PhysicalRegister_ASM sp;
+	PhysicalRegister_ASM s0;
+	PhysicalRegister_ASM ra;
+	PhysicalRegister_ASM a0;
 
-
+	public ASMBuilder(){
+		asmModule=new ASMModule();
+		sp=asmModule.sp;
+		s0=asmModule.s0;
+		ra=asmModule.ra;
+		a0=asmModule.a0;
+	}
 	public Void visitIRModule(IRModule node){
 		for(int i=0;i<node.globalVarList.size();i++){
 			GlobalVarDef tmp=node.globalVarList.get(i);
@@ -102,7 +105,7 @@ public class ASMBuilder extends IRVisitor<Void> {
 					Value para=node.operandlist.get(j);
 					VirtualRegister_ASM vReg0=Creat_and_Get_vReg(para);
 					if(j<parasize){
-						new Mv_Inst_ASM(vReg0,new PhysicalRegister_ASM("a"+j),currentBlock);
+						new Mv_Inst_ASM(vReg0,asmModule.physicalReg.get(10+j),currentBlock);//a_j
 					}
 					else {
 						if(j==parasize)new Load_Inst_ASM(4,pres0,sp,new Imm_ASM(0),currentBlock);//把原函数的s0(stack头)取出放入pres0中
@@ -254,7 +257,7 @@ public class ASMBuilder extends IRVisitor<Void> {
 			Value paradata=node.operandlist.get(i);
 			VirtualRegister_ASM vReg=Creat_and_Get_vReg(paradata);
 			if(i-1<parasize){
-				new Mv_Inst_ASM(new PhysicalRegister_ASM("a"+(i-1)),vReg,currentBlock);
+				new Mv_Inst_ASM(asmModule.physicalReg.get(10+(i-1)),vReg,currentBlock);//a_{i-1}
 			}
 			else {
 				new Store_Inst_ASM(4,vReg,s0,new Imm_ASM(-((i-1)+1-parasize)*4),currentBlock);//把要传入的其余参数从当前stack顶依次往下存

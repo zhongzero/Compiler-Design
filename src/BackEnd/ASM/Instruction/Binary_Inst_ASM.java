@@ -20,6 +20,7 @@ public class Binary_Inst_ASM extends Base_Inst_ASM{
 		rs1=_rs1;
 		rs2=_rs2;
 		imm=_imm;
+		update_use_def();
 	}
 
 	@Override

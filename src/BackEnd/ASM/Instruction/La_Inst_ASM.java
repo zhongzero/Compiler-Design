@@ -10,6 +10,7 @@ public class La_Inst_ASM extends Base_Inst_ASM{
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		symbolname=_symbolname;
 		rd=_rd;
+		update_use_def();
 	}
 
 	@Override

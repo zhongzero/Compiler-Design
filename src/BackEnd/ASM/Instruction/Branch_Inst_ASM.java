@@ -13,6 +13,7 @@ public class Branch_Inst_ASM extends Base_Inst_ASM{
 		op=_op;
 		rs1=_rs1;
 		jumpblockname=_jumpblockname;
+		update_use_def();
 	}
 
 	@Override

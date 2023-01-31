@@ -13,6 +13,7 @@ public class Store_Inst_ASM extends Base_Inst_ASM{
 		rs1=_rs1;
 		rs2=_rs2;
 		imm=_offset;
+		update_use_def();
 	}
 
 	@Override

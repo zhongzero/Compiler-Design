@@ -13,9 +13,10 @@ import java.util.ListIterator;
 
 public class UpdateInst {
 	ASMModule asmmodule;
-	PhysicalRegister_ASM t0=new PhysicalRegister_ASM("t0");
+	PhysicalRegister_ASM t0;
 	public UpdateInst(ASMModule _asmmodule) {
 		asmmodule=_asmmodule;
+		t0=asmmodule.t0;
 	}
 	public void process(){
 		//填入function开头和结尾sp(和s0)用到的stacksize(已在ASMBuilder中占位)

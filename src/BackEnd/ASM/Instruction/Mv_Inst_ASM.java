@@ -9,6 +9,7 @@ public class Mv_Inst_ASM extends Base_Inst_ASM{
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		rd=_rd;
 		rs1=_rs1;
+		update_use_def();
 	}
 
 	@Override

@@ -7,6 +7,7 @@ public class Call_Inst_ASM extends Base_Inst_ASM{
 	public Call_Inst_ASM(String _callfuncname, ASMBasicBlock _belongBlock){
 		if(_belongBlock!=null)_belongBlock.instList.add(this);
 		callfuncname=_callfuncname;
+		update_use_def();
 	}
 
 	@Override
