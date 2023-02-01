@@ -20,7 +20,7 @@ import java.io.PrintStream;
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
-			boolean input_from_file=true;
+			boolean input_from_file=false;
 			boolean IR_output_to_file=true;
 			boolean ASM_output_to_file=true;
 			CharStream input;
