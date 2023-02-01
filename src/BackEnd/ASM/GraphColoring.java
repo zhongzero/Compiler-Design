@@ -65,7 +65,7 @@ public class GraphColoring {
 	void processEachFunction(){
 //		count=0;
 		while(true){
-			System.out.println(currentfunction.name);
+//			System.out.println(currentfunction.name);
 //			System.out.println("count: "+(++count));
 			liveanalysis.process(currentfunction);
 			Init();

@@ -70,20 +70,20 @@ public class ASMModule {
 		regForColor.remove(physicalReg.get(0));//没有zero
 		regForColor.remove(physicalReg.get(1));//没有ra
 		regForColor.remove(physicalReg.get(2));//没有sp
-//		regForColor.remove(physicalReg.get(3));//没有gp
-//		regForColor.remove(physicalReg.get(4));//没有tp
+		regForColor.remove(physicalReg.get(3));//没有gp
+		regForColor.remove(physicalReg.get(4));//没有tp
 		regForColor.remove(physicalReg.get(5));//没有t0
 		regForColor.remove(physicalReg.get(8));//没有s0
 
 		callerSavedReg=new ArrayList<>();
-		//ra,t0也是callersaved reg,但是它不参加分配
+		//ra,t0,a0也是callersaved reg,但是它不参加分配
 		callerSavedReg.add(physicalReg.get(6));//t1
 		callerSavedReg.add(physicalReg.get(7));//t2
 		callerSavedReg.add(physicalReg.get(28));//t3
 		callerSavedReg.add(physicalReg.get(29));//t4
 		callerSavedReg.add(physicalReg.get(30));//t5
 		callerSavedReg.add(physicalReg.get(31));//t6
-		callerSavedReg.add(physicalReg.get(10));//a0
+//		callerSavedReg.add(physicalReg.get(10));//a0
 		callerSavedReg.add(physicalReg.get(11));//a1
 		callerSavedReg.add(physicalReg.get(12));//a2
 		callerSavedReg.add(physicalReg.get(13));//a3
