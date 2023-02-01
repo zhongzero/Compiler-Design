@@ -78,7 +78,7 @@ public class ASMModule {
 
 		callerSavedReg=new ArrayList<>();
 		//ra,t0也是callersaved reg,但是它不参加分配
-//		callerSavedReg.add(physicalReg.get(6));//t1
+		callerSavedReg.add(physicalReg.get(6));//t1
 		callerSavedReg.add(physicalReg.get(7));//t2
 		callerSavedReg.add(physicalReg.get(28));//t3
 		callerSavedReg.add(physicalReg.get(29));//t4
