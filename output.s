@@ -1,447 +1,374 @@
 	.section	.text
-	.globl	f_getHash_1
+	.globl	f_partition_1
 	.p2align	2
-	.type	f_getHash_1,@function
-f_getHash_1:
-.func_begin_block_2:
-	addi	sp,	sp,	-16
+	.type	f_partition_1,@function
+f_partition_1:
+.func_begin_block_1:
+	addi	sp,	sp,	-44
 	sw		s0,	0(sp)
-	addi	s0,	sp,	16
+	addi	s0,	sp,	44
+	sw		ra,	4(sp)
+	addi	t2,	sp,	8
+	addi	a7,	sp,	12
+	addi	t3,	sp,	16
+	addi	t5,	sp,	20
+	addi	t1,	sp,	24
+	addi	a4,	sp,	28
+	addi	a6,	sp,	32
+	addi	a5,	sp,	36
+	addi	t6,	sp,	40
+	j		.normal_block_1
+.func_end_block_1:
+	lw		a0,	0(t2)
+	lw		s0,	0(sp)
+	lw		ra,	4(sp)
+	addi	sp,	sp,	44
+	ret
+.normal_block_1:
+	sw		a0,	0(a7)
+	sw		a1,	0(t3)
+	sw		a2,	0(t5)
+	lw		a2,	0(a7)
+	lw		a0,	0(t5)
+	li		a1,	4
+	mul		a1,	a1,	a0
+	add		a2,	a2,	a1
+	lw		a2,	0(a2)
+	sw		a2,	0(t1)
+	lw		a1,	0(t3)
+	li		a2,	1
+	sub		a2,	a1,	a2
+	sw		a2,	0(a4)
+	lw		a2,	0(t3)
+	sw		a2,	0(a6)
+	j		.for_condition_block_1
+.for_condition_block_1:
+	lw		a1,	0(a6)
+	lw		a2,	0(t5)
+	slt		a2,	a1,	a2
+	beqz	a2,	.normal_block_2
+	j		.for_body_block_1
+.for_body_block_1:
+	lw		a1,	0(a7)
+	lw		a2,	0(a6)
+	li		a0,	4
+	mul		a0,	a0,	a2
+	add		a2,	a1,	a0
+	lw		a1,	0(a2)
+	lw		a2,	0(t1)
+	sgt		a2,	a1,	a2
+	seqz	a2,	a2,
+	beqz	a2,	.normal_block_3
+	j		.if_body_block_1
+.for_update_block_1:
+	lw		a2,	0(a6)
+	li		a1,	1
+	add		a2,	a2,	a1
+	sw		a2,	0(a6)
+	j		.for_condition_block_1
+.normal_block_2:
+	lw		t1,	0(a7)
+	lw		a1,	0(a4)
+	li		a2,	1
+	add		a1,	a1,	a2
+	li		a2,	4
+	mul		a2,	a2,	a1
+	add		a2,	t1,	a2
+	lw		a2,	0(a2)
+	sw		a2,	0(t6)
+	lw		a1,	0(a7)
+	lw		t1,	0(a4)
+	li		a2,	1
+	add		t1,	t1,	a2
+	li		a2,	4
+	mul		a2,	a2,	t1
+	add		t1,	a1,	a2
+	lw		a1,	0(a7)
+	lw		a6,	0(t5)
+	li		a2,	4
+	mul		a2,	a2,	a6
+	add		a2,	a1,	a2
+	lw		a2,	0(a2)
+	sw		a2,	0(t1)
+	lw		a7,	0(a7)
+	lw		t5,	0(t5)
+	li		a2,	4
+	mul		a2,	a2,	t5
+	add		a7,	a7,	a2
+	lw		t5,	0(t6)
+	sw		t5,	0(a7)
+	lw		a7,	0(a4)
+	li		t5,	1
+	add		a7,	a7,	t5
+	sw		a7,	0(t2)
+	j		.func_end_block_1
+.if_body_block_1:
+	lw		a2,	0(a4)
+	li		a1,	1
+	add		a2,	a2,	a1
+	sw		a2,	0(a4)
+	lw		a2,	0(a7)
+	lw		a0,	0(a4)
+	li		a1,	4
+	mul		a1,	a1,	a0
+	add		a2,	a2,	a1
+	lw		a2,	0(a2)
+	sw		a2,	0(a5)
+	lw		a1,	0(a7)
+	lw		a0,	0(a4)
+	li		a2,	4
+	mul		a2,	a2,	a0
+	add		t3,	a1,	a2
+	lw		a1,	0(a7)
+	lw		a0,	0(a6)
+	li		a2,	4
+	mul		a2,	a2,	a0
+	add		a2,	a1,	a2
+	lw		a2,	0(a2)
+	sw		a2,	0(t3)
+	lw		a1,	0(a7)
+	lw		a2,	0(a6)
+	li		a0,	4
+	mul		a0,	a0,	a2
+	add		a1,	a1,	a0
+	lw		a2,	0(a5)
+	sw		a2,	0(a1)
+	j		.normal_block_3
+.normal_block_3:
+	j		.for_update_block_1
+.normal_block_4:
+	j		.func_end_block_1
+	.size	f_partition_1,	.-f_partition_1
+
+	.globl	f_quick_sort_1
+	.p2align	2
+	.type	f_quick_sort_1,@function
+f_quick_sort_1:
+.func_begin_block_2:
+	addi	sp,	sp,	-40
+	sw		s0,	0(sp)
+	addi	s0,	sp,	40
+	sw		ra,	4(sp)
+	sw		s1,	24(sp)
+	sw		s5,	28(sp)
+	sw		s6,	32(sp)
+	sw		s9,	36(sp)
+	addi	s6,	sp,	8
+	addi	s9,	sp,	12
+	addi	s1,	sp,	16
+	addi	s5,	sp,	20
+	j		.normal_block_5
+.func_end_block_2:
+	lw		s1,	24(sp)
+	lw		s5,	28(sp)
+	lw		s6,	32(sp)
+	lw		s9,	36(sp)
+	lw		s0,	0(sp)
+	lw		ra,	4(sp)
+	addi	sp,	sp,	40
+	ret
+.normal_block_5:
+	sw		a0,	0(s6)
+	sw		a1,	0(s9)
+	sw		a2,	0(s1)
+	lw		t5,	0(s9)
+	lw		a7,	0(s1)
+	slt		a7,	t5,	a7
+	seqz	a7,	a7,
+	beqz	a7,	.normal_block_6
+	j		.if_body_block_2
+.if_body_block_2:
+	j		.func_end_block_2
+.normal_block_6:
+	lw		a0,	0(s6)
+	lw		a1,	0(s9)
+	lw		a2,	0(s1)
+	call	f_partition_1
+	sw		a0,	0(s5)
+	lw		a0,	0(s6)
+	lw		a1,	0(s9)
+	lw		t5,	0(s5)
+	li		a7,	1
+	sub		a2,	t5,	a7
+	call	f_quick_sort_1
+	lw		a0,	0(s6)
+	lw		t5,	0(s5)
+	li		a7,	1
+	add		a1,	t5,	a7
+	lw		a2,	0(s1)
+	call	f_quick_sort_1
+	j		.func_end_block_2
+.normal_block_7:
+	j		.normal_block_6
+	.size	f_quick_sort_1,	.-f_quick_sort_1
+
+	.globl	f_quick_sort_inf_1
+	.p2align	2
+	.type	f_quick_sort_inf_1,@function
+f_quick_sort_inf_1:
+.func_begin_block_3:
+	addi	sp,	sp,	-12
+	sw		s0,	0(sp)
+	addi	s0,	sp,	12
 	sw		ra,	4(sp)
 	addi	a7,	sp,	8
-	addi	a5,	sp,	12
-	j		.normal_block_2
-.func_end_block_2:
-	lw		a0,	0(a7)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	16
-	ret
-.normal_block_2:
-	sw		a0,	0(a5)
-	lw		a5,	0(a5)
-	li		a2,	237
-	mul		a2,	a5,	a2
-	la		a5,	hashsize_addr_1
-	lw		a5,	0(a5)
-	rem		a5,	a2,	a5
-	sw		a5,	0(a7)
-	j		.func_end_block_2
-.normal_block_3:
-	j		.func_end_block_2
-	.size	f_getHash_1,	.-f_getHash_1
-
-	.globl	f_put_1
-	.p2align	2
-	.type	f_put_1,@function
-f_put_1:
-.func_begin_block_3:
-	addi	sp,	sp,	-56
-	sw		s0,	0(sp)
-	addi	s0,	sp,	56
-	sw		ra,	4(sp)
-	sw		s1,	32(sp)
-	sw		s3,	36(sp)
-	sw		s4,	40(sp)
-	sw		s6,	44(sp)
-	sw		s7,	48(sp)
-	sw		s9,	52(sp)
-	addi	s9,	sp,	8
-	addi	s1,	sp,	12
-	addi	s6,	sp,	16
-	addi	s4,	sp,	20
-	addi	s3,	sp,	24
-	addi	s7,	sp,	28
-	j		.normal_block_4
-.func_end_block_3:
-	lw		s1,	32(sp)
-	lw		s3,	36(sp)
-	lw		s4,	40(sp)
-	lw		s6,	44(sp)
-	lw		s7,	48(sp)
-	lw		s9,	52(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	56
-	ret
-.normal_block_4:
-	sw		a0,	0(s9)
-	sw		a1,	0(s1)
-	li		a5,	0
-	sw		a5,	0(s4)
-	lw		a0,	0(s9)
-	call	f_getHash_1
-	sw		a0,	0(s6)
-	la		a5,	table_addr_1
-	lw		a5,	0(a5)
-	lw		a2,	0(s6)
-	li		a7,	4
-	mul		a7,	a7,	a2
-	add		a5,	a5,	a7
-	lw		a5,	0(a5)
-	li		a7,	0
-	xor		a5,	a5,	a7
-	seqz	a5,	a5,
-	beqz	a5,	.normal_block_5
-	j		.if_body_block_1
-.if_body_block_1:
-	la		a5,	table_addr_1
-	lw		a2,	0(a5)
-	lw		a5,	0(s6)
-	li		a7,	4
-	mul		a7,	a7,	a5
-	add		s4,	a2,	a7
-	li		a0,	16
-	call	_heap_malloc_1
-	mv		s7,	a0
-	sw		s7,	0(s3)
-	mv		a0,	s3
-	call	class_constructor_node.node_1
-	sw		s7,	0(s4)
-	la		a5,	table_addr_1
-	lw		a7,	0(a5)
-	lw		a2,	0(s6)
-	li		a5,	4
-	mul		a5,	a5,	a2
-	add		a5,	a7,	a5
-	lw		a5,	0(a5)
-	addi	a7,	a5,	0
-	lw		a5,	0(s9)
-	sw		a5,	0(a7)
-	la		a5,	table_addr_1
-	lw		a5,	0(a5)
-	lw		a7,	0(s6)
-	li		a2,	4
-	mul		a2,	a2,	a7
-	add		a5,	a5,	a2
-	lw		a5,	0(a5)
-	addi	a7,	a5,	4
-	lw		a5,	0(s1)
-	sw		a5,	0(a7)
-	la		a5,	table_addr_1
-	lw		a5,	0(a5)
-	lw		a7,	0(s6)
-	li		a2,	4
-	mul		a2,	a2,	a7
-	add		a5,	a5,	a2
-	lw		a5,	0(a5)
-	addi	a7,	a5,	8
-	li		a5,	0
-	sw		a5,	0(a7)
-	j		.func_end_block_3
-.normal_block_5:
-	la		a5,	table_addr_1
-	lw		a7,	0(a5)
-	lw		a5,	0(s6)
-	li		a2,	4
-	mul		a2,	a2,	a5
-	add		a5,	a7,	a2
-	lw		a5,	0(a5)
-	sw		a5,	0(s4)
-	j		.while_condition_block_1
-.normal_block_6:
-	j		.normal_block_5
-.while_condition_block_1:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	0
-	lw		a7,	0(a5)
-	lw		a5,	0(s9)
-	xor		a5,	a7,	a5
-	snez	a5,	a5,
-	beqz	a5,	.normal_block_7
-	j		.while_body_block_1
-.while_body_block_1:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	8
-	lw		a7,	0(a5)
-	li		a5,	0
-	xor		a5,	a7,	a5
-	seqz	a5,	a5,
-	beqz	a5,	.normal_block_8
-	j		.if_body_block_2
-.normal_block_7:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	4
-	lw		a7,	0(s1)
-	sw		a7,	0(a5)
-	j		.func_end_block_3
-.if_body_block_2:
-	lw		a5,	0(s4)
-	addi	s3,	a5,	8
-	li		a0,	16
-	call	_heap_malloc_1
-	mv		s6,	a0
-	sw		s6,	0(s7)
-	mv		a0,	s7
-	call	class_constructor_node.node_1
-	sw		s6,	0(s3)
-	lw		a5,	0(s4)
-	addi	a5,	a5,	8
-	lw		a5,	0(a5)
-	addi	a5,	a5,	0
-	lw		a7,	0(s9)
-	sw		a7,	0(a5)
-	lw		a5,	0(s4)
-	addi	a5,	a5,	8
-	lw		a5,	0(a5)
-	addi	a7,	a5,	8
-	li		a5,	0
-	sw		a5,	0(a7)
 	j		.normal_block_8
-.normal_block_8:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	8
-	lw		a5,	0(a5)
-	sw		a5,	0(s4)
-	j		.while_condition_block_1
-	.size	f_put_1,	.-f_put_1
-
-	.globl	f_get_1
-	.p2align	2
-	.type	f_get_1,@function
-f_get_1:
-.func_begin_block_4:
-	addi	sp,	sp,	-36
-	sw		s0,	0(sp)
-	addi	s0,	sp,	36
-	sw		ra,	4(sp)
-	sw		s4,	20(sp)
-	sw		s7,	24(sp)
-	sw		s9,	28(sp)
-	sw		s11,	32(sp)
-	addi	s9,	sp,	8
-	addi	s7,	sp,	12
-	addi	s4,	sp,	16
-	j		.normal_block_9
-.func_end_block_4:
-	lw		a0,	0(s9)
-	lw		s4,	20(sp)
-	lw		s7,	24(sp)
-	lw		s9,	28(sp)
-	lw		s11,	32(sp)
+.func_end_block_3:
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	36
+	addi	sp,	sp,	12
 	ret
-.normal_block_9:
-	sw		a0,	0(s7)
-	li		a5,	0
-	sw		a5,	0(s4)
-	la		a5,	table_addr_1
-	lw		s11,	0(a5)
-	lw		a0,	0(s7)
-	call	f_getHash_1
-	li		a5,	4
-	mul		a5,	a5,	a0
-	add		a5,	s11,	a5
-	lw		a5,	0(a5)
-	sw		a5,	0(s4)
-	j		.while_condition_block_2
-.while_condition_block_2:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	0
-	lw		a5,	0(a5)
-	lw		a7,	0(s7)
-	xor		a5,	a5,	a7
-	snez	a5,	a5,
-	beqz	a5,	.normal_block_10
-	j		.while_body_block_2
-.while_body_block_2:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	8
-	lw		a5,	0(a5)
-	sw		a5,	0(s4)
-	j		.while_condition_block_2
-.normal_block_10:
-	lw		a5,	0(s4)
-	addi	a5,	a5,	4
-	lw		a5,	0(a5)
-	sw		a5,	0(s9)
-	j		.func_end_block_4
-.normal_block_11:
-	j		.func_end_block_4
-	.size	f_get_1,	.-f_get_1
+.normal_block_8:
+	sw		a0,	0(a7)
+	lw		a0,	0(a7)
+	lw		a7,	0(a7)
+	addi	a7,	a7,	-4
+	lw		a7,	0(a7)
+	li		t5,	1
+	sub		a2,	a7,	t5
+	li		a1,	0
+	call	f_quick_sort_1
+	j		.func_end_block_3
+	.size	f_quick_sort_inf_1,	.-f_quick_sort_inf_1
 
 	.globl	main
 	.p2align	2
 	.type	main,@function
 main:
-.func_begin_block_5:
-	addi	sp,	sp,	-28
+.func_begin_block_4:
+	addi	sp,	sp,	-44
 	sw		s0,	0(sp)
-	addi	s0,	sp,	28
+	addi	s0,	sp,	44
 	sw		ra,	4(sp)
-	sw		s1,	16(sp)
-	sw		s5,	20(sp)
-	sw		s8,	24(sp)
-	addi	s1,	sp,	8
-	addi	s8,	sp,	12
-	j		.normal_block_12
-.func_end_block_5:
-	lw		a0,	0(s1)
-	lw		s1,	16(sp)
-	lw		s5,	20(sp)
-	lw		s8,	24(sp)
+	sw		s3,	24(sp)
+	sw		s4,	28(sp)
+	sw		s5,	32(sp)
+	sw		s9,	36(sp)
+	sw		s10,	40(sp)
+	addi	s9,	sp,	8
+	addi	s4,	sp,	12
+	addi	s5,	sp,	16
+	addi	s10,	sp,	20
+	j		.normal_block_9
+.func_end_block_4:
+	lw		a0,	0(s9)
+	lw		s3,	24(sp)
+	lw		s4,	28(sp)
+	lw		s5,	32(sp)
+	lw		s9,	36(sp)
+	lw		s10,	40(sp)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	28
+	addi	sp,	sp,	44
 	ret
-.normal_block_12:
+.normal_block_9:
 	call	_main_initial_1
-	li		a0,	804
+	call	f_getInt_1
+	sw		a0,	0(s4)
+	lw		s3,	0(s4)
+	li		a7,	4
+	mul		t5,	a7,	s3
+	li		a7,	4
+	add		a0,	t5,	a7
 	call	_heap_malloc_1
-	li		a5,	100
-	sw		a5,	0(a0)
-	addi	a5,	a0,	4
-	la		a7,	table_addr_1
-	sw		a5,	0(a7)
-	li		a5,	0
-	sw		a5,	0(s8)
-	j		.for_condition_block_1
-.for_condition_block_1:
-	lw		a5,	0(s8)
-	la		a7,	hashsize_addr_1
-	lw		a7,	0(a7)
-	slt		a5,	a5,	a7
-	beqz	a5,	.normal_block_13
-	j		.for_body_block_1
-.for_body_block_1:
-	la		a5,	table_addr_1
-	lw		a5,	0(a5)
-	lw		a7,	0(s8)
-	li		a2,	4
-	mul		a2,	a2,	a7
-	add		a5,	a5,	a2
+	sw		s3,	0(a0)
+	addi	a7,	a0,	4
+	sw		a7,	0(s5)
 	li		a7,	0
-	sw		a7,	0(a5)
-	j		.for_update_block_1
-.for_update_block_1:
-	lw		a5,	0(s8)
-	li		a7,	1
-	add		a5,	a5,	a7
-	sw		a5,	0(s8)
-	j		.for_condition_block_1
-.normal_block_13:
-	li		a5,	0
-	sw		a5,	0(s8)
+	sw		a7,	0(s10)
 	j		.for_condition_block_2
 .for_condition_block_2:
-	lw		a5,	0(s8)
-	li		a7,	1000
-	slt		a5,	a5,	a7
-	beqz	a5,	.normal_block_14
+	lw		a7,	0(s10)
+	lw		t5,	0(s4)
+	slt		a7,	a7,	t5
+	beqz	a7,	.normal_block_10
 	j		.for_body_block_2
 .for_body_block_2:
-	lw		a0,	0(s8)
-	lw		a1,	0(s8)
-	call	f_put_1
+	lw		a2,	0(s5)
+	lw		t5,	0(s10)
+	li		a7,	4
+	mul		a7,	a7,	t5
+	add		s3,	a2,	a7
+	call	f_getInt_1
+	sw		a0,	0(s3)
 	j		.for_update_block_2
 .for_update_block_2:
-	lw		a5,	0(s8)
-	li		a7,	1
-	add		a5,	a5,	a7
-	sw		a5,	0(s8)
+	lw		a7,	0(s10)
+	li		t5,	1
+	add		a7,	a7,	t5
+	sw		a7,	0(s10)
 	j		.for_condition_block_2
-.normal_block_14:
-	li		a5,	0
-	sw		a5,	0(s8)
+.normal_block_10:
+	lw		a0,	0(s5)
+	call	f_quick_sort_inf_1
+	li		a7,	0
+	sw		a7,	0(s10)
 	j		.for_condition_block_3
 .for_condition_block_3:
-	lw		a7,	0(s8)
-	li		a5,	1000
-	slt		a5,	a7,	a5
-	beqz	a5,	.normal_block_15
+	lw		t5,	0(s10)
+	lw		a7,	0(s4)
+	slt		a7,	t5,	a7
+	beqz	a7,	.normal_block_11
 	j		.for_body_block_3
 .for_body_block_3:
-	lw		a0,	0(s8)
+	lw		t5,	0(s5)
+	lw		a2,	0(s10)
+	li		a7,	4
+	mul		a7,	a7,	a2
+	add		a7,	t5,	a7
+	lw		a0,	0(a7)
 	call	f_toString_1
-	la		a5,	const_string_1
-	addi	a1,	a5,	0
+	la		a7,	const_string_1
+	addi	a1,	a7,	0
 	call	_string_merge_1
-	mv		s5,	a0
-	lw		a0,	0(s8)
-	call	f_get_1
-	call	f_toString_1
-	mv		a1,	a0
-	mv		a0,	s5
-	call	_string_merge_1
-	call	f_println_1
+	call	f_print_1
 	j		.for_update_block_3
 .for_update_block_3:
-	lw		a5,	0(s8)
-	li		a7,	1
-	add		a5,	a5,	a7
-	sw		a5,	0(s8)
+	lw		a7,	0(s10)
+	li		t5,	1
+	add		a7,	a7,	t5
+	sw		a7,	0(s10)
 	j		.for_condition_block_3
-.normal_block_15:
-	li		a5,	0
-	sw		a5,	0(s1)
-	j		.func_end_block_5
-.normal_block_16:
-	j		.func_end_block_5
+.normal_block_11:
+	la		a7,	const_string_2
+	addi	a0,	a7,	0
+	call	f_println_1
+	li		a7,	0
+	sw		a7,	0(s9)
+	j		.func_end_block_4
+.normal_block_12:
+	j		.func_end_block_4
 	.size	main,	.-main
 
 	.globl	_main_initial_1
 	.p2align	2
 	.type	_main_initial_1,@function
 _main_initial_1:
-.func_begin_block_6:
+.func_begin_block_5:
 	addi	sp,	sp,	-8
 	sw		s0,	0(sp)
 	addi	s0,	sp,	8
 	sw		ra,	4(sp)
-	j		.normal_block_17
-.func_end_block_6:
+	j		.normal_block_13
+.func_end_block_5:
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	8
 	ret
-.normal_block_17:
-	li		a5,	100
-	la		a7,	hashsize_addr_1
-	sw		a5,	0(a7)
-	li		a7,	0
-	la		a5,	table_addr_1
-	sw		a7,	0(a5)
-	j		.func_end_block_6
+.normal_block_13:
+	j		.func_end_block_5
 	.size	_main_initial_1,	.-_main_initial_1
 
-	.globl	class_constructor_node.node_1
-	.p2align	2
-	.type	class_constructor_node.node_1,@function
-class_constructor_node.node_1:
-.func_begin_block_1:
-	addi	sp,	sp,	-8
-	sw		s0,	0(sp)
-	addi	s0,	sp,	8
-	sw		ra,	4(sp)
-	j		.normal_block_1
-.func_end_block_1:
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	8
-	ret
-.normal_block_1:
-	j		.func_end_block_1
-	.size	class_constructor_node.node_1,	.-class_constructor_node.node_1
-
 	.section	.bss
-	.globl	hashsize_addr_1
-	.type	hashsize_addr_1,@object
-hashsize_addr_1:
-	.word	0
-	.size	hashsize_addr_1,	4
-
-	.globl	table_addr_1
-	.type	table_addr_1,@object
-table_addr_1:
-	.word	0
-	.size	table_addr_1,	4
-
 	.section	.rodata
 	.type	const_string_1,@object
 const_string_1:
 	.string	" "
 	.size	const_string_1,	3
+
+	.type	const_string_2,@object
+const_string_2:
+	.string	""
+	.size	const_string_2,	2
 
 

@@ -1,46 +1,18 @@
 	.section	.text
-	.globl	f_gcd_1
+	.globl	f_cd_1
 	.p2align	2
-	.type	f_gcd_1,@function
-f_gcd_1:
+	.type	f_cd_1,@function
+f_cd_1:
 .func_begin_block_1:
-	addi	sp,	sp,	-140
+	addi	sp,	sp,	-32
 	sw		s0,	0(sp)
-	addi	s0,	sp,	140
+	addi	s0,	sp,	32
 	sw		ra,	4(sp)
-	mv		x_1_0_,	a0
-	mv		y_1_0_,	a1
-	mv		j0_1_0_,	a2
-	mv		j1_1_0_,	a3
-	mv		j2_1_0_,	a4
-	mv		j3_1_0_,	a5
-	mv		j4_1_0_,	a6
-	mv		j5_1_0_,	a7
-	lw		pres0_0_,	0(sp)
-	lw		j6_1_0_,	-4(pres0_0_)
-	lw		j7_1_0_,	-8(pres0_0_)
-	lw		j8_1_0_,	-12(pres0_0_)
-	lw		j9_1_0_,	-16(pres0_0_)
-	lw		j10_1_0_,	-20(pres0_0_)
-	lw		j11_1_0_,	-24(pres0_0_)
-	lw		j12_1_0_,	-28(pres0_0_)
-	lw		j13_1_0_,	-32(pres0_0_)
-	lw		j14_1_0_,	-36(pres0_0_)
-	lw		j15_1_0_,	-40(pres0_0_)
-	lw		j16_1_0_,	-44(pres0_0_)
-	lw		j17_1_0_,	-48(pres0_0_)
-	lw		j18_1_0_,	-52(pres0_0_)
-	lw		j19_1_0_,	-56(pres0_0_)
-	lw		j20_1_0_,	-60(pres0_0_)
-	lw		j21_1_0_,	-64(pres0_0_)
-	lw		j22_1_0_,	-68(pres0_0_)
-	lw		j23_1_0_,	-72(pres0_0_)
-	lw		j24_1_0_,	-76(pres0_0_)
-	lw		j25_1_0_,	-80(pres0_0_)
-	lw		j26_1_0_,	-84(pres0_0_)
-	lw		j27_1_0_,	-88(pres0_0_)
-	lw		j28_1_0_,	-92(pres0_0_)
-	lw		j29_1_0_,	-96(pres0_0_)
+	mv		d_1_0_,	a0
+	mv		a_1_0_,	a1
+	mv		b_1_0_,	a2
+	mv		c_1_0_,	a3
+	mv		sum_1_0_,	a4
 	mv		calleesaveVreg___0_,	s1
 	mv		calleesaveVreg___1_,	s2
 	mv		calleesaveVreg___2_,	s3
@@ -53,38 +25,11 @@ f_gcd_1:
 	mv		calleesaveVreg___9_,	s10
 	mv		calleesaveVreg___10_,	s11
 	addi	funcReturn_addr_1_0_,	sp,	8
-	addi	x_addr_1_0_,	sp,	12
-	addi	y_addr_1_0_,	sp,	16
-	addi	j0_addr_1_0_,	sp,	20
-	addi	j1_addr_1_0_,	sp,	24
-	addi	j2_addr_1_0_,	sp,	28
-	addi	j3_addr_1_0_,	sp,	32
-	addi	j4_addr_1_0_,	sp,	36
-	addi	j5_addr_1_0_,	sp,	40
-	addi	j6_addr_1_0_,	sp,	44
-	addi	j7_addr_1_0_,	sp,	48
-	addi	j8_addr_1_0_,	sp,	52
-	addi	j9_addr_1_0_,	sp,	56
-	addi	j10_addr_1_0_,	sp,	60
-	addi	j11_addr_1_0_,	sp,	64
-	addi	j12_addr_1_0_,	sp,	68
-	addi	j13_addr_1_0_,	sp,	72
-	addi	j14_addr_1_0_,	sp,	76
-	addi	j15_addr_1_0_,	sp,	80
-	addi	j16_addr_1_0_,	sp,	84
-	addi	j17_addr_1_0_,	sp,	88
-	addi	j18_addr_1_0_,	sp,	92
-	addi	j19_addr_1_0_,	sp,	96
-	addi	j20_addr_1_0_,	sp,	100
-	addi	j21_addr_1_0_,	sp,	104
-	addi	j22_addr_1_0_,	sp,	108
-	addi	j23_addr_1_0_,	sp,	112
-	addi	j24_addr_1_0_,	sp,	116
-	addi	j25_addr_1_0_,	sp,	120
-	addi	j26_addr_1_0_,	sp,	124
-	addi	j27_addr_1_0_,	sp,	128
-	addi	j28_addr_1_0_,	sp,	132
-	addi	j29_addr_1_0_,	sp,	136
+	addi	d_addr_1_0_,	sp,	12
+	addi	a_addr_1_0_,	sp,	16
+	addi	b_addr_1_0_,	sp,	20
+	addi	c_addr_1_0_,	sp,	24
+	addi	sum_addr_1_0_,	sp,	28
 	j		.normal_block_1
 .func_end_block_1:
 	lw		load_1_0_,	0(funcReturn_addr_1_0_)
@@ -102,56 +47,118 @@ f_gcd_1:
 	mv		s11,	calleesaveVreg___10_
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	140
+	addi	sp,	sp,	32
 	ret
 .normal_block_1:
-	sw		x_1_0_,	0(x_addr_1_0_)
-	sw		y_1_0_,	0(y_addr_1_0_)
-	sw		j0_1_0_,	0(j0_addr_1_0_)
-	sw		j1_1_0_,	0(j1_addr_1_0_)
-	sw		j2_1_0_,	0(j2_addr_1_0_)
-	sw		j3_1_0_,	0(j3_addr_1_0_)
-	sw		j4_1_0_,	0(j4_addr_1_0_)
-	sw		j5_1_0_,	0(j5_addr_1_0_)
-	sw		j6_1_0_,	0(j6_addr_1_0_)
-	sw		j7_1_0_,	0(j7_addr_1_0_)
-	sw		j8_1_0_,	0(j8_addr_1_0_)
-	sw		j9_1_0_,	0(j9_addr_1_0_)
-	sw		j10_1_0_,	0(j10_addr_1_0_)
-	sw		j11_1_0_,	0(j11_addr_1_0_)
-	sw		j12_1_0_,	0(j12_addr_1_0_)
-	sw		j13_1_0_,	0(j13_addr_1_0_)
-	sw		j14_1_0_,	0(j14_addr_1_0_)
-	sw		j15_1_0_,	0(j15_addr_1_0_)
-	sw		j16_1_0_,	0(j16_addr_1_0_)
-	sw		j17_1_0_,	0(j17_addr_1_0_)
-	sw		j18_1_0_,	0(j18_addr_1_0_)
-	sw		j19_1_0_,	0(j19_addr_1_0_)
-	sw		j20_1_0_,	0(j20_addr_1_0_)
-	sw		j21_1_0_,	0(j21_addr_1_0_)
-	sw		j22_1_0_,	0(j22_addr_1_0_)
-	sw		j23_1_0_,	0(j23_addr_1_0_)
-	sw		j24_1_0_,	0(j24_addr_1_0_)
-	sw		j25_1_0_,	0(j25_addr_1_0_)
-	sw		j26_1_0_,	0(j26_addr_1_0_)
-	sw		j27_1_0_,	0(j27_addr_1_0_)
-	sw		j28_1_0_,	0(j28_addr_1_0_)
-	sw		j29_1_0_,	0(j29_addr_1_0_)
-	lw		load_2_0_,	0(y_addr_1_0_)
-	sw		load_2_0_,	0(funcReturn_addr_1_0_)
-	j		.func_end_block_1
+	sw		d_1_0_,	0(d_addr_1_0_)
+	sw		a_1_0_,	0(a_addr_1_0_)
+	sw		b_1_0_,	0(b_addr_1_0_)
+	sw		c_1_0_,	0(c_addr_1_0_)
+	sw		sum_1_0_,	0(sum_addr_1_0_)
+	lw		load_2_0_,	0(d_addr_1_0_)
+	li		const___0_,	1
+	xor		icmp_1_0_,	load_2_0_,	const___0_
+	seqz	icmp_1_0_,	icmp_1_0_,
+	beqz	icmp_1_0_,	.else_body_block_1
+	j		.if_body_block_1
+.if_body_block_1:
+	lw		load_3_0_,	0(a_addr_1_0_)
+	la		const___1_,	const_string_1
+	addi	gep_1_0_,	const___1_,	0
+	mv		a0,	gep_1_0_
+	mv		a1,	load_3_0_
+	call	_string_merge_1
+	mv		call_1_0_,	a0
+	la		const___2_,	const_string_2
+	addi	gep_2_0_,	const___2_,	0
+	mv		a0,	call_1_0_
+	mv		a1,	gep_2_0_
+	call	_string_merge_1
+	mv		call_2_0_,	a0
+	lw		load_4_0_,	0(c_addr_1_0_)
+	mv		a0,	call_2_0_
+	mv		a1,	load_4_0_
+	call	_string_merge_1
+	mv		call_3_0_,	a0
+	mv		a0,	call_3_0_
+	call	f_println_1
+	lw		load_5_0_,	0(sum_addr_1_0_)
+	li		const___3_,	1
+	add		add_1_0_,	load_5_0_,	const___3_
+	sw		add_1_0_,	0(sum_addr_1_0_)
+	j		.normal_block_2
+.else_body_block_1:
+	lw		load_6_0_,	0(d_addr_1_0_)
+	li		const___4_,	1
+	sub		sub_1_0_,	load_6_0_,	const___4_
+	lw		load_7_0_,	0(a_addr_1_0_)
+	lw		load_8_0_,	0(c_addr_1_0_)
+	lw		load_9_0_,	0(b_addr_1_0_)
+	lw		load_10_0_,	0(sum_addr_1_0_)
+	mv		a0,	sub_1_0_
+	mv		a1,	load_7_0_
+	mv		a2,	load_8_0_
+	mv		a3,	load_9_0_
+	mv		a4,	load_10_0_
+	call	f_cd_1
+	mv		call_5_0_,	a0
+	sw		call_5_0_,	0(sum_addr_1_0_)
+	lw		load_11_0_,	0(a_addr_1_0_)
+	la		const___5_,	const_string_3
+	addi	gep_3_0_,	const___5_,	0
+	mv		a0,	gep_3_0_
+	mv		a1,	load_11_0_
+	call	_string_merge_1
+	mv		call_6_0_,	a0
+	la		const___6_,	const_string_4
+	addi	gep_4_0_,	const___6_,	0
+	mv		a0,	call_6_0_
+	mv		a1,	gep_4_0_
+	call	_string_merge_1
+	mv		call_7_0_,	a0
+	lw		load_12_0_,	0(c_addr_1_0_)
+	mv		a0,	call_7_0_
+	mv		a1,	load_12_0_
+	call	_string_merge_1
+	mv		call_8_0_,	a0
+	mv		a0,	call_8_0_
+	call	f_println_1
+	lw		load_13_0_,	0(d_addr_1_0_)
+	li		const___7_,	1
+	sub		sub_2_0_,	load_13_0_,	const___7_
+	lw		load_14_0_,	0(b_addr_1_0_)
+	lw		load_15_0_,	0(a_addr_1_0_)
+	lw		load_16_0_,	0(c_addr_1_0_)
+	lw		load_17_0_,	0(sum_addr_1_0_)
+	mv		a0,	sub_2_0_
+	mv		a1,	load_14_0_
+	mv		a2,	load_15_0_
+	mv		a3,	load_16_0_
+	mv		a4,	load_17_0_
+	call	f_cd_1
+	mv		call_10_0_,	a0
+	sw		call_10_0_,	0(sum_addr_1_0_)
+	lw		load_18_0_,	0(sum_addr_1_0_)
+	li		const___8_,	1
+	add		add_2_0_,	load_18_0_,	const___8_
+	sw		add_2_0_,	0(sum_addr_1_0_)
+	j		.normal_block_2
 .normal_block_2:
+	lw		load_19_0_,	0(sum_addr_1_0_)
+	sw		load_19_0_,	0(funcReturn_addr_1_0_)
 	j		.func_end_block_1
-	.size	f_gcd_1,	.-f_gcd_1
+.normal_block_3:
+	j		.func_end_block_1
+	.size	f_cd_1,	.-f_cd_1
 
 	.globl	main
 	.p2align	2
 	.type	main,@function
 main:
 .func_begin_block_2:
-	addi	sp,	sp,	-12
+	addi	sp,	sp,	-32
 	sw		s0,	0(sp)
-	addi	s0,	sp,	12
+	addi	s0,	sp,	32
 	sw		ra,	4(sp)
 	mv		calleesaveVreg___11_,	s1
 	mv		calleesaveVreg___12_,	s2
@@ -165,10 +172,15 @@ main:
 	mv		calleesaveVreg___20_,	s10
 	mv		calleesaveVreg___21_,	s11
 	addi	funcReturn_addr_2_0_,	sp,	8
-	j		.normal_block_3
+	addi	a_addr_2_0_,	sp,	12
+	addi	b_addr_2_0_,	sp,	16
+	addi	c_addr_2_0_,	sp,	20
+	addi	d_addr_2_0_,	sp,	24
+	addi	sum_addr_2_0_,	sp,	28
+	j		.normal_block_4
 .func_end_block_2:
-	lw		load_3_0_,	0(funcReturn_addr_2_0_)
-	mv		a0,	load_3_0_
+	lw		load_20_0_,	0(funcReturn_addr_2_0_)
+	mv		a0,	load_20_0_
 	mv		s1,	calleesaveVreg___11_
 	mv		s2,	calleesaveVreg___12_
 	mv		s3,	calleesaveVreg___13_
@@ -182,87 +194,45 @@ main:
 	mv		s11,	calleesaveVreg___21_
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	12
+	addi	sp,	sp,	32
 	ret
-.normal_block_3:
-	call	_main_initial_1
-	li		const___0_,	10
-	mv		a0,	const___0_
-	li		const___1_,	1
-	mv		a1,	const___1_
-	li		const___2_,	0
-	mv		a2,	const___2_
-	li		const___3_,	2
-	mv		a3,	const___3_
-	li		const___4_,	4
-	mv		a4,	const___4_
-	li		const___5_,	6
-	mv		a5,	const___5_
-	li		const___6_,	8
-	mv		a6,	const___6_
-	li		const___7_,	10
-	mv		a7,	const___7_
-	li		const___8_,	12
-	sw		const___8_,	-4(s0)
-	li		const___9_,	14
-	sw		const___9_,	-8(s0)
-	li		const___10_,	16
-	sw		const___10_,	-12(s0)
-	li		const___11_,	18
-	sw		const___11_,	-16(s0)
-	li		const___12_,	20
-	sw		const___12_,	-20(s0)
-	li		const___13_,	22
-	sw		const___13_,	-24(s0)
-	li		const___14_,	24
-	sw		const___14_,	-28(s0)
-	li		const___15_,	26
-	sw		const___15_,	-32(s0)
-	li		const___16_,	28
-	sw		const___16_,	-36(s0)
-	li		const___17_,	30
-	sw		const___17_,	-40(s0)
-	li		const___18_,	32
-	sw		const___18_,	-44(s0)
-	li		const___19_,	34
-	sw		const___19_,	-48(s0)
-	li		const___20_,	36
-	sw		const___20_,	-52(s0)
-	li		const___21_,	38
-	sw		const___21_,	-56(s0)
-	li		const___22_,	40
-	sw		const___22_,	-60(s0)
-	li		const___23_,	42
-	sw		const___23_,	-64(s0)
-	li		const___24_,	44
-	sw		const___24_,	-68(s0)
-	li		const___25_,	46
-	sw		const___25_,	-72(s0)
-	li		const___26_,	48
-	sw		const___26_,	-76(s0)
-	li		const___27_,	50
-	sw		const___27_,	-80(s0)
-	li		const___28_,	52
-	sw		const___28_,	-84(s0)
-	li		const___29_,	54
-	sw		const___29_,	-88(s0)
-	li		const___30_,	56
-	sw		const___30_,	-92(s0)
-	li		const___31_,	58
-	sw		const___31_,	-96(s0)
-	call	f_gcd_1
-	mv		call_2_0_,	a0
-	li		const___32_,	1024
-	add		add_1_0_,	call_2_0_,	const___32_
-	mv		a0,	add_1_0_
-	call	f_toString_1
-	mv		call_3_0_,	a0
-	mv		a0,	call_3_0_
-	call	f_println_1
-	li		const___33_,	0
-	sw		const___33_,	0(funcReturn_addr_2_0_)
-	j		.func_end_block_2
 .normal_block_4:
+	call	_main_initial_1
+	la		const___9_,	const_string_5
+	addi	gep_5_0_,	const___9_,	0
+	sw		gep_5_0_,	0(a_addr_2_0_)
+	la		const___10_,	const_string_6
+	addi	gep_6_0_,	const___10_,	0
+	sw		gep_6_0_,	0(b_addr_2_0_)
+	la		const___11_,	const_string_7
+	addi	gep_7_0_,	const___11_,	0
+	sw		gep_7_0_,	0(c_addr_2_0_)
+	call	f_getInt_1
+	mv		call_12_0_,	a0
+	sw		call_12_0_,	0(d_addr_2_0_)
+	lw		load_21_0_,	0(d_addr_2_0_)
+	lw		load_22_0_,	0(a_addr_2_0_)
+	lw		load_23_0_,	0(b_addr_2_0_)
+	lw		load_24_0_,	0(c_addr_2_0_)
+	mv		a0,	load_21_0_
+	mv		a1,	load_22_0_
+	mv		a2,	load_23_0_
+	mv		a3,	load_24_0_
+	li		const___12_,	0
+	mv		a4,	const___12_
+	call	f_cd_1
+	mv		call_13_0_,	a0
+	sw		call_13_0_,	0(sum_addr_2_0_)
+	lw		load_25_0_,	0(sum_addr_2_0_)
+	mv		a0,	load_25_0_
+	call	f_toString_1
+	mv		call_14_0_,	a0
+	mv		a0,	call_14_0_
+	call	f_println_1
+	li		const___13_,	0
+	sw		const___13_,	0(funcReturn_addr_2_0_)
+	j		.func_end_block_2
+.normal_block_5:
 	j		.func_end_block_2
 	.size	main,	.-main
 
@@ -286,7 +256,7 @@ _main_initial_1:
 	mv		calleesaveVreg___30_,	s9
 	mv		calleesaveVreg___31_,	s10
 	mv		calleesaveVreg___32_,	s11
-	j		.normal_block_5
+	j		.normal_block_6
 .func_end_block_3:
 	mv		s1,	calleesaveVreg___22_
 	mv		s2,	calleesaveVreg___23_
@@ -303,10 +273,45 @@ _main_initial_1:
 	lw		ra,	4(sp)
 	addi	sp,	sp,	8
 	ret
-.normal_block_5:
+.normal_block_6:
 	j		.func_end_block_3
 	.size	_main_initial_1,	.-_main_initial_1
 
 	.section	.bss
 	.section	.rodata
+	.type	const_string_1,@object
+const_string_1:
+	.string	"move "
+	.size	const_string_1,	7
+
+	.type	const_string_2,@object
+const_string_2:
+	.string	" --> "
+	.size	const_string_2,	7
+
+	.type	const_string_3,@object
+const_string_3:
+	.string	"move "
+	.size	const_string_3,	7
+
+	.type	const_string_4,@object
+const_string_4:
+	.string	" --> "
+	.size	const_string_4,	7
+
+	.type	const_string_5,@object
+const_string_5:
+	.string	"A"
+	.size	const_string_5,	3
+
+	.type	const_string_6,@object
+const_string_6:
+	.string	"B"
+	.size	const_string_6,	3
+
+	.type	const_string_7,@object
+const_string_7:
+	.string	"C"
+	.size	const_string_7,	3
+
 
