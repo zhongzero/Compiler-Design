@@ -14,6 +14,7 @@ public class ASMModule {
 
 	public ArrayList<PhysicalRegister_ASM> physicalReg;
 	public ArrayList<PhysicalRegister_ASM> regForColor;
+	public ArrayList<PhysicalRegister_ASM> callerSavedReg,calleeSavedReg;
 	public PhysicalRegister_ASM ra,sp,s0,a0,t0,t1,t2,t3;
 
 	public ASMModule(){
@@ -69,13 +70,43 @@ public class ASMModule {
 		regForColor.remove(physicalReg.get(0));//没有zero
 		regForColor.remove(physicalReg.get(1));//没有ra
 		regForColor.remove(physicalReg.get(2));//没有sp
-		regForColor.remove(physicalReg.get(8));//没有s0
+		regForColor.remove(physicalReg.get(3));//没有gp
+		regForColor.remove(physicalReg.get(4));//没有tp
 		regForColor.remove(physicalReg.get(5));//没有t0
+		regForColor.remove(physicalReg.get(8));//没有s0
 
-//		regForColor.remove(physicalReg.get(3));//没有gp
-//		regForColor.remove(physicalReg.get(4));//没有tp
+		callerSavedReg=new ArrayList<>();
+		//ra,t0也是callersaved reg,但是它不参加分配
+		callerSavedReg.add(physicalReg.get(6));//t1
+		callerSavedReg.add(physicalReg.get(7));//t2
+		callerSavedReg.add(physicalReg.get(28));//t3
+		callerSavedReg.add(physicalReg.get(29));//t4
+		callerSavedReg.add(physicalReg.get(30));//t5
+		callerSavedReg.add(physicalReg.get(31));//t6
+		callerSavedReg.add(physicalReg.get(10));//a0
+		callerSavedReg.add(physicalReg.get(11));//a1
+		callerSavedReg.add(physicalReg.get(12));//a2
+		callerSavedReg.add(physicalReg.get(13));//a3
+		callerSavedReg.add(physicalReg.get(14));//a4
+		callerSavedReg.add(physicalReg.get(15));//a5
+		callerSavedReg.add(physicalReg.get(16));//a6
+		callerSavedReg.add(physicalReg.get(17));//a7
 
+		calleeSavedReg=new ArrayList<>();
+		//sp,s1也是calleesaved reg,但是它不参加分配
+		calleeSavedReg.add(physicalReg.get(9));//s1
+		calleeSavedReg.add(physicalReg.get(18));//s2
+		calleeSavedReg.add(physicalReg.get(19));//s3
+		calleeSavedReg.add(physicalReg.get(20));//s4
+		calleeSavedReg.add(physicalReg.get(21));//s5
+		calleeSavedReg.add(physicalReg.get(22));//s6
+		calleeSavedReg.add(physicalReg.get(23));//s7
+		calleeSavedReg.add(physicalReg.get(24));//s8
+		calleeSavedReg.add(physicalReg.get(25));//s9
+		calleeSavedReg.add(physicalReg.get(26));//s10
+		calleeSavedReg.add(physicalReg.get(27));//s11
 
+		//zero,gp,tp与caller/callee无关
 	}
 
 	@Override

@@ -25,6 +25,7 @@ import FrontEnd.IR.TypeSystem.FunctionType;
 import FrontEnd.IR.TypeSystem.LabelType;
 import FrontEnd.IR.TypeSystem.OperandType.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ASMBuilder extends IRVisitor<Void> {
@@ -54,6 +55,8 @@ public class ASMBuilder extends IRVisitor<Void> {
 	PhysicalRegister_ASM s0;
 	PhysicalRegister_ASM ra;
 	PhysicalRegister_ASM a0;
+
+	ArrayList<VirtualRegister_ASM> calleeSaveVreg=new ArrayList<>();
 
 	public ASMBuilder(){
 		asmModule=new ASMModule();
@@ -112,9 +115,23 @@ public class ASMBuilder extends IRVisitor<Void> {
 						new Load_Inst_ASM(4,vReg0,pres0,new Imm_ASM(-(j+1-parasize)*4),currentBlock);//通过原函数的s0(stack头)找到原函数传入的其余参数的存储位置
 					}
 				}
+
+				calleeSaveVreg.clear();
+				for(int j=0;j<asmModule.calleeSavedReg.size();j++){
+					PhysicalRegister_ASM reg=asmModule.calleeSavedReg.get(j);
+					VirtualRegister_ASM vReg=new VirtualRegister_ASM("calleesaveVreg__");
+					new Mv_Inst_ASM(vReg,reg,currentBlock);
+					calleeSaveVreg.add(vReg);
+				}
 			}
 			visit(tmp);
 			if(node.funcEndBlock==tmp){//endBlock (最后一步一定是ret，且在visitRetInst中先不加入ret指令)
+				for(int j=0;j<asmModule.calleeSavedReg.size();j++){
+					PhysicalRegister_ASM reg=asmModule.calleeSavedReg.get(j);
+					VirtualRegister_ASM vReg=calleeSaveVreg.get(j);
+					new Mv_Inst_ASM(reg,vReg,currentBlock);
+				}
+
 				/*
 				lw		a0,	0(sp)		//visitRetInst中完成了(如果有返回值的话)
 				lw		s0,0(sp)
@@ -261,9 +278,12 @@ public class ASMBuilder extends IRVisitor<Void> {
 			}
 			else {
 				new Store_Inst_ASM(4,vReg,s0,new Imm_ASM(-((i-1)+1-parasize)*4),currentBlock);//把要传入的其余参数从当前stack顶依次往下存
+				currentFunction.stackParaSize=Math.max(currentFunction.stackParaSize,(i-parasize)*4);
+//				System.out.println(currentFunction.name+" "+currentFunction.stackParaSize);
 			}
 		}
-		new Call_Inst_ASM(targetfunc.name,currentBlock);
+		Call_Inst_ASM call=new Call_Inst_ASM(targetfunc.name,currentBlock);
+		call.def.addAll(asmModule.callerSavedReg);//callersaved reg(t0,t1...,a0,a1...)在函数调用时不会保存(即等价于它们被def了，以此在图染色时产生冲突边)
 		if(!(node.type instanceof VoidType)) {
 			VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
 			new Mv_Inst_ASM(vReg0, a0, currentBlock);

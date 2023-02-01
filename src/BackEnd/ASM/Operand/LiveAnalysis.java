@@ -15,6 +15,8 @@ public class LiveAnalysis {
 	public void process(ASMFunction currentfunction){//得到liveIn和liveOut
 		getSuccessor(currentfunction);
 
+		liveIn=new HashMap<>();
+		liveOut=new HashMap<>();
 		for(ASMBasicBlock currentblock:currentfunction.blockList){
 			for(Base_Inst_ASM inst:currentblock.instList){
 				liveIn.put(inst,new HashSet<>());
@@ -46,17 +48,28 @@ public class LiveAnalysis {
 			}
 			if(!flag)break;
 		}
+
+//		System.out.println("!!!!");
+//		int num=0;
+//		for(ASMBasicBlock currentblock:currentfunction.blockList){
+//			for(Base_Inst_ASM inst:currentblock.instList){
+//				System.out.println(liveOut.get(inst));
+//				System.out.println(inst);
+//				if(++num==20)throw new RuntimeException();
+//			}
+//		}
 	}
 	boolean Equal(HashSet<Register_ASM> tmp1,HashSet<Register_ASM> tmp2){
 		if(tmp1.size() !=tmp2.size())return false;
 		return tmp1.containsAll(tmp2);
 	}
 	void getSuccessor(ASMFunction currentfunction){
+		succ=new HashMap<>();
 		for(ASMBasicBlock currentblock:currentfunction.blockList){
 			Base_Inst_ASM preinst=null;
 			for(Base_Inst_ASM inst:currentblock.instList){
 				//结尾一定是ret或者j(beqz一定在j之前)
-				if(inst instanceof Ret_Inst_ASM)succ.put(inst,null);//ret
+				if(inst instanceof Ret_Inst_ASM)succ.put(inst,new HashSet<>());//ret
 				if(inst instanceof Branch_Inst_ASM && inst.rs1==null){//j
 					HashSet<Base_Inst_ASM> tmp=new HashSet<>();
 					tmp.add(GetJumpBlockFirstInst(((Branch_Inst_ASM) inst).jumpblockname,currentfunction));

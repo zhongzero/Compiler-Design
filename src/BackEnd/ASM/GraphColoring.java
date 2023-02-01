@@ -22,7 +22,7 @@ public class GraphColoring {
 
 	LiveAnalysis liveanalysis=new LiveAnalysis();
 
-	int K=27;//参与分配的物理寄存器总数
+	int K;//参与分配的物理寄存器总数
 
 	HashSet<Register_ASM> precolored;//physical register集合，每个寄存器都预先指派了一种颜色
 	HashSet<Register_ASM> initial;//virtual register集合，其中的元素既没有预着色，也没有被处理
@@ -53,6 +53,7 @@ public class GraphColoring {
 		asmmodule=_asmmodule;
 		sp=asmmodule.sp;
 		t0=asmmodule.t0;
+		K=asmmodule.regForColor.size();
 	}
 	public void process(){
 		for(int i=0;i<asmmodule.funcList.size();i++){
@@ -60,11 +61,16 @@ public class GraphColoring {
 			processEachFunction();//每个函数分开做(逻辑上可行，且这样做才能保证使用预着色正确)
 		}
 	}
+//	int count;
 	void processEachFunction(){
+//		count=0;
 		while(true){
+//			System.out.println(currentfunction.name);
+//			System.out.println("count: "+(++count));
 			liveanalysis.process(currentfunction);
 			Init();
 			Build();
+//			System.out.println(moveList);
 			MakeWorklist();
 			while (true){
 				if(!simplifyWorklist.isEmpty())Simplify();//简化
@@ -83,9 +89,9 @@ public class GraphColoring {
 			ASMBasicBlock currentblock = currentfunction.blockList.get(i);
 			LinkedList<Base_Inst_ASM> tmpList=new LinkedList<>();
 			for (Base_Inst_ASM inst : currentblock.instList) {
-				if(inst.rs1!=null)inst.rs1=color.get(inst.rs1);
-				if(inst.rs2!=null)inst.rs2=color.get(inst.rs2);
-				if(inst.rd!=null)inst.rd=color.get(inst.rd);
+				if(inst.rs1!=null && !(inst.rs1 instanceof PhysicalRegister_ASM && !precolored.contains(inst.rs1)) )inst.rs1=color.get(inst.rs1);
+				if(inst.rs2!=null && !(inst.rs2 instanceof PhysicalRegister_ASM && !precolored.contains(inst.rs2)) )inst.rs2=color.get(inst.rs2);
+				if(inst.rd!=null && !(inst.rd instanceof PhysicalRegister_ASM && !precolored.contains(inst.rd)) )inst.rd=color.get(inst.rd);
 				if(inst instanceof Mv_Inst_ASM && inst.rs1==inst.rd)continue;
 				tmpList.add(inst);
 			}
@@ -116,6 +122,7 @@ public class GraphColoring {
 		for(int i=0;i<currentfunction.blockList.size();i++){
 			ASMBasicBlock currentblock=currentfunction.blockList.get(i);
 			for(Base_Inst_ASM inst:currentblock.instList){
+//				System.out.println(inst);
 				for(Register_ASM reg:inst.def){
 					if(reg instanceof PhysicalRegister_ASM)continue;
 					initial.add(reg);
@@ -153,15 +160,19 @@ public class GraphColoring {
 			ASMBasicBlock currentblock=currentfunction.blockList.get(i);
 			for(Base_Inst_ASM inst:currentblock.instList){//直接把每一个instruction当成一个基本块
 				HashSet<Register_ASM> live=liveanalysis.liveOut.get(inst);
-				if(inst instanceof Mv_Inst_ASM){//注，保证sp等不参与分配的physical reg不会出现在mv指令中
+				if(inst instanceof Mv_Inst_ASM){
 					live.removeAll(inst.use);
-					for(Register_ASM reg:inst.def){
-						moveList.get(reg).add((Mv_Inst_ASM) inst);
+					boolean flag1=(inst.rd instanceof PhysicalRegister_ASM && !precolored.contains(inst.rd));
+					boolean flag2=(inst.rs1 instanceof PhysicalRegister_ASM && !precolored.contains(inst.rs1));
+					if(!flag1 && !flag2){//mv a0 xx (像存在a0这样不参与分配的就不需要加入moveList)
+						for(Register_ASM reg:inst.def){
+							moveList.get(reg).add((Mv_Inst_ASM) inst);
+						}
+						for(Register_ASM reg:inst.use){
+							moveList.get(reg).add((Mv_Inst_ASM) inst);
+						}
+						worklistMoves.add((Mv_Inst_ASM) inst);
 					}
-					for(Register_ASM reg:inst.use){
-						moveList.get(reg).add((Mv_Inst_ASM) inst);
-					}
-					worklistMoves.add((Mv_Inst_ASM) inst);
 				}
 				live.addAll(inst.def);//若是一个基本块只有一个inst，这条可删
 				for(Register_ASM reg1:inst.def){
@@ -174,8 +185,10 @@ public class GraphColoring {
 			}
 		}
 	}
+//	int num=0;
 	void AddEdge(Register_ASM reg1,Register_ASM reg2){
-		if(!asmmodule.regForColor.contains(reg1) || !asmmodule.regForColor.contains(reg2)) return;
+		if(reg1 instanceof PhysicalRegister_ASM && !asmmodule.regForColor.contains(reg1) )return;
+		if(reg2 instanceof PhysicalRegister_ASM && !asmmodule.regForColor.contains(reg2)) return;
 		//与sp等不参与分配的寄存器同时活跃，不需要AddEdge
 		if(!adjSet.contains(new Pair<>(reg1, reg2)) && reg1!=reg2){
 			adjSet.add(new Pair<>(reg1, reg2));
@@ -188,9 +201,14 @@ public class GraphColoring {
 				adjList.get(reg2).add(reg1);
 				degree.replace(reg2,degree.get(reg2)+1);
 			}
+//			System.out.println(reg1+" "+reg2);
+//			if(++num==20)throw new RuntimeException();
 		}
 	}
 	void MakeWorklist(){
+//		System.out.println(currentfunction);
+//		System.out.println("initial size : "+initial.size());
+//		System.out.println(initial);
 		for(Register_ASM reg:initial){
 			if(degree.get(reg)>=K)spillWorklist.add(reg);//高度数节点
 			else if(MoveRelated(reg))freezeWorklist.add(reg);//低度数传送有关节点
@@ -367,55 +385,64 @@ public class GraphColoring {
 		FreezeMoves(reg);
 	}
 	void AssignColor(){
+//		System.out.println(selectStack.size());
 		while(!selectStack.isEmpty()){
 			Register_ASM reg=selectStack.pop();
+//			System.out.println("stack pop : "+reg);
 			HashSet<Register_ASM> okColors = new HashSet<>(asmmodule.regForColor);
 			for(Register_ASM w:adjList.get(reg)){
 				HashSet<Register_ASM> tmp=coloredNodes;
 				tmp.addAll(precolored);
 				if(tmp.contains(GetAlias(w))){//如果reg的相邻点w已经染色(包括预染色)，则把该颜色去掉
-					okColors.remove(GetAlias(w));
+//					System.out.println("remove color : "+color.get(GetAlias(w)));
+					okColors.remove(color.get(GetAlias(w)));
 				}
 			}
-			if(okColors.isEmpty())spilledNodes.add(reg);
+			if(okColors.isEmpty()) {
+				spilledNodes.add(reg);
+//				System.out.println("spill : "+reg);
+			}
 			else {
 				coloredNodes.add(reg);
 				PhysicalRegister_ASM c= (PhysicalRegister_ASM) okColors.iterator().next();
 				color.replace(reg,c);//color[reg]=c
+//				System.out.println("color : "+c);
 			}
 		}
 		for(Register_ASM reg:coalescedNodes){
 			color.replace(reg,color.get(GetAlias(reg)));
+//			System.out.println("alias : "+reg);
+//			System.out.println("color : "+color.get(GetAlias(reg)));
 		}
 	}
 
 	ASMBasicBlock currentblock;
 	ListIterator<Base_Inst_ASM> iterator;
 	void RewriteProgram(){
-		for(int i=0;i<asmmodule.funcList.size();i++){
-			currentfunction=asmmodule.funcList.get(i);
-//			System.out.println(currentfunction.name);
-			for(int j=0;j<currentfunction.blockList.size();j++){
-				currentblock=currentfunction.blockList.get(j);
-//				System.out.println(currentblock.name);
-				iterator=currentblock.instList.listIterator(0);
-				while(iterator.hasNext()){
-					Base_Inst_ASM inst=iterator.next();
-					if(inst.rs1!=null&&spilledNodes.contains(inst.rs1)){
-						VirtualRegister_ASM tmp=new VirtualRegister_ASM("load1");
-						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs1,tmp);
-						inst.rs1=tmp;
-					}
-					if(inst.rs2!=null&&spilledNodes.contains(inst.rs2)){
-						VirtualRegister_ASM tmp=new VirtualRegister_ASM("load2");
-						StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs2,tmp);
-						inst.rs2=tmp;
-					}
-					if(inst.rd!=null&&spilledNodes.contains(inst.rd)){
-						VirtualRegister_ASM tmp=new VirtualRegister_ASM("store1");
-						StackAllocLoadStore("store", (VirtualRegister_ASM) inst.rd,tmp);
-						inst.rd=tmp;
-					}
+//		System.out.println(currentfunction.name);
+		for(int j=0;j<currentfunction.blockList.size();j++){
+			currentblock=currentfunction.blockList.get(j);
+//			System.out.println(currentblock.name);
+			iterator=currentblock.instList.listIterator(0);
+			while(iterator.hasNext()){
+				Base_Inst_ASM inst=iterator.next();
+				if(inst.rs1!=null&&spilledNodes.contains(inst.rs1)){
+					VirtualRegister_ASM tmp=new VirtualRegister_ASM("load1");
+					StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs1,tmp);
+					inst.rs1=tmp;
+					inst.update_use_def();//该inst不可能是call
+				}
+				if(inst.rs2!=null&&spilledNodes.contains(inst.rs2)){
+					VirtualRegister_ASM tmp=new VirtualRegister_ASM("load2");
+					StackAllocLoadStore("load", (VirtualRegister_ASM) inst.rs2,tmp);
+					inst.rs2=tmp;
+					inst.update_use_def();//该inst不可能是call
+				}
+				if(inst.rd!=null&&spilledNodes.contains(inst.rd)){
+					VirtualRegister_ASM tmp=new VirtualRegister_ASM("store1");
+					StackAllocLoadStore("store", (VirtualRegister_ASM) inst.rd,tmp);
+					inst.rd=tmp;
+					inst.update_use_def();//该inst不可能是call
 				}
 			}
 		}

@@ -10,6 +10,8 @@ public class Base_Inst_ASM {
 	public Imm_ASM imm=null;
 	public HashSet<Register_ASM> use=new HashSet<>(),def=new HashSet<>();
 	public void update_use_def(){
+		def.clear();
+		use.clear();
 		if(rd!=null)def.add(rd);
 		if(rs1!=null)use.add(rs1);
 		if(rs2!=null)use.add(rs2);
