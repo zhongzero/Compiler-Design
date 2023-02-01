@@ -67,12 +67,11 @@ public class GraphColoring {
 		while(true){
 //			System.out.println(currentfunction.name);
 //			System.out.println("count: "+(++count));
+//			if(currentfunction.name.equals("f_cd_1") && count==2)System.out.println(currentfunction);
 			liveanalysis.process(currentfunction);
 			Init();
 			Build();
-//			System.out.println(moveList);
 			MakeWorklist();
-			int GGG=0;
 			while (true){
 				if(!simplifyWorklist.isEmpty())Simplify();//简化
 				else if(!worklistMoves.isEmpty())Coalesce();//合并
@@ -90,11 +89,13 @@ public class GraphColoring {
 			ASMBasicBlock currentblock = currentfunction.blockList.get(i);
 			LinkedList<Base_Inst_ASM> tmpList=new LinkedList<>();
 			for (Base_Inst_ASM inst : currentblock.instList) {
+//				if(currentfunction.name.equals("f_cd_1") && count==2)System.out.println(inst+"   !!");
 				if(inst.rs1!=null && !(inst.rs1 instanceof PhysicalRegister_ASM && !precolored.contains(inst.rs1)) )inst.rs1=color.get(inst.rs1);
 				if(inst.rs2!=null && !(inst.rs2 instanceof PhysicalRegister_ASM && !precolored.contains(inst.rs2)) )inst.rs2=color.get(inst.rs2);
 				if(inst.rd!=null && !(inst.rd instanceof PhysicalRegister_ASM && !precolored.contains(inst.rd)) )inst.rd=color.get(inst.rd);
 				if(inst instanceof Mv_Inst_ASM && inst.rs1==inst.rd)continue;
 				tmpList.add(inst);
+//				if(currentfunction.name.equals("f_cd_1") && count==2)System.out.println(inst+"   @@");
 			}
 			currentblock.instList=tmpList;
 		}
@@ -147,7 +148,7 @@ public class GraphColoring {
 		for(int i=0;i<asmmodule.regForColor.size();i++){
 			Register_ASM reg=asmmodule.regForColor.get(i);
 			precolored.add(reg);
-			degree.put(reg,0);
+			degree.put(reg,Integer.MAX_VALUE);//防止physical reg意外进入各种WorkList里
 			adjList.put(reg,new HashSet<>());
 			moveList.put(reg,new HashSet<>());
 			alias.put(reg,null);
@@ -179,6 +180,8 @@ public class GraphColoring {
 				for(Register_ASM reg1:inst.def){
 					for(Register_ASM reg2:live){
 						AddEdge(reg1,reg2);
+//						if(reg1 instanceof PhysicalRegister_ASM && ((PhysicalRegister_ASM) reg1).name.equals("s8"))System.out.println(reg1+" "+reg2+" "+degree.get(reg1));
+//						if(reg2 instanceof PhysicalRegister_ASM && ((PhysicalRegister_ASM) reg2).name.equals("s8"))System.out.println(reg1+" "+reg2+" "+degree.get(reg2));
 					}
 				}
 				live.removeAll(inst.def);//若是一个基本块只有一个inst，这条可删
@@ -202,7 +205,8 @@ public class GraphColoring {
 				adjList.get(reg2).add(reg1);
 				degree.replace(reg2,degree.get(reg2)+1);
 			}
-//			System.out.println(reg1+" "+reg2);
+//			if(reg1 instanceof PhysicalRegister_ASM && ((PhysicalRegister_ASM) reg1).name.equals("s8"))System.out.println(reg1+" "+reg2);
+//			if(reg2 instanceof PhysicalRegister_ASM && ((PhysicalRegister_ASM) reg2).name.equals("s8"))System.out.println(reg1+" "+reg2);
 //			if(++num==20)throw new RuntimeException();
 		}
 	}
@@ -389,6 +393,7 @@ public class GraphColoring {
 //		System.out.println(selectStack.size());
 		while(!selectStack.isEmpty()){
 			Register_ASM reg=selectStack.pop();
+			if(reg instanceof PhysicalRegister_ASM)throw new RuntimeException("find physical reg in stack");
 //			System.out.println("stack pop : "+reg);
 			HashSet<Register_ASM> okColors = new HashSet<>(asmmodule.regForColor);
 			for(Register_ASM w:adjList.get(reg)){

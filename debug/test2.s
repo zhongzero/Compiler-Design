@@ -13,17 +13,16 @@ f_cd_1:
 	mv		b_1_0_,	a2
 	mv		c_1_0_,	a3
 	mv		sum_1_0_,	a4
-	mv		calleesaveVreg___0_,	s1
-	mv		calleesaveVreg___1_,	s2
-	mv		calleesaveVreg___2_,	s3
-	mv		calleesaveVreg___3_,	s4
-	mv		calleesaveVreg___4_,	s5
-	mv		calleesaveVreg___5_,	s6
-	mv		calleesaveVreg___6_,	s7
-	mv		calleesaveVreg___7_,	s8
-	mv		calleesaveVreg___8_,	s9
-	mv		calleesaveVreg___9_,	s10
-	mv		calleesaveVreg___10_,	s11
+	mv		calleesaveVreg___0_,	s2
+	mv		calleesaveVreg___1_,	s3
+	mv		calleesaveVreg___2_,	s4
+	mv		calleesaveVreg___3_,	s5
+	mv		calleesaveVreg___4_,	s6
+	mv		calleesaveVreg___5_,	s7
+	mv		calleesaveVreg___6_,	s8
+	mv		calleesaveVreg___7_,	s9
+	mv		calleesaveVreg___8_,	s10
+	mv		calleesaveVreg___9_,	s11
 	addi	funcReturn_addr_1_0_,	sp,	8
 	addi	d_addr_1_0_,	sp,	12
 	addi	a_addr_1_0_,	sp,	16
@@ -34,17 +33,16 @@ f_cd_1:
 .func_end_block_1:
 	lw		load_1_0_,	0(funcReturn_addr_1_0_)
 	mv		a0,	load_1_0_
-	mv		s1,	calleesaveVreg___0_
-	mv		s2,	calleesaveVreg___1_
-	mv		s3,	calleesaveVreg___2_
-	mv		s4,	calleesaveVreg___3_
-	mv		s5,	calleesaveVreg___4_
-	mv		s6,	calleesaveVreg___5_
-	mv		s7,	calleesaveVreg___6_
-	mv		s8,	calleesaveVreg___7_
-	mv		s9,	calleesaveVreg___8_
-	mv		s10,	calleesaveVreg___9_
-	mv		s11,	calleesaveVreg___10_
+	mv		s2,	calleesaveVreg___0_
+	mv		s3,	calleesaveVreg___1_
+	mv		s4,	calleesaveVreg___2_
+	mv		s5,	calleesaveVreg___3_
+	mv		s6,	calleesaveVreg___4_
+	mv		s7,	calleesaveVreg___5_
+	mv		s8,	calleesaveVreg___6_
+	mv		s9,	calleesaveVreg___7_
+	mv		s10,	calleesaveVreg___8_
+	mv		s11,	calleesaveVreg___9_
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	32
@@ -160,17 +158,16 @@ main:
 	sw		s0,	0(sp)
 	addi	s0,	sp,	32
 	sw		ra,	4(sp)
-	mv		calleesaveVreg___11_,	s1
-	mv		calleesaveVreg___12_,	s2
-	mv		calleesaveVreg___13_,	s3
-	mv		calleesaveVreg___14_,	s4
-	mv		calleesaveVreg___15_,	s5
-	mv		calleesaveVreg___16_,	s6
-	mv		calleesaveVreg___17_,	s7
-	mv		calleesaveVreg___18_,	s8
-	mv		calleesaveVreg___19_,	s9
-	mv		calleesaveVreg___20_,	s10
-	mv		calleesaveVreg___21_,	s11
+	mv		calleesaveVreg___10_,	s2
+	mv		calleesaveVreg___11_,	s3
+	mv		calleesaveVreg___12_,	s4
+	mv		calleesaveVreg___13_,	s5
+	mv		calleesaveVreg___14_,	s6
+	mv		calleesaveVreg___15_,	s7
+	mv		calleesaveVreg___16_,	s8
+	mv		calleesaveVreg___17_,	s9
+	mv		calleesaveVreg___18_,	s10
+	mv		calleesaveVreg___19_,	s11
 	addi	funcReturn_addr_2_0_,	sp,	8
 	addi	a_addr_2_0_,	sp,	12
 	addi	b_addr_2_0_,	sp,	16
@@ -181,17 +178,16 @@ main:
 .func_end_block_2:
 	lw		load_20_0_,	0(funcReturn_addr_2_0_)
 	mv		a0,	load_20_0_
-	mv		s1,	calleesaveVreg___11_
-	mv		s2,	calleesaveVreg___12_
-	mv		s3,	calleesaveVreg___13_
-	mv		s4,	calleesaveVreg___14_
-	mv		s5,	calleesaveVreg___15_
-	mv		s6,	calleesaveVreg___16_
-	mv		s7,	calleesaveVreg___17_
-	mv		s8,	calleesaveVreg___18_
-	mv		s9,	calleesaveVreg___19_
-	mv		s10,	calleesaveVreg___20_
-	mv		s11,	calleesaveVreg___21_
+	mv		s2,	calleesaveVreg___10_
+	mv		s3,	calleesaveVreg___11_
+	mv		s4,	calleesaveVreg___12_
+	mv		s5,	calleesaveVreg___13_
+	mv		s6,	calleesaveVreg___14_
+	mv		s7,	calleesaveVreg___15_
+	mv		s8,	calleesaveVreg___16_
+	mv		s9,	calleesaveVreg___17_
+	mv		s10,	calleesaveVreg___18_
+	mv		s11,	calleesaveVreg___19_
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	32
@@ -245,30 +241,28 @@ _main_initial_1:
 	sw		s0,	0(sp)
 	addi	s0,	sp,	8
 	sw		ra,	4(sp)
-	mv		calleesaveVreg___22_,	s1
-	mv		calleesaveVreg___23_,	s2
-	mv		calleesaveVreg___24_,	s3
-	mv		calleesaveVreg___25_,	s4
-	mv		calleesaveVreg___26_,	s5
-	mv		calleesaveVreg___27_,	s6
-	mv		calleesaveVreg___28_,	s7
-	mv		calleesaveVreg___29_,	s8
-	mv		calleesaveVreg___30_,	s9
-	mv		calleesaveVreg___31_,	s10
-	mv		calleesaveVreg___32_,	s11
+	mv		calleesaveVreg___20_,	s2
+	mv		calleesaveVreg___21_,	s3
+	mv		calleesaveVreg___22_,	s4
+	mv		calleesaveVreg___23_,	s5
+	mv		calleesaveVreg___24_,	s6
+	mv		calleesaveVreg___25_,	s7
+	mv		calleesaveVreg___26_,	s8
+	mv		calleesaveVreg___27_,	s9
+	mv		calleesaveVreg___28_,	s10
+	mv		calleesaveVreg___29_,	s11
 	j		.normal_block_6
 .func_end_block_3:
-	mv		s1,	calleesaveVreg___22_
-	mv		s2,	calleesaveVreg___23_
-	mv		s3,	calleesaveVreg___24_
-	mv		s4,	calleesaveVreg___25_
-	mv		s5,	calleesaveVreg___26_
-	mv		s6,	calleesaveVreg___27_
-	mv		s7,	calleesaveVreg___28_
-	mv		s8,	calleesaveVreg___29_
-	mv		s9,	calleesaveVreg___30_
-	mv		s10,	calleesaveVreg___31_
-	mv		s11,	calleesaveVreg___32_
+	mv		s2,	calleesaveVreg___20_
+	mv		s3,	calleesaveVreg___21_
+	mv		s4,	calleesaveVreg___22_
+	mv		s5,	calleesaveVreg___23_
+	mv		s6,	calleesaveVreg___24_
+	mv		s7,	calleesaveVreg___25_
+	mv		s8,	calleesaveVreg___26_
+	mv		s9,	calleesaveVreg___27_
+	mv		s10,	calleesaveVreg___28_
+	mv		s11,	calleesaveVreg___29_
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	8

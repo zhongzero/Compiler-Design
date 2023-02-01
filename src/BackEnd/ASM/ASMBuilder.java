@@ -103,6 +103,14 @@ public class ASMBuilder extends IRVisitor<Void> {
 				new Store_Inst_ASM(4,ra,sp,new Imm_ASM(4),currentBlock);
 				currentFunction.stackAllocSize+=8;
 
+				calleeSaveVreg.clear();
+				for(int j=0;j<asmModule.calleeSavedReg.size();j++){
+					PhysicalRegister_ASM reg=asmModule.calleeSavedReg.get(j);
+					VirtualRegister_ASM vReg=new VirtualRegister_ASM("calleesaveVreg__");
+					new Mv_Inst_ASM(vReg,reg,currentBlock);
+					calleeSaveVreg.add(vReg);
+				}
+
 				VirtualRegister_ASM pres0=new VirtualRegister_ASM("pres0");
 				for(int j=0;j<node.operandlist.size();j++){
 					Value para=node.operandlist.get(j);
@@ -114,14 +122,6 @@ public class ASMBuilder extends IRVisitor<Void> {
 						if(j==parasize)new Load_Inst_ASM(4,pres0,sp,new Imm_ASM(0),currentBlock);//把原函数的s0(stack头)取出放入pres0中
 						new Load_Inst_ASM(4,vReg0,pres0,new Imm_ASM(-(j+1-parasize)*4),currentBlock);//通过原函数的s0(stack头)找到原函数传入的其余参数的存储位置
 					}
-				}
-
-				calleeSaveVreg.clear();
-				for(int j=0;j<asmModule.calleeSavedReg.size();j++){
-					PhysicalRegister_ASM reg=asmModule.calleeSavedReg.get(j);
-					VirtualRegister_ASM vReg=new VirtualRegister_ASM("calleesaveVreg__");
-					new Mv_Inst_ASM(vReg,reg,currentBlock);
-					calleeSaveVreg.add(vReg);
 				}
 			}
 			visit(tmp);
