@@ -64,6 +64,7 @@ public class ASMModule {
 		t1=physicalReg.get(6);
 		t2=physicalReg.get(7);
 		t3=physicalReg.get(28);
+		regForColor=new ArrayList<>();
 		regForColor.addAll(physicalReg);
 		regForColor.remove(physicalReg.get(0));//没有zero
 		regForColor.remove(physicalReg.get(1));//没有ra

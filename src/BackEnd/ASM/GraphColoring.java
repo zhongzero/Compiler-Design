@@ -20,7 +20,7 @@ public class GraphColoring {
 	PhysicalRegister_ASM sp;
 	PhysicalRegister_ASM t0;
 
-	LiveAnalysis liveanalysis;
+	LiveAnalysis liveanalysis=new LiveAnalysis();
 
 	int K=27;//参与分配的物理寄存器总数
 
