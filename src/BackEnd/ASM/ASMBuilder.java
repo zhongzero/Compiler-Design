@@ -27,6 +27,7 @@ import FrontEnd.IR.TypeSystem.OperandType.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ASMBuilder extends IRVisitor<Void> {
 
@@ -57,6 +58,8 @@ public class ASMBuilder extends IRVisitor<Void> {
 	PhysicalRegister_ASM a0;
 
 	ArrayList<VirtualRegister_ASM> calleeSaveVreg=new ArrayList<>();
+
+	HashSet<AllocInst> NotAllocList=new HashSet<>();
 
 	public ASMBuilder(){
 		asmModule=new ASMModule();
@@ -162,9 +165,17 @@ public class ASMBuilder extends IRVisitor<Void> {
 	public Void visitAllocInst(AllocInst node){
 		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
 		VirtualRegister_ASM value=new VirtualRegister_ASM("value__");
-		currentFunction.StackAlloc(value);//分配栈上的地址
-		int offset=currentFunction.getOffset(value);
-		new Binary_Inst_ASM("addi",vReg0,sp,null,new Imm_ASM(offset),currentBlock);//把xx_addr(一个vReg)的值赋成对应的地址
+
+		if(node.type.dePoint() instanceof IntegerType){
+			//局部int/bool变量alloc不分配栈上的空间了，改为使用一个vReg代替，接下来的load/store操作全部变成mv
+			NotAllocList.add(node);
+		}
+		else {
+			currentFunction.StackAlloc(value);//分配栈上的地址
+			int offset=currentFunction.getOffset(value);
+			new Binary_Inst_ASM("addi",vReg0,sp,null,new Imm_ASM(offset),currentBlock);//把xx_addr(一个vReg)的值赋成对应的地址
+		}
+
 		return null;
 	}
 	public Void visitBinaryInst(BinaryInst node){
@@ -231,7 +242,14 @@ public class ASMBuilder extends IRVisitor<Void> {
 		Value addr=node.operandlist.get(0);
 		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(node);
 		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(addr);
-		new Load_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
+
+		if(NotAllocList.contains(addr)){
+			//局部int/bool变量alloc不分配栈上的空间了，改为使用一个vReg代替，接下来的load/store操作全部变成mv
+			new Mv_Inst_ASM(vReg0,vReg1,currentBlock);
+		}
+		else {
+			new Load_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
+		}
 		return null;
 	}
 	public Void visitStoreInst(StoreInst node){
@@ -240,7 +258,13 @@ public class ASMBuilder extends IRVisitor<Void> {
 		Value value=node.operandlist.get(1);
 		VirtualRegister_ASM vReg0=Creat_and_Get_vReg(value);
 		VirtualRegister_ASM vReg1=Creat_and_Get_vReg(addr);
-		new Store_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
+		if(NotAllocList.contains(addr)){
+			//局部int/bool变量alloc不分配栈上的空间了，改为使用一个vReg代替，接下来的load/store操作全部变成mv
+			new Mv_Inst_ASM(vReg1,vReg0,currentBlock);
+		}
+		else {
+			new Store_Inst_ASM(4,vReg0,vReg1,new Imm_ASM(0),currentBlock);
+		}
 		return null;
 	}
 	public Void visitBrInst(BrInst node){

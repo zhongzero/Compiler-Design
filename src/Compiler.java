@@ -60,6 +60,7 @@ public class Compiler {
 			ASMBuilder asmbuilder=new ASMBuilder();
 			asmbuilder.visit(irmodule);
 			ASMModule asmmodule=asmbuilder.asmModule;
+
 			if(irmodule.toString().length()>100000){//代码过长graphcaloring跑得太慢(因为是对于每个inst当成块来做的，跑得慢)
 				ForceStackAlloc forceregalloc=new ForceStackAlloc(asmmodule);
 				forceregalloc.process();//暴力用压栈代替寄存器分配,即寄存器分配时让它全部溢出
