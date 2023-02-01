@@ -70,8 +70,8 @@ public class ASMModule {
 		regForColor.remove(physicalReg.get(0));//没有zero
 		regForColor.remove(physicalReg.get(1));//没有ra
 		regForColor.remove(physicalReg.get(2));//没有sp
-		regForColor.remove(physicalReg.get(3));//没有gp
-		regForColor.remove(physicalReg.get(4));//没有tp
+//		regForColor.remove(physicalReg.get(3));//没有gp
+//		regForColor.remove(physicalReg.get(4));//没有tp
 		regForColor.remove(physicalReg.get(5));//没有t0
 		regForColor.remove(physicalReg.get(8));//没有s0
 
