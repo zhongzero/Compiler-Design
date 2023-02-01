@@ -65,13 +65,14 @@ public class GraphColoring {
 	void processEachFunction(){
 //		count=0;
 		while(true){
-//			System.out.println(currentfunction.name);
+			System.out.println(currentfunction.name);
 //			System.out.println("count: "+(++count));
 			liveanalysis.process(currentfunction);
 			Init();
 			Build();
 //			System.out.println(moveList);
 			MakeWorklist();
+			int GGG=0;
 			while (true){
 				if(!simplifyWorklist.isEmpty())Simplify();//简化
 				else if(!worklistMoves.isEmpty())Coalesce();//合并

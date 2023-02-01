@@ -24,6 +24,7 @@ public class LiveAnalysis {
 			}
 		}
 
+
 		while (true){
 			boolean flag=false;
 			for(int i=currentfunction.blockList.size()-1;i>=0;i--) {

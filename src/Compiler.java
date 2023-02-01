@@ -20,7 +20,7 @@ import java.io.PrintStream;
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
-			boolean input_from_file=false;
+			boolean input_from_file=true;
 			boolean IR_output_to_file=true;
 			boolean ASM_output_to_file=true;
 			CharStream input;
@@ -60,11 +60,14 @@ public class Compiler {
 			ASMBuilder asmbuilder=new ASMBuilder();
 			asmbuilder.visit(irmodule);
 			ASMModule asmmodule=asmbuilder.asmModule;
-
-//			ForceStackAlloc forceregalloc=new ForceStackAlloc(asmmodule);
-//			forceregalloc.process();//暴力用压栈代替寄存器分配,即寄存器分配时让它全部溢出
-			GraphColoring regalloc=new GraphColoring(asmmodule);
-			regalloc.process();
+			if(irmodule.toString().length()>100000){//代码过长graphcaloring跑得太慢(因为是对于每个inst当成块来做的，跑得慢)
+				ForceStackAlloc forceregalloc=new ForceStackAlloc(asmmodule);
+				forceregalloc.process();//暴力用压栈代替寄存器分配,即寄存器分配时让它全部溢出
+			}
+			else{
+				GraphColoring regalloc=new GraphColoring(asmmodule);
+				regalloc.process();
+			}
 
 			UpdateInst updateinst=new UpdateInst(asmmodule);
 			updateinst.process();
