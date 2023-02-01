@@ -109,6 +109,7 @@ public class ASMModule {
 
 		//zero,gp,tp与caller/callee无关
 
+		regForColor=new ArrayList<>();
 		regForColor.addAll(calleeSavedReg);
 		regForColor.addAll(callerSavedReg);
 	}
