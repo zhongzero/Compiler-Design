@@ -74,6 +74,7 @@ public class ASMModule {
 		regForColor.remove(physicalReg.get(4));//没有tp
 		regForColor.remove(physicalReg.get(5));//没有t0
 		regForColor.remove(physicalReg.get(8));//没有s0
+		regForColor.remove(physicalReg.get(10));//没有a0
 
 		callerSavedReg=new ArrayList<>();
 		//ra,t0,a0也是callersaved reg,但是它不参加分配
