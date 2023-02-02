@@ -47,8 +47,8 @@ public class UpdateAddi {
 				Base_Inst_ASM preinst=null;
 				while(iterator.hasNext()) {
 					Base_Inst_ASM inst = iterator.next();
-					if(preinst!=null && preinst instanceof Li_Inst_ASM && BetweenImm(preinst.imm.imm) && inst instanceof Binary_Inst_ASM && (((Binary_Inst_ASM) inst).op.equals("add") || ((Binary_Inst_ASM) inst).op.equals("sub"))){
-						if(inst.rs1==preinst.rd && ((Binary_Inst_ASM) inst).op.equals("add")){
+					if(preinst!=null && preinst instanceof Li_Inst_ASM && BetweenImm(preinst.imm.imm) && inst instanceof Binary_Inst_ASM && ((Binary_Inst_ASM) inst).op.equals("add")){
+						if(inst.rs1==preinst.rd){
 							iterator.add(new Binary_Inst_ASM("addi",inst.rd,inst.rs2,null,preinst.imm,null));
 							iterator.previous();
 							iterator.previous();
