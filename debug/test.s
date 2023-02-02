@@ -1,186 +1,227 @@
 	.section	.text
-	.globl	f_compute_1
+	.globl	f_test_foo_1
 	.p2align	2
-	.type	f_compute_1,@function
-f_compute_1:
+	.type	f_test_foo_1,@function
+f_test_foo_1:
 .func_begin_block_1:
-	addi	sp,	sp,	-60
+	addi	sp,	sp,	-16
 	sw		s0,	0(sp)
-	addi	s0,	sp,	60
+	addi	s0,	sp,	16
 	sw		ra,	4(sp)
 	sw		s1,	8(sp)
-	sw		s2,	12(sp)
-	sw		s3,	16(sp)
-	sw		s4,	20(sp)
-	sw		s5,	24(sp)
-	sw		s6,	28(sp)
-	sw		s7,	32(sp)
-	sw		s8,	36(sp)
-	sw		s9,	40(sp)
-	sw		s10,	44(sp)
-	sw		s11,	48(sp)
+	sw		s6,	12(sp)
 	j		.normal_block_1
 .normal_block_1:
-	mv		t1,	a0
-	addi	s10,	a0,	1
-	addi	s9,	a0,	2
-	addi	a3,	a0,	3
-	addi	s2,	a0,	4
-	addi	t4,	a0,	5
-	addi	t3,	a0,	6
-	addi	a1,	a0,	7
-	addi	a4,	a0,	8
-	addi	s6,	a0,	9
-	addi	s3,	a0,	10
-	sw		s3,	52(sp)
-	addi	a7,	a0,	11
-	addi	s5,	a0,	12
-	addi	s4,	a0,	13
-	addi	a6,	a0,	14
-	addi	s3,	a0,	15
-	addi	t2,	a0,	16
-	addi	s1,	a0,	17
-	addi	t0,	a0,	18
-	addi	t6,	a0,	19
-	addi	s11,	a0,	20
-	addi	t5,	a0,	21
-	addi	a5,	a0,	22
-	sw		a5,	56(sp)
-	addi	s8,	a0,	23
-	addi	a5,	a0,	24
-	li		a0,	0
-	li		a2,	0
-	li		a2,	0
-	li		s7,	50
-	slt		s7,	a2,	s7
-	beqz	s7,	.normal_block_2
-	j		.for_body_block_1
-.for_body_block_1:
-	add		a0,	a0,	t1
-	add		a0,	a0,	s10
-	add		a0,	a0,	s9
-	add		a0,	a0,	a3
-	add		a0,	a0,	s2
-	add		a0,	a0,	t4
-	add		a0,	a0,	t3
-	add		a0,	a0,	a1
-	add		a0,	a0,	a4
-	add		a0,	a0,	s6
-	lw		s7,	52(sp)
-	add		a0,	a0,	s7
-	add		s7,	a0,	a7
-	mv		a0,	s5
-	add		a0,	s7,	a0
-	add		a0,	a0,	s4
-	add		a0,	a0,	a6
-	add		a0,	a0,	s3
-	add		a0,	a0,	t2
-	add		a0,	a0,	s1
-	add		a0,	a0,	t0
-	add		a0,	a0,	t6
-	add		a0,	a0,	s11
-	add		a0,	a0,	t5
-	lw		s7,	56(sp)
-	add		a0,	a0,	s7
-	add		a0,	a0,	s8
-	add		a0,	a0,	a5
-	add		a0,	a0,	a2
-	li		s7,	1000000
-	slt		s7,	a0,	s7
-	seqz	s7,	s7,
-	beqz	s7,	.normal_block_3
-	li		s7,	1000000
-	sub		a0,	a0,	s7
-	j		.normal_block_3
+	li		t3,	0
+	li		a1,	0
+	li		a6,	0
+	li		a4,	0
+	mv		a2,	a4
+	li		t4,	0
+	li		t0,	0
+	li		t5,	0
+	li		a4,	0
+	li		s1,	0
+	li		s1,	0
+	li		a3,	0
+	li		s1,	0
+	li		t1,	0
+	li		a7,	0
+	li		t1,	0
+	li		a7,	0
+	li		a5,	0
+	li		t2,	0
+	li		a7,	0
+	mv		s6,	a7
+	li		a5,	0
+	mv		a7,	a5
+	slt		a7,	a7,	a0
+	beqz	a7,	.normal_block_2
+	li		t2,	0
+	slt		a7,	t2,	a0
+	beqz	a7,	.normal_block_3
+	li		a7,	0
+	mv		s6,	a7
+	slt		a7,	s6,	a0
+	beqz	a7,	.normal_block_4
+	li		a7,	0
+	slt		t6,	a7,	a0
+	beqz	t6,	.normal_block_5
+	addi	t3,	t3,	1
+	li		t6,	1000000
+	sgt		t6,	t3,	t6
+	beqz	t6,	.normal_block_6
+	li		t6,	1000000
+	sub		t3,	t3,	t6
+	j		.normal_block_6
 .normal_block_2:
+	mv		a0,	t3
 	lw		s1,	8(sp)
-	lw		s2,	12(sp)
-	lw		s3,	16(sp)
-	lw		s4,	20(sp)
-	lw		s5,	24(sp)
-	lw		s6,	28(sp)
-	lw		s7,	32(sp)
-	lw		s8,	36(sp)
-	lw		s9,	40(sp)
-	lw		s10,	44(sp)
-	lw		s11,	48(sp)
+	lw		s6,	12(sp)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	60
+	addi	sp,	sp,	16
 	ret
 .normal_block_3:
-	addi	a2,	a2,	1
-	li		s7,	50
-	slt		s7,	a2,	s7
-	beqz	s7,	.normal_block_2
-	j		.for_body_block_1
+	addi	a5,	a5,	1
+	mv		a7,	a5
+	slt		a7,	a7,	a0
+	beqz	a7,	.normal_block_2
+	li		t2,	0
+	slt		a7,	t2,	a0
+	beqz	a7,	.normal_block_3
+	li		a7,	0
+	mv		s6,	a7
+	slt		a7,	s6,	a0
+	beqz	a7,	.normal_block_4
+	li		a7,	0
+	slt		t6,	a7,	a0
+	beqz	t6,	.normal_block_5
+	addi	t3,	t3,	1
+	li		t6,	1000000
+	sgt		t6,	t3,	t6
+	beqz	t6,	.normal_block_6
+	li		t6,	1000000
+	sub		t3,	t3,	t6
+	j		.normal_block_6
 .normal_block_4:
+	addi	t2,	t2,	1
+	slt		a7,	t2,	a0
+	beqz	a7,	.normal_block_3
+	li		a7,	0
+	mv		s6,	a7
+	slt		a7,	s6,	a0
+	beqz	a7,	.normal_block_4
+	li		a7,	0
+	slt		t6,	a7,	a0
+	beqz	t6,	.normal_block_5
+	addi	t3,	t3,	1
+	li		t6,	1000000
+	sgt		t6,	t3,	t6
+	beqz	t6,	.normal_block_6
+	li		t6,	1000000
+	sub		t3,	t3,	t6
+	j		.normal_block_6
+.normal_block_5:
+	mv		a7,	s6
+	addi	s6,	a7,	1
+	slt		a7,	s6,	a0
+	beqz	a7,	.normal_block_4
+	li		a7,	0
+	slt		t6,	a7,	a0
+	beqz	t6,	.normal_block_5
+	addi	t3,	t3,	1
+	li		t6,	1000000
+	sgt		t6,	t3,	t6
+	beqz	t6,	.normal_block_6
+	li		t6,	1000000
+	sub		t3,	t3,	t6
+	j		.normal_block_6
+.normal_block_6:
+	li		t6,	1000000
+	sgt		t6,	t5,	t6
+	beqz	t6,	.normal_block_7
+	li		t6,	1000000
+	sub		t5,	t5,	t6
+	j		.normal_block_7
+.normal_block_7:
+	li		t5,	1000000
+	sgt		t5,	a1,	t5
+	beqz	t5,	.normal_block_8
+	li		t5,	1000000
+	sub		a1,	a1,	t5
+	j		.normal_block_8
+.normal_block_8:
+	li		t5,	1000000
+	sgt		t5,	a6,	t5
+	beqz	t5,	.normal_block_9
+	li		t5,	1000000
+	sub		a6,	a6,	t5
+	j		.normal_block_9
+.normal_block_9:
+	li		t5,	1000000
+	sgt		t5,	t0,	t5
+	beqz	t5,	.normal_block_10
+	li		t5,	1000000
+	sub		t0,	t0,	t5
+	j		.normal_block_10
+.normal_block_10:
+	addi	a1,	a1,	2
+	li		t0,	3
+	sgt		t0,	t3,	t0
+	beqz	t0,	.normal_block_11
+	add		t0,	a6,	t3
+	addi	t0,	t0,	10
+	mv		a6,	t0
+	j		.normal_block_11
+.normal_block_11:
+	addi	a6,	a6,	1
+	add		t0,	a6,	t3
+	add		a2,	t0,	a2
+	add		t5,	t3,	a1
+	add		t5,	t5,	a6
+	add		t5,	t5,	a2
+	add		t5,	t5,	t4
+	add		t5,	t5,	t0
+	li		t6,	10
+	sgt		t6,	t5,	t6
+	beqz	t6,	.else_body_block_7
+	addi	a4,	a4,	1
+	addi	s1,	s1,	1
+	addi	t1,	t1,	1
+	addi	a7,	a7,	1
+	slt		t6,	a7,	a0
+	beqz	t6,	.normal_block_5
+	addi	t3,	t3,	1
+	li		t6,	1000000
+	sgt		t6,	t3,	t6
+	beqz	t6,	.normal_block_6
+	li		t6,	1000000
+	sub		t3,	t3,	t6
+	j		.normal_block_6
+.else_body_block_7:
+	addi	t3,	t3,	1
+	addi	s1,	s1,	1
+	addi	a3,	a3,	1
+	addi	a7,	a7,	1
+	slt		t6,	a7,	a0
+	beqz	t6,	.normal_block_5
+	addi	t3,	t3,	1
+	li		t6,	1000000
+	sgt		t6,	t3,	t6
+	beqz	t6,	.normal_block_6
+	li		t6,	1000000
+	sub		t3,	t3,	t6
+	j		.normal_block_6
+.normal_block_13:
 	lw		s1,	8(sp)
-	lw		s2,	12(sp)
-	lw		s3,	16(sp)
-	lw		s4,	20(sp)
-	lw		s5,	24(sp)
-	lw		s6,	28(sp)
-	lw		s7,	32(sp)
-	lw		s8,	36(sp)
-	lw		s9,	40(sp)
-	lw		s10,	44(sp)
-	lw		s11,	48(sp)
+	lw		s6,	12(sp)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	60
+	addi	sp,	sp,	16
 	ret
-	.size	f_compute_1,	.-f_compute_1
+	.size	f_test_foo_1,	.-f_test_foo_1
 
 	.globl	main
 	.p2align	2
 	.type	main,@function
 main:
 .func_begin_block_2:
-	addi	sp,	sp,	-16
+	addi	sp,	sp,	-12
 	sw		s0,	0(sp)
-	addi	s0,	sp,	16
+	addi	s0,	sp,	12
 	sw		ra,	4(sp)
-	sw		s2,	8(sp)
-	sw		s8,	12(sp)
+	mv		t3,	s8
+	sw		t3,	8(sp)
 	call	_main_initial_1
-	li		s8,	0
-	li		s2,	0
-	li		s2,	0
-	la		a3,	NUM_ITERATIONS_addr_1
-	lw		a3,	0(a3)
-	slt		a3,	s2,	a3
-	beqz	a3,	.normal_block_6
-	mv		a0,	s2
-	call	f_compute_1
-	add		s8,	s8,	a0
-	j		.for_update_block_2
-.for_update_block_2:
-	addi	s2,	s2,	1
-	la		a3,	NUM_ITERATIONS_addr_1
-	lw		a3,	0(a3)
-	slt		a3,	s2,	a3
-	beqz	a3,	.normal_block_6
-	mv		a0,	s2
-	call	f_compute_1
-	add		s8,	s8,	a0
-	j		.for_update_block_2
-.normal_block_6:
-	mv		a0,	s8
+	li		a0,	60
+	call	f_test_foo_1
 	call	f_printInt_1
-	li		a0,	0
-	lw		s2,	8(sp)
-	lw		s8,	12(sp)
+	mv		a0,	s8
+	lw		s8,	8(sp)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	16
-	ret
-.normal_block_7:
-	lw		s2,	8(sp)
-	lw		s8,	12(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	16
+	addi	sp,	sp,	12
 	ret
 	.size	main,	.-main
 
@@ -193,9 +234,6 @@ _main_initial_1:
 	sw		s0,	0(sp)
 	addi	s0,	sp,	8
 	sw		ra,	4(sp)
-	li		a3,	500000
-	la		t3,	NUM_ITERATIONS_addr_1
-	sw		a3,	0(t3)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	8
@@ -203,11 +241,5 @@ _main_initial_1:
 	.size	_main_initial_1,	.-_main_initial_1
 
 	.section	.bss
-	.globl	NUM_ITERATIONS_addr_1
-	.type	NUM_ITERATIONS_addr_1,@object
-NUM_ITERATIONS_addr_1:
-	.word	0
-	.size	NUM_ITERATIONS_addr_1,	4
-
 	.section	.rodata
 
