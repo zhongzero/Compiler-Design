@@ -59,7 +59,7 @@ public class UpdateAddi {
 							iterator.next();
 							preinst=null;
 						}
-						if(inst.rs2==preinst.rd){
+						else if(inst.rs2==preinst.rd){
 							iterator.add(new Binary_Inst_ASM("addi",inst.rd,inst.rs1,null,preinst.imm,null));
 							iterator.previous();
 							iterator.previous();
