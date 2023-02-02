@@ -74,8 +74,8 @@ public class ASMModule {
 		callerSavedReg.add(physicalReg.get(29));//t4
 		callerSavedReg.add(physicalReg.get(30));//t5
 		callerSavedReg.add(physicalReg.get(31));//t6
-//		callerSavedReg.add(physicalReg.get(10));//a0
-//		callerSavedReg.add(physicalReg.get(11));//a1
+		callerSavedReg.add(physicalReg.get(10));//a0
+		callerSavedReg.add(physicalReg.get(11));//a1
 		callerSavedReg.add(physicalReg.get(12));//a2
 		callerSavedReg.add(physicalReg.get(13));//a3
 		callerSavedReg.add(physicalReg.get(14));//a4
@@ -85,7 +85,7 @@ public class ASMModule {
 
 		calleeSavedReg=new ArrayList<>();
 		//sp,s0也是calleesaved reg,但是它不参加分配
-//		calleeSavedReg.add(physicalReg.get(9));//s1
+		calleeSavedReg.add(physicalReg.get(9));//s1
 		calleeSavedReg.add(physicalReg.get(18));//s2
 		calleeSavedReg.add(physicalReg.get(19));//s3
 		calleeSavedReg.add(physicalReg.get(20));//s4

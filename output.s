@@ -1,339 +1,233 @@
 	.section	.text
-	.globl	f_loop_1
-	.p2align	2
-	.type	f_loop_1,@function
-f_loop_1:
-.func_begin_block_1:
-	addi	sp,	sp,	-16
-	sw		s0,	0(sp)
-	addi	s0,	sp,	16
-	sw		ra,	4(sp)
-	sw		s9,	12(sp)
-	addi	s9,	sp,	8
-	j		.normal_block_1
-.func_end_block_1:
-	mv		a0,	a4
-	lw		s9,	12(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	16
-	ret
-.normal_block_1:
-	li		a5,	40004
-	mv		a0,	a5
-	call	_heap_malloc_1
-	mv		a5,	a0
-	li		t6,	10000
-	sw		t6,	0(a5)
-	addi	a5,	a5,	4
-	sw		a5,	0(s9)
-	li		t4,	0
-	j		.for_condition_block_1
-.for_condition_block_1:
-	li		a5,	10
-	slt		a5,	t4,	a5
-	beqz	a5,	.normal_block_2
-	j		.for_body_block_1
-.for_body_block_1:
-	li		a5,	0
-	j		.for_condition_block_2
-.for_update_block_1:
-	li		a5,	1
-	add		t4,	t4,	a5
-	j		.for_condition_block_1
-.normal_block_2:
-	li		a4,	0
-	li		t4,	0
-	j		.for_condition_block_5
-.for_condition_block_2:
-	li		t6,	10
-	slt		t6,	a5,	t6
-	beqz	t6,	.normal_block_3
-	j		.for_body_block_2
-.for_body_block_2:
-	li		a2,	0
-	j		.for_condition_block_3
-.for_update_block_2:
-	li		t6,	1
-	add		a5,	a5,	t6
-	j		.for_condition_block_2
-.normal_block_3:
-	j		.for_update_block_1
-.for_condition_block_3:
-	li		t6,	10
-	slt		t6,	a2,	t6
-	beqz	t6,	.normal_block_4
-	j		.for_body_block_3
-.for_body_block_3:
-	li		t6,	0
-	j		.for_condition_block_4
-.for_update_block_3:
-	li		t6,	1
-	add		a2,	a2,	t6
-	j		.for_condition_block_3
-.normal_block_4:
-	j		.for_update_block_2
-.for_condition_block_4:
-	li		a4,	10
-	slt		a4,	t6,	a4
-	beqz	a4,	.normal_block_5
-	j		.for_body_block_4
-.for_body_block_4:
-	lw		t3,	0(s9)
-	li		a4,	1000
-	mul		a7,	t4,	a4
-	li		a4,	100
-	mul		a4,	a5,	a4
-	add		a7,	a7,	a4
-	li		a4,	10
-	mul		a4,	a2,	a4
-	add		a4,	a7,	a4
-	add		a7,	a4,	t6
-	li		a4,	4
-	mul		a4,	a4,	a7
-	add		a4,	t3,	a4
-	add		t3,	t4,	t6
-	sw		t3,	0(a4)
-	lw		t3,	0(s9)
-	li		a4,	10
-	mul		a4,	t4,	a4
-	li		a7,	5
-	mul		a7,	a5,	a7
-	add		a4,	a4,	a7
-	li		a7,	4
-	mul		a7,	a7,	a4
-	add		t2,	t3,	a7
-	lw		a4,	0(s9)
-	li		t3,	10
-	mul		a7,	t4,	t3
-	li		t3,	5
-	mul		t3,	a5,	t3
-	add		a7,	a7,	t3
-	li		t3,	4
-	mul		t3,	t3,	a7
-	add		a4,	a4,	t3
-	lw		a4,	0(a4)
-	sw		a4,	0(t2)
-	j		.for_update_block_4
-.for_update_block_4:
-	li		a4,	1
-	add		t6,	t6,	a4
-	j		.for_condition_block_4
-.normal_block_5:
-	j		.for_update_block_3
-.for_condition_block_5:
-	li		a5,	10
-	slt		a5,	t4,	a5
-	beqz	a5,	.normal_block_6
-	j		.for_body_block_5
-.for_body_block_5:
-	li		a5,	0
-	j		.for_condition_block_6
-.for_update_block_5:
-	li		a5,	1
-	add		t4,	t4,	a5
-	j		.for_condition_block_5
-.normal_block_6:
-	j		.func_end_block_1
-.for_condition_block_6:
-	li		t6,	10
-	slt		t6,	a5,	t6
-	beqz	t6,	.normal_block_7
-	j		.for_body_block_6
-.for_body_block_6:
-	li		a2,	0
-	j		.for_condition_block_7
-.for_update_block_6:
-	li		t6,	1
-	add		a5,	a5,	t6
-	j		.for_condition_block_6
-.normal_block_7:
-	j		.for_update_block_5
-.for_condition_block_7:
-	li		t6,	10
-	slt		t6,	a2,	t6
-	beqz	t6,	.normal_block_8
-	j		.for_body_block_7
-.for_body_block_7:
-	li		t6,	0
-	j		.for_condition_block_8
-.for_update_block_7:
-	li		t6,	1
-	add		a2,	a2,	t6
-	j		.for_condition_block_7
-.normal_block_8:
-	j		.for_update_block_6
-.for_condition_block_8:
-	li		t3,	10
-	slt		t3,	t6,	t3
-	beqz	t3,	.normal_block_9
-	j		.for_body_block_8
-.for_body_block_8:
-	li		t3,	1
-	and		t3,	t6,	t3
-	li		a7,	1
-	xor		t3,	t3,	a7
-	seqz	t3,	t3,
-	beqz	t3,	.else_body_block_1
-	j		.if_body_block_1
-.for_update_block_8:
-	li		t3,	1
-	add		t6,	t6,	t3
-	j		.for_condition_block_8
-.normal_block_9:
-	j		.for_update_block_7
-.if_body_block_1:
-	lw		a7,	0(s9)
-	li		t3,	1000
-	mul		t2,	t4,	t3
-	li		t3,	100
-	mul		t3,	a5,	t3
-	add		t2,	t2,	t3
-	li		t3,	10
-	mul		t3,	a2,	t3
-	add		t3,	t2,	t3
-	add		t2,	t3,	t6
-	li		t3,	4
-	mul		t3,	t3,	t2
-	add		t3,	a7,	t3
-	lw		t3,	0(t3)
-	add		a4,	a4,	t3
-	j		.normal_block_10
-.else_body_block_1:
-	lw		a7,	0(s9)
-	li		t3,	1000
-	mul		t2,	t4,	t3
-	li		t3,	100
-	mul		t3,	a5,	t3
-	add		t2,	t2,	t3
-	li		t3,	10
-	mul		t3,	a2,	t3
-	add		t3,	t2,	t3
-	add		t3,	t3,	t6
-	li		t2,	4
-	mul		t2,	t2,	t3
-	add		t3,	a7,	t2
-	lw		t3,	0(t3)
-	sub		a4,	a4,	t3
-	j		.normal_block_10
-.normal_block_10:
-	j		.for_update_block_8
-.normal_block_11:
-	j		.func_end_block_1
-	.size	f_loop_1,	.-f_loop_1
-
 	.globl	f_compute_1
 	.p2align	2
 	.type	f_compute_1,@function
 f_compute_1:
-.func_begin_block_2:
-	addi	sp,	sp,	-20
+.func_begin_block_1:
+	addi	sp,	sp,	-68
 	sw		s0,	0(sp)
-	addi	s0,	sp,	20
+	addi	s0,	sp,	68
 	sw		ra,	4(sp)
-	sw		s2,	8(sp)
-	sw		s9,	12(sp)
-	sw		s11,	16(sp)
-	mv		s2,	a0
-	j		.normal_block_12
-.func_end_block_2:
-	mv		a0,	s11
-	lw		s2,	8(sp)
-	lw		s9,	12(sp)
-	lw		s11,	16(sp)
+	sw		s1,	8(sp)
+	sw		s2,	12(sp)
+	sw		s3,	16(sp)
+	sw		s4,	20(sp)
+	sw		s5,	24(sp)
+	sw		s6,	28(sp)
+	sw		s7,	32(sp)
+	sw		s8,	36(sp)
+	sw		s9,	40(sp)
+	sw		s10,	44(sp)
+	sw		s11,	48(sp)
+	j		.normal_block_1
+.func_end_block_1:
+	lw		s1,	8(sp)
+	lw		s2,	12(sp)
+	lw		s3,	16(sp)
+	lw		s4,	20(sp)
+	lw		s5,	24(sp)
+	lw		s6,	28(sp)
+	lw		s7,	32(sp)
+	lw		s8,	36(sp)
+	lw		s9,	40(sp)
+	lw		s10,	44(sp)
+	lw		s11,	48(sp)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	20
+	addi	sp,	sp,	68
 	ret
-.normal_block_12:
-	li		s9,	0
-	li		s11,	0
-	j		.while_condition_block_1
-.while_condition_block_1:
-	sgt		a5,	s9,	s2
-	seqz	a5,	a5,
-	beqz	a5,	.normal_block_13
-	j		.while_body_block_1
-.while_body_block_1:
-	call	f_loop_1
-	mv		a5,	a0
-	li		t6,	5000
-	sgt		t6,	a5,	t6
-	beqz	t6,	.normal_block_14
-	j		.if_body_block_2
-.normal_block_13:
-	j		.func_end_block_2
-.if_body_block_2:
-	li		t6,	5000
-	sub		a5,	a5,	t6
-	j		.normal_block_14
-.normal_block_14:
-	add		s11,	s11,	a5
-	li		a5,	5000
-	sgt		a5,	s11,	a5
-	beqz	a5,	.normal_block_15
-	j		.if_body_block_3
-.if_body_block_3:
-	li		a5,	5000
-	sub		s11,	s11,	a5
-	j		.normal_block_15
-.normal_block_15:
-	li		a5,	1
-	add		s9,	s9,	a5
-	j		.while_condition_block_1
-.normal_block_16:
-	j		.func_end_block_2
+.normal_block_1:
+	mv		s1,	a0
+	li		s9,	1
+	add		a6,	a0,	s9
+	li		s9,	2
+	add		t1,	a0,	s9
+	li		s9,	3
+	add		a4,	a0,	s9
+	li		s9,	4
+	add		s8,	a0,	s9
+	li		s9,	5
+	add		s9,	a0,	s9
+	sw		s9,	52(sp)
+	li		s9,	6
+	add		t4,	a0,	s9
+	li		s9,	7
+	add		t5,	a0,	s9
+	li		s9,	8
+	add		a2,	a0,	s9
+	li		s9,	9
+	add		t6,	a0,	s9
+	li		s9,	10
+	add		s9,	a0,	s9
+	sw		s9,	56(sp)
+	li		s9,	11
+	add		t3,	a0,	s9
+	li		s9,	12
+	add		s11,	a0,	s9
+	li		s9,	13
+	add		s4,	a0,	s9
+	li		s9,	14
+	add		t2,	a0,	s9
+	li		s9,	15
+	add		s9,	a0,	s9
+	li		s3,	16
+	add		s6,	a0,	s3
+	li		s3,	17
+	add		s2,	a0,	s3
+	li		s3,	18
+	add		a3,	a0,	s3
+	li		s3,	19
+	add		a1,	a0,	s3
+	li		s3,	20
+	add		a5,	a0,	s3
+	li		s3,	21
+	add		s3,	a0,	s3
+	li		a7,	22
+	add		a7,	a0,	a7
+	sw		a7,	60(sp)
+	li		a7,	23
+	add		a7,	a0,	a7
+	li		s10,	24
+	add		s10,	a0,	s10
+	sw		s10,	64(sp)
+	li		a0,	0
+	li		s10,	0
+	li		s10,	0
+	j		.for_condition_block_1
+.for_condition_block_1:
+	li		s5,	50
+	slt		s5,	s10,	s5
+	beqz	s5,	.normal_block_2
+	j		.for_body_block_1
+.for_body_block_1:
+	add		a0,	a0,	s1
+	add		a0,	a0,	a6
+	add		a0,	a0,	t1
+	add		a0,	a0,	a4
+	add		s5,	a0,	s8
+	lw		a0,	52(sp)
+	add		a0,	s5,	a0
+	add		a0,	a0,	t4
+	add		a0,	a0,	t5
+	add		a0,	a0,	a2
+	add		s5,	a0,	t6
+	lw		a0,	56(sp)
+	add		a0,	s5,	a0
+	add		a0,	a0,	t3
+	add		a0,	a0,	s11
+	add		a0,	a0,	s4
+	add		a0,	a0,	t2
+	add		a0,	a0,	s9
+	add		a0,	a0,	s6
+	add		a0,	a0,	s2
+	add		a0,	a0,	a3
+	add		a0,	a0,	a1
+	add		a0,	a0,	a5
+	add		s5,	a0,	s3
+	lw		a0,	60(sp)
+	add		a0,	s5,	a0
+	add		s5,	a0,	a7
+	lw		a0,	64(sp)
+	add		a0,	s5,	a0
+	add		a0,	a0,	s10
+	li		s5,	1000000
+	slt		s5,	a0,	s5
+	seqz	s5,	s5,
+	beqz	s5,	.normal_block_3
+	j		.if_body_block_1
+.for_update_block_1:
+	li		s5,	1
+	add		s10,	s10,	s5
+	j		.for_condition_block_1
+.normal_block_2:
+	j		.func_end_block_1
+.if_body_block_1:
+	li		s5,	1000000
+	sub		a0,	a0,	s5
+	j		.normal_block_3
+.normal_block_3:
+	j		.for_update_block_1
+.normal_block_4:
+	j		.func_end_block_1
 	.size	f_compute_1,	.-f_compute_1
 
 	.globl	main
 	.p2align	2
 	.type	main,@function
 main:
-.func_begin_block_3:
-	addi	sp,	sp,	-12
+.func_begin_block_2:
+	addi	sp,	sp,	-16
 	sw		s0,	0(sp)
-	addi	s0,	sp,	12
+	addi	s0,	sp,	16
 	sw		ra,	4(sp)
-	mv		a5,	s11
-	sw		a5,	8(sp)
-	j		.normal_block_17
-.func_end_block_3:
-	mv		a0,	s11
-	lw		s11,	8(sp)
+	sw		s2,	8(sp)
+	sw		s8,	12(sp)
+	j		.normal_block_5
+.func_end_block_2:
+	lw		s2,	8(sp)
+	lw		s8,	12(sp)
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
-	addi	sp,	sp,	12
+	addi	sp,	sp,	16
 	ret
-.normal_block_17:
+.normal_block_5:
 	call	_main_initial_1
-	li		a5,	20
-	mv		a0,	a5
+	li		s2,	0
+	li		s8,	0
+	li		s8,	0
+	j		.for_condition_block_2
+.for_condition_block_2:
+	la		a4,	NUM_ITERATIONS_addr_1
+	lw		a4,	0(a4)
+	slt		a4,	s8,	a4
+	beqz	a4,	.normal_block_6
+	j		.for_body_block_2
+.for_body_block_2:
+	mv		a0,	s8
 	call	f_compute_1
-	mv		a5,	a0
-	mv		a0,	a5
+	add		s2,	s2,	a0
+	j		.for_update_block_2
+.for_update_block_2:
+	li		a4,	1
+	add		s8,	s8,	a4
+	j		.for_condition_block_2
+.normal_block_6:
+	mv		a0,	s2
 	call	f_printInt_1
-	j		.func_end_block_3
+	li		a0,	0
+	j		.func_end_block_2
+.normal_block_7:
+	j		.func_end_block_2
 	.size	main,	.-main
 
 	.globl	_main_initial_1
 	.p2align	2
 	.type	_main_initial_1,@function
 _main_initial_1:
-.func_begin_block_4:
+.func_begin_block_3:
 	addi	sp,	sp,	-8
 	sw		s0,	0(sp)
 	addi	s0,	sp,	8
 	sw		ra,	4(sp)
-	j		.normal_block_18
-.func_end_block_4:
+	j		.normal_block_8
+.func_end_block_3:
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	8
 	ret
-.normal_block_18:
-	j		.func_end_block_4
+.normal_block_8:
+	li		t4,	500000
+	la		a4,	NUM_ITERATIONS_addr_1
+	sw		t4,	0(a4)
+	j		.func_end_block_3
 	.size	_main_initial_1,	.-_main_initial_1
 
 	.section	.bss
+	.globl	NUM_ITERATIONS_addr_1
+	.type	NUM_ITERATIONS_addr_1,@object
+NUM_ITERATIONS_addr_1:
+	.word	0
+	.size	NUM_ITERATIONS_addr_1,	4
+
 	.section	.rodata
 
