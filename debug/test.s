@@ -20,6 +20,22 @@ f_compute_1:
 	sw		s10,	44(sp)
 	sw		s11,	48(sp)
 	j		.normal_block_1
+.func_end_block_1:
+	lw		s1,	8(sp)
+	lw		s2,	12(sp)
+	lw		s3,	16(sp)
+	lw		s4,	20(sp)
+	lw		s5,	24(sp)
+	lw		s6,	28(sp)
+	lw		s7,	32(sp)
+	lw		s8,	36(sp)
+	lw		s9,	40(sp)
+	lw		s10,	44(sp)
+	lw		s11,	48(sp)
+	lw		s0,	0(sp)
+	lw		ra,	4(sp)
+	addi	sp,	sp,	64
+	ret
 .normal_block_1:
 	mv		t5,	a0
 	addi	s1,	a0,	1
@@ -52,6 +68,8 @@ f_compute_1:
 	li		a0,	0
 	li		t3,	0
 	li		t3,	0
+	j		.for_condition_block_1
+.for_condition_block_1:
 	li		s7,	50
 	slt		s7,	t3,	s7
 	beqz	s7,	.normal_block_2
@@ -92,47 +110,20 @@ f_compute_1:
 	slt		s7,	a0,	s7
 	seqz	s7,	s7,
 	beqz	s7,	.normal_block_3
+	j		.if_body_block_1
+.for_update_block_1:
+	addi	t3,	t3,	1
+	j		.for_condition_block_1
+.normal_block_2:
+	j		.func_end_block_1
+.if_body_block_1:
 	li		s7,	1000000
 	sub		a0,	a0,	s7
 	j		.normal_block_3
-.normal_block_2:
-	lw		s1,	8(sp)
-	lw		s2,	12(sp)
-	lw		s3,	16(sp)
-	lw		s4,	20(sp)
-	lw		s5,	24(sp)
-	lw		s6,	28(sp)
-	lw		s7,	32(sp)
-	lw		s8,	36(sp)
-	lw		s9,	40(sp)
-	lw		s10,	44(sp)
-	lw		s11,	48(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	64
-	ret
 .normal_block_3:
-	addi	t3,	t3,	1
-	li		s7,	50
-	slt		s7,	t3,	s7
-	beqz	s7,	.normal_block_2
-	j		.for_body_block_1
+	j		.for_update_block_1
 .normal_block_4:
-	lw		s1,	8(sp)
-	lw		s2,	12(sp)
-	lw		s3,	16(sp)
-	lw		s4,	20(sp)
-	lw		s5,	24(sp)
-	lw		s6,	28(sp)
-	lw		s7,	32(sp)
-	lw		s8,	36(sp)
-	lw		s9,	40(sp)
-	lw		s10,	44(sp)
-	lw		s11,	48(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	64
-	ret
+	j		.func_end_block_1
 	.size	f_compute_1,	.-f_compute_1
 
 	.globl	main
@@ -146,14 +137,27 @@ main:
 	sw		ra,	4(sp)
 	sw		s2,	8(sp)
 	sw		s8,	12(sp)
+	j		.normal_block_5
+.func_end_block_2:
+	lw		s2,	8(sp)
+	lw		s8,	12(sp)
+	lw		s0,	0(sp)
+	lw		ra,	4(sp)
+	addi	sp,	sp,	16
+	ret
+.normal_block_5:
 	call	_main_initial_1
 	li		a0,	0
 	li		s8,	0
 	li		s8,	0
+	j		.for_condition_block_2
+.for_condition_block_2:
 	la		a4,	NUM_ITERATIONS_addr_1
 	lw		a4,	0(a4)
 	slt		a4,	s8,	a4
 	beqz	a4,	.normal_block_6
+	j		.for_body_block_2
+.for_body_block_2:
 	mv		s2,	a0
 	mv		a0,	s8
 	call	f_compute_1
@@ -161,31 +165,13 @@ main:
 	j		.for_update_block_2
 .for_update_block_2:
 	addi	s8,	s8,	1
-	la		a4,	NUM_ITERATIONS_addr_1
-	lw		a4,	0(a4)
-	slt		a4,	s8,	a4
-	beqz	a4,	.normal_block_6
-	mv		s2,	a0
-	mv		a0,	s8
-	call	f_compute_1
-	add		a0,	s2,	a0
-	j		.for_update_block_2
+	j		.for_condition_block_2
 .normal_block_6:
 	call	f_printInt_1
 	li		a0,	0
-	lw		s2,	8(sp)
-	lw		s8,	12(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	16
-	ret
+	j		.func_end_block_2
 .normal_block_7:
-	lw		s2,	8(sp)
-	lw		s8,	12(sp)
-	lw		s0,	0(sp)
-	lw		ra,	4(sp)
-	addi	sp,	sp,	16
-	ret
+	j		.func_end_block_2
 	.size	main,	.-main
 
 	.globl	_main_initial_1
@@ -197,13 +183,17 @@ _main_initial_1:
 	sw		s0,	0(sp)
 	addi	s0,	sp,	8
 	sw		ra,	4(sp)
-	li		t4,	500000
-	la		a4,	NUM_ITERATIONS_addr_1
-	sw		t4,	0(a4)
+	j		.normal_block_8
+.func_end_block_3:
 	lw		s0,	0(sp)
 	lw		ra,	4(sp)
 	addi	sp,	sp,	8
 	ret
+.normal_block_8:
+	li		t4,	500000
+	la		a4,	NUM_ITERATIONS_addr_1
+	sw		t4,	0(a4)
+	j		.func_end_block_3
 	.size	_main_initial_1,	.-_main_initial_1
 
 	.section	.bss

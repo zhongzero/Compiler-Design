@@ -70,8 +70,8 @@ public class Compiler {
 			UpdateInst updateinst=new UpdateInst(asmmodule);
 			updateinst.process();
 
-//			ReduceBr reduceBr=new ReduceBr(asmmodule);
-//			reduceBr.process();
+			ReduceBr reduceBr=new ReduceBr(asmmodule);//opt
+			reduceBr.process();
 
 			ps.println(asmmodule.toString());
 
