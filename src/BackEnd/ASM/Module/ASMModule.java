@@ -74,7 +74,7 @@ public class ASMModule {
 		callerSavedReg.add(physicalReg.get(29));//t4
 		callerSavedReg.add(physicalReg.get(30));//t5
 		callerSavedReg.add(physicalReg.get(31));//t6
-		callerSavedReg.add(physicalReg.get(10));//a0
+//		callerSavedReg.add(physicalReg.get(10));//a0
 		callerSavedReg.add(physicalReg.get(11));//a1
 		callerSavedReg.add(physicalReg.get(12));//a2
 		callerSavedReg.add(physicalReg.get(13));//a3
