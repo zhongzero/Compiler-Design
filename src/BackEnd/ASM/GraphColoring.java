@@ -404,7 +404,7 @@ public class GraphColoring {
 		for(Register_ASM tmp:spillWorklist){
 			int num=degree.get(tmp);
 			double value=RegValue.get(tmp)*1.0/num;//平均权值
-			System.out.println(tmp+" "+RegValue.get(tmp)+" "+num);
+//			System.out.println(tmp+" "+RegValue.get(tmp)+" "+num);
 			if(value<minvalue){
 				reg=tmp;
 				minvalue=value;

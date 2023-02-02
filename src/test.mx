@@ -1,52 +1,55 @@
-int test_foo(int args){
-    int a = 0;
-    int b = 0;
-    int c = 0;
-    int d = 0;
-    int e = 0;
-    int f = 0;
-    int g = 0;
-    int h = 0;
+/*
+answer: 620191334
+*/
+
+int loop(){
+    int a = 123;
+    int b = 234;
+    int c = 345;
+    int d = 456;
+    int e = 567;
+    int f = 678;
+    int g = 789;
+
     int i = 0;
     int j = 0;
     int k = 0;
-    int r = 0;
-    int m = 0;
-    int n = 0;
-    int q = 0;
-    int i1 = 0;
-    int i2 = 0;
-    int i3 = 0;
-    int i4 = 0;
-    for(i2 = 0; i2 < args; ++i2){
-    for(i3 = 0; i3 < args; ++i3){
-    for(i4 = 0; i4 < args; ++i4){
-    for(n = 0; n < args; ++n){
-        a = a + 1;
-        if(a > 1000000) a = a - 1000000;
-        if(g > 1000000) g = g - 1000000;
-        if(b > 1000000) b = b - 1000000;
-        if(c > 1000000) c = c - 1000000;
-        if(f > 1000000) f = f - 1000000;
-        b = b + 2;
-        if(a > 3) c = c + a - 10;
-        c = c + 1;
-        f = c + a;
-        d = f + d;
-        g = a + b + c + d + e + f;
-        if(g > 10){
-            h = h + 1;
-            r = r + 1;
-            q = q + 1;
+    int x = 0;
+    int y = 0;
 
-        } else {
-            a = a + 1;
-            r = r + 1;
-            k = k + 1;
+	for (i = 0; i < 100; i++) {
+		b = a + c - e - g;
+        for (j = 0; j < 100; j++) {
+			c = b + d - f - a;
+            for (k = 0; k < 100; k++) {
+				d = c + e - g - b;
+                for (x = 0; x < 10; x++) {
+                    e = d + f - a - c;
+					for (y = 0; y < 10; y++) {
+						f = e + g - b - d;
+					}
+                }
+            }
         }
-    }}}}
-    return a;
+    }
+
+	for (i = 0; i < 10; i++) {
+		for (j = 0; j < 10; j++) {
+        	for (k = 0; k < 10; k++) {
+				d = c + e + g + b;
+                for (x = 0; x < 10; x++) {
+                    e = d + f + a + c;
+                }
+				for (y = 0; y < 10; y++) {
+					f = e + g + b + d;
+				}
+            }
+        }
+    }
+    return f;
 }
+
 int main(){
-    printInt(test_foo(60));
+    int a = loop();
+	printInt(a);
 }

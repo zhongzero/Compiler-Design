@@ -1,8 +1,5 @@
-import BackEnd.ASM.ASMBuilder;
-import BackEnd.ASM.ForceStackAlloc;
-import BackEnd.ASM.GraphColoring;
+import BackEnd.ASM.*;
 import BackEnd.ASM.Module.ASMModule;
-import BackEnd.ASM.UpdateInst;
 import FrontEnd.IR.IRBuilder;
 import FrontEnd.IR.Module.IRModule;
 import FrontEnd.SemanticCheck.SemanticCheckVisitor;
