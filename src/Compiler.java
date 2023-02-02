@@ -69,7 +69,12 @@ public class Compiler {
 
 			UpdateInst updateinst=new UpdateInst(asmmodule);
 			updateinst.process();
+
+			ReduceBr reduceBr=new ReduceBr(asmmodule);
+			reduceBr.process();
+
 			ps.println(asmmodule.toString());
+
 
 			ps=new PrintStream("builtin.s");
 			ps.println(new PrintBuiltin().str);

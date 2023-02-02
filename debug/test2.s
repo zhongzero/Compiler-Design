@@ -15,79 +15,79 @@ f_loop_1:
 	addi	sp,	sp,	8
 	ret
 .normal_block_1:
-	li		a3,	123
-	li		a2,	234
-	li		a4,	345
+	li		t1,	123
+	li		t6,	234
+	li		t3,	345
 	li		a6,	456
-	li		t2,	567
+	li		a7,	567
 	li		a0,	678
-	li		a7,	789
+	li		a2,	789
+	li		a3,	0
+	li		t2,	0
 	li		t4,	0
-	li		t1,	0
-	li		t6,	0
 	li		a1,	0
-	li		t3,	0
-	li		t4,	0
+	li		a4,	0
+	li		a3,	0
 	j		.for_condition_block_1
 .for_condition_block_1:
-	li		t1,	100
-	slt		t1,	t4,	t1
-	beqz	t1,	.normal_block_2
+	li		t2,	100
+	slt		t2,	a3,	t2
+	beqz	t2,	.normal_block_2
 	j		.for_body_block_1
 .for_body_block_1:
-	add		t1,	a3,	a4
-	sub		t1,	t1,	t2
-	sub		a2,	t1,	a7
-	li		t1,	0
+	add		t6,	t1,	t3
+	sub		t6,	t6,	a7
+	sub		t6,	t6,	a2
+	li		t2,	0
 	j		.for_condition_block_2
 .for_update_block_1:
-	addi	t4,	t4,	1
+	addi	a3,	a3,	1
 	j		.for_condition_block_1
 .normal_block_2:
-	li		t4,	0
+	li		a3,	0
 	j		.for_condition_block_6
 .for_condition_block_2:
-	li		t6,	100
-	slt		t6,	t1,	t6
-	beqz	t6,	.normal_block_3
+	li		a4,	100
+	slt		a4,	t2,	a4
+	beqz	a4,	.normal_block_3
 	j		.for_body_block_2
 .for_body_block_2:
-	add		t6,	a2,	a6
-	sub		t6,	t6,	a0
-	sub		a4,	t6,	a3
-	li		t6,	0
+	add		a4,	t6,	a6
+	sub		a4,	a4,	a0
+	sub		t3,	a4,	t1
+	li		t4,	0
 	j		.for_condition_block_3
 .for_update_block_2:
-	addi	t1,	t1,	1
+	addi	t2,	t2,	1
 	j		.for_condition_block_2
 .normal_block_3:
 	j		.for_update_block_1
 .for_condition_block_3:
-	li		t3,	100
-	slt		t3,	t6,	t3
-	beqz	t3,	.normal_block_4
+	li		a4,	100
+	slt		a4,	t4,	a4
+	beqz	a4,	.normal_block_4
 	j		.for_body_block_3
 .for_body_block_3:
-	add		a6,	a4,	t2
-	sub		a6,	a6,	a7
+	add		a6,	t3,	a7
 	sub		a6,	a6,	a2
+	sub		a6,	a6,	t6
 	li		a1,	0
 	j		.for_condition_block_4
 .for_update_block_3:
-	addi	t6,	t6,	1
+	addi	t4,	t4,	1
 	j		.for_condition_block_3
 .normal_block_4:
 	j		.for_update_block_2
 .for_condition_block_4:
-	li		t3,	10
-	slt		t3,	a1,	t3
-	beqz	t3,	.normal_block_5
+	li		a4,	10
+	slt		a4,	a1,	a4
+	beqz	a4,	.normal_block_5
 	j		.for_body_block_4
 .for_body_block_4:
-	add		t2,	a6,	a0
-	sub		t2,	t2,	a3
-	sub		t2,	t2,	a4
-	li		t3,	0
+	add		a4,	a6,	a0
+	sub		a4,	a4,	t1
+	sub		a7,	a4,	t3
+	li		a4,	0
 	j		.for_condition_block_5
 .for_update_block_4:
 	addi	a1,	a1,	1
@@ -96,89 +96,89 @@ f_loop_1:
 	j		.for_update_block_3
 .for_condition_block_5:
 	li		t5,	10
-	slt		t5,	t3,	t5
+	slt		t5,	a4,	t5
 	beqz	t5,	.normal_block_6
 	j		.for_body_block_5
 .for_body_block_5:
-	add		a0,	t2,	a7
-	sub		a0,	a0,	a2
+	add		a0,	a7,	a2
+	sub		a0,	a0,	t6
 	sub		a0,	a0,	a6
 	j		.for_update_block_5
 .for_update_block_5:
-	addi	t3,	t3,	1
+	addi	a4,	a4,	1
 	j		.for_condition_block_5
 .normal_block_6:
 	j		.for_update_block_4
 .for_condition_block_6:
-	li		t1,	10
-	slt		t1,	t4,	t1
-	beqz	t1,	.normal_block_7
+	li		a6,	10
+	slt		a6,	a3,	a6
+	beqz	a6,	.normal_block_7
 	j		.for_body_block_6
 .for_body_block_6:
-	li		t1,	0
+	li		t2,	0
 	j		.for_condition_block_7
 .for_update_block_6:
-	addi	t4,	t4,	1
+	addi	a3,	a3,	1
 	j		.for_condition_block_6
 .normal_block_7:
 	j		.func_end_block_1
 .for_condition_block_7:
 	li		a6,	10
-	slt		a6,	t1,	a6
+	slt		a6,	t2,	a6
 	beqz	a6,	.normal_block_8
 	j		.for_body_block_7
 .for_body_block_7:
-	li		t6,	0
+	li		t4,	0
 	j		.for_condition_block_8
 .for_update_block_7:
-	addi	t1,	t1,	1
+	addi	t2,	t2,	1
 	j		.for_condition_block_7
 .normal_block_8:
 	j		.for_update_block_6
 .for_condition_block_8:
 	li		a6,	10
-	slt		a6,	t6,	a6
+	slt		a6,	t4,	a6
 	beqz	a6,	.normal_block_9
 	j		.for_body_block_8
 .for_body_block_8:
-	add		a6,	a4,	t2
-	add		a6,	a6,	a7
+	add		a6,	t3,	a7
 	add		a6,	a6,	a2
+	add		a6,	a6,	t6
 	li		a1,	0
 	j		.for_condition_block_9
 .for_update_block_8:
-	addi	t6,	t6,	1
+	addi	t4,	t4,	1
 	j		.for_condition_block_8
 .normal_block_9:
 	j		.for_update_block_7
 .for_condition_block_9:
-	li		t3,	10
-	slt		t3,	a1,	t3
-	beqz	t3,	.normal_block_10
+	li		a4,	10
+	slt		a4,	a1,	a4
+	beqz	a4,	.normal_block_10
 	j		.for_body_block_9
 .for_body_block_9:
-	add		t2,	a6,	a0
-	add		t2,	t2,	a3
-	add		t2,	t2,	a4
+	add		a4,	a6,	a0
+	add		a4,	a4,	t1
+	add		a7,	a4,	t3
 	j		.for_update_block_9
 .for_update_block_9:
 	addi	a1,	a1,	1
 	j		.for_condition_block_9
 .normal_block_10:
-	li		t3,	0
+	li		a4,	0
 	j		.for_condition_block_10
 .for_condition_block_10:
 	li		a1,	10
-	slt		a1,	t3,	a1
+	slt		a1,	a4,	a1
 	beqz	a1,	.normal_block_11
 	j		.for_body_block_10
 .for_body_block_10:
-	add		a0,	t2,	a7
-	add		a0,	a0,	a2
+	add		a0,	a7,	a2
+	add		a0,	a0,	t6
 	add		a0,	a0,	a6
 	j		.for_update_block_10
 .for_update_block_10:
-	addi	t3,	t3,	1
+	addi	a4,	a4,	1
 	j		.for_condition_block_10
 .normal_block_11:
 	j		.for_update_block_8

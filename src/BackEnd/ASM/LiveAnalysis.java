@@ -70,7 +70,7 @@ public class LiveAnalysis {
 		for(ASMBasicBlock currentblock:currentfunction.blockList){
 			Base_Inst_ASM preinst=null;
 			for(Base_Inst_ASM inst:currentblock.instList){
-				//结尾一定是ret或者j(beqz一定在j之前)
+				//结尾一定是ret或者j
 				if(inst instanceof Ret_Inst_ASM)succ.put(inst,new HashSet<>());//ret
 				if(inst instanceof Branch_Inst_ASM && inst.rs1==null){//j
 					HashSet<Base_Inst_ASM> tmp=new HashSet<>();
@@ -81,7 +81,7 @@ public class LiveAnalysis {
 				if(preinst!=null){
 					HashSet<Base_Inst_ASM> tmp=new HashSet<>();
 					tmp.add(inst);
-					if(preinst instanceof Branch_Inst_ASM){//一定为beqz
+					if(preinst instanceof Branch_Inst_ASM && preinst.rs1!=null){//beqz
 						tmp.add(GetJumpBlockFirstInst(((Branch_Inst_ASM) preinst).jumpblockname,currentfunction));
 						succ.put(preinst,tmp);
 					}

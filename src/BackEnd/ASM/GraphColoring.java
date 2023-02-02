@@ -455,14 +455,12 @@ public class GraphColoring {
 	}
 	ArrayList<ASMBasicBlock> GetNextBlock(ASMBasicBlock currentblock){
 		ArrayList<ASMBasicBlock> ans=new ArrayList<>();
-		int id=currentblock.instList.size()-1;
-		Base_Inst_ASM inst=currentblock.instList.get(id);
-		//结尾一定是ret或者j(beqz一定在j之前)
-		if(inst instanceof Branch_Inst_ASM && inst.rs1==null) ans.add(GetJumpBlock(((Branch_Inst_ASM) inst).jumpblockname));//j
-		if(id-1>=0){
-			Base_Inst_ASM inst2=currentblock.instList.get(id-1);
-			if(inst2 instanceof Branch_Inst_ASM){//一定为beqz
-				ans.add(GetJumpBlock(((Branch_Inst_ASM) inst2).jumpblockname));
+		for(Base_Inst_ASM inst:currentblock.instList){
+			if(inst instanceof Branch_Inst_ASM && inst.rs1==null){//j
+				ans.add(GetJumpBlock(((Branch_Inst_ASM) inst).jumpblockname));
+			}
+			if(inst instanceof Branch_Inst_ASM && inst.rs1!=null){//beqz
+				ans.add(GetJumpBlock(((Branch_Inst_ASM) inst).jumpblockname));
 			}
 		}
 		return ans;
