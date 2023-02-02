@@ -394,17 +394,18 @@ public class GraphColoring {
 		for(Register_ASM tmp:spillWorklist){
 //			int num=Adjacent(tmp).size();
 			int num=degree.get(tmp);
+			System.out.println(tmp+" "+Adjacent(tmp).size()+" "+degree.get(tmp));
 			if(num>maxnum){//这里认为相邻的点越多优先级越低，要优先spill
 				reg=tmp;
 				maxnum=num;
 			}
 		}
-//		double minvalue=100000000;
+//		double minvalue=200000000;
 //		for(Register_ASM tmp:spillWorklist){
 //			int num=degree.get(tmp);
 //			double value=RegValue.get(tmp)*1.0/num;//平均权值
-//			System.out.println(tmp+" "+num+" "+degree.get(tmp));
-//			if(value<minvalue){//权值越高
+//			System.out.println(tmp+" "+RegValue.get(tmp)+" "+num);
+//			if(value<minvalue){
 //				reg=tmp;
 //				minvalue=value;
 //			}
@@ -479,11 +480,11 @@ public class GraphColoring {
 			for(Base_Inst_ASM inst:currentblock.instList){
 				for(Register_ASM reg:inst.use){
 					if(!RegValue.containsKey(reg))RegValue.put(reg,value);
-					else RegValue.replace(reg,Math.min(value*RegValue.get(reg),100000000));
+					else RegValue.replace(reg,Math.min(value+RegValue.get(reg),100000000));
 				}
 				for(Register_ASM reg:inst.def){
 					if(!RegValue.containsKey(reg))RegValue.put(reg,value);
-					else RegValue.replace(reg,Math.min(value*RegValue.get(reg),100000000));
+					else RegValue.replace(reg,Math.min(value+RegValue.get(reg),100000000));
 				}
 			}
 		}
