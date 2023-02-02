@@ -17,7 +17,7 @@ import java.io.PrintStream;
 public class Compiler {
 	public static void main(String[] args) throws Exception {
 		try {
-			boolean input_from_file=false;
+			boolean input_from_file=true;
 			boolean IR_output_to_file=true;
 			boolean ASM_output_to_file=true;
 			CharStream input;
@@ -70,8 +70,8 @@ public class Compiler {
 			UpdateInst updateinst=new UpdateInst(asmmodule);
 			updateinst.process();
 
-			ReduceBr reduceBr=new ReduceBr(asmmodule);
-			reduceBr.process();
+//			ReduceBr reduceBr=new ReduceBr(asmmodule);
+//			reduceBr.process();
 
 			ps.println(asmmodule.toString());
 
