@@ -1,10 +1,11 @@
-package BackEnd.ASM.Operand;
+package BackEnd.ASM;
 
 import BackEnd.ASM.BasicBlock.ASMBasicBlock;
 import BackEnd.ASM.Function.ASMFunction;
 import BackEnd.ASM.Instruction.Base_Inst_ASM;
 import BackEnd.ASM.Instruction.Branch_Inst_ASM;
 import BackEnd.ASM.Instruction.Ret_Inst_ASM;
+import BackEnd.ASM.Operand.Register_ASM;
 
 import java.util.*;
 

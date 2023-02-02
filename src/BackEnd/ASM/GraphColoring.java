@@ -47,7 +47,10 @@ public class GraphColoring {
 	public HashMap<Register_ASM, Register_ASM> alias;//当一条传送指令(u,v)已被合并，且v被放入coalescedNodes时，有alias(v)=u
 	public HashMap<Register_ASM, PhysicalRegister_ASM> color;//算法为节点选择的颜色(对于预着色节点，其初始值为给定的颜色)
 
-
+	HashMap<ASMBasicBlock,Integer> blockVisit=new HashMap();
+	HashSet<ASMBasicBlock> blockOnStack=new HashSet<>();
+	HashMap<ASMBasicBlock,Integer> blockValue=new HashMap();
+	HashMap<Register_ASM,Integer> RegValue=new HashMap();
 
 	public GraphColoring(ASMModule _asmmodule){
 		asmmodule=_asmmodule;
@@ -156,6 +159,9 @@ public class GraphColoring {
 		}
 		//sp,ra等physical reg不参与分配，也不会进入precolored
 		//a0~a7要考虑预着色(参与分配，进入precolored)
+
+		CalcBlockValue();
+		CalcRegValue();
 	}
 	void Build(){//生成冲突图和mv指令集合
 		for(int i=0;i<currentfunction.blockList.size();i++){
@@ -375,20 +381,115 @@ public class GraphColoring {
 		}
 	}
 	void SelectSpill(){
-		Register_ASM reg=null;
-		int maxnum=-1;
-		for(Register_ASM tmp:spillWorklist){
-			int num=Adjacent(tmp).size();
-			if(num>maxnum){//这里认为相邻的点越多优先级越低，要优先spill
-				reg=tmp;
-				maxnum=num;
-			}
-		}
+		Register_ASM reg=SelectWorstNode();
 		//选择优先级最低的点，把它spill掉(下面具体实现是直接把它丢入simplifyWorklist,在下周期Simplify中把它spill掉)
 		spillWorklist.remove(reg);
 		simplifyWorklist.add(reg);
 		FreezeMoves(reg);
 	}
+
+	Register_ASM SelectWorstNode(){
+		Register_ASM reg=null;
+		int maxnum=-1;
+		for(Register_ASM tmp:spillWorklist){
+//			int num=Adjacent(tmp).size();
+			int num=degree.get(tmp);
+			if(num>maxnum){//这里认为相邻的点越多优先级越低，要优先spill
+				reg=tmp;
+				maxnum=num;
+			}
+		}
+//		double minvalue=100000000;
+//		for(Register_ASM tmp:spillWorklist){
+//			int num=degree.get(tmp);
+//			double value=RegValue.get(tmp)*1.0/num;//平均权值
+//			System.out.println(tmp+" "+num+" "+degree.get(tmp));
+//			if(value<minvalue){//权值越高
+//				reg=tmp;
+//				minvalue=value;
+//			}
+//		}
+		if(reg==null)throw new RuntimeException("Wrong in selectWorseNode");
+		return reg;
+	}
+
+	void CalcBlockValue(){
+		//模拟程序从funcBeginBlock进入，funcEndBlock出去，每有一个循环即有向图里有一个环，环上的点及其后续的点权值全部乘10
+		blockValue.clear();
+		blockVisit.clear();
+		blockOnStack.clear();
+		CalcValuePre_DFS(currentfunction.beginBlock);
+		blockVisit.clear();
+		CalcValueDoing_DFS(currentfunction.beginBlock);
+
+		for(ASMBasicBlock currentblock:currentfunction.blockList){
+			if(!blockValue.containsKey(currentblock))blockValue.put(currentblock,0);//永远不会运行到的block
+		}
+	}
+	void CalcValuePre_DFS(ASMBasicBlock currentblock){//DFS计算权重预处理
+		if(blockVisit.containsKey(currentblock)){
+			if(blockOnStack.contains(currentblock)){
+//				System.out.println("!!! "+currentblock.name);
+				blockValue.put(currentblock,Math.min(blockValue.get(currentblock)*10,100000000));
+			}
+			return;
+		}
+//		System.out.println(currentblock.name);
+		blockVisit.put(currentblock,1);
+		blockValue.put(currentblock,1);
+		blockOnStack.add(currentblock);
+		for(ASMBasicBlock nextblock:GetNextBlock(currentblock)){
+			CalcValuePre_DFS(nextblock);
+			blockOnStack.remove(currentblock);
+		}
+	}
+	void CalcValueDoing_DFS(ASMBasicBlock currentblock){//DFS计算权重
+//		System.out.println(currentblock.name+" "+blockValue.get(currentblock));
+		blockVisit.put(currentblock,1);
+		for(ASMBasicBlock nextblock:GetNextBlock(currentblock)){
+			if(blockVisit.containsKey(nextblock))continue;
+			blockValue.put(nextblock,Math.min(blockValue.get(nextblock)*blockValue.get(currentblock),100000000));
+			CalcValueDoing_DFS(nextblock);
+		}
+	}
+	ArrayList<ASMBasicBlock> GetNextBlock(ASMBasicBlock currentblock){
+		ArrayList<ASMBasicBlock> ans=new ArrayList<>();
+		int id=currentblock.instList.size()-1;
+		Base_Inst_ASM inst=currentblock.instList.get(id);
+		//结尾一定是ret或者j(beqz一定在j之前)
+		if(inst instanceof Branch_Inst_ASM && inst.rs1==null) ans.add(GetJumpBlock(((Branch_Inst_ASM) inst).jumpblockname));//j
+		if(id-1>=0){
+			Base_Inst_ASM inst2=currentblock.instList.get(id-1);
+			if(inst2 instanceof Branch_Inst_ASM){//一定为beqz
+				ans.add(GetJumpBlock(((Branch_Inst_ASM) inst2).jumpblockname));
+			}
+		}
+		return ans;
+	}
+	ASMBasicBlock GetJumpBlock(String blockname){
+		for(ASMBasicBlock currentblock:currentfunction.blockList){
+			if(currentblock.name.equals(blockname))return currentblock;
+		}
+		throw new RuntimeException("can't find jumpblock ???");
+	}
+	void CalcRegValue(){
+		RegValue.clear();
+		for(ASMBasicBlock currentblock:currentfunction.blockList){
+			int value=blockValue.get(currentblock);
+			for(Base_Inst_ASM inst:currentblock.instList){
+				for(Register_ASM reg:inst.use){
+					if(!RegValue.containsKey(reg))RegValue.put(reg,value);
+					else RegValue.replace(reg,Math.min(value*RegValue.get(reg),100000000));
+				}
+				for(Register_ASM reg:inst.def){
+					if(!RegValue.containsKey(reg))RegValue.put(reg,value);
+					else RegValue.replace(reg,Math.min(value*RegValue.get(reg),100000000));
+				}
+			}
+		}
+	}
+
+
 	void AssignColor(){
 //		System.out.println(selectStack.size());
 		while(!selectStack.isEmpty()){
