@@ -390,26 +390,26 @@ public class GraphColoring {
 
 	Register_ASM SelectWorstNode(){
 		Register_ASM reg=null;
-		int maxnum=-1;
-		for(Register_ASM tmp:spillWorklist){
-//			int num=Adjacent(tmp).size();
-			int num=degree.get(tmp);
-			System.out.println(tmp+" "+Adjacent(tmp).size()+" "+degree.get(tmp));
-			if(num>maxnum){//这里认为相邻的点越多优先级越低，要优先spill
-				reg=tmp;
-				maxnum=num;
-			}
-		}
-//		double minvalue=200000000;
+//		int maxnum=-1;
 //		for(Register_ASM tmp:spillWorklist){
+////			int num=Adjacent(tmp).size();
 //			int num=degree.get(tmp);
-//			double value=RegValue.get(tmp)*1.0/num;//平均权值
-//			System.out.println(tmp+" "+RegValue.get(tmp)+" "+num);
-//			if(value<minvalue){
+////			System.out.println(tmp+" "+Adjacent(tmp).size()+" "+degree.get(tmp));
+//			if(num>maxnum){//这里认为相邻的点越多优先级越低，要优先spill
 //				reg=tmp;
-//				minvalue=value;
+//				maxnum=num;
 //			}
 //		}
+		double minvalue=200000000;
+		for(Register_ASM tmp:spillWorklist){
+			int num=degree.get(tmp);
+			double value=RegValue.get(tmp)*1.0/num;//平均权值
+			System.out.println(tmp+" "+RegValue.get(tmp)+" "+num);
+			if(value<minvalue){
+				reg=tmp;
+				minvalue=value;
+			}
+		}
 		if(reg==null)throw new RuntimeException("Wrong in selectWorseNode");
 		return reg;
 	}
